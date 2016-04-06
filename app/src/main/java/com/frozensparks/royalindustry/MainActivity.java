@@ -22,8 +22,6 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.util.Calendar;
-import java.util.Timer;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -166,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        POOLtext = (TextView) findViewById(R.id.POOL);
+
 
 
 
@@ -181,11 +179,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
             editor.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
             editor.commit();
-
-            //Pooltext aktualisieren
-            SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
-            String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
-            POOLtext.setText(Pooltext);
 
             //Fabrik auf lvl 1 setzen
             SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
@@ -308,6 +301,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (id == R.id.Bank) {
+          Intent start = new Intent(MainActivity.this, BankActivity.class);
+            MainActivity.this.startActivity(start);
+
+            finish();
+
 
 
         }
@@ -349,15 +347,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     goldprogress1 = maxfabrik1;
                 }
                 progressBarFabrik1.setProgress(goldprogress1);
+
+                //
                 StringBuilder sb = new StringBuilder();
                 sb.append("");
                 sb.append(goldprogress1);
                 String strI = sb.toString();
-                countfab1.setText(strI);
+                //maximum storage to string
+                StringBuilder maxg = new StringBuilder();
+                maxg.append("");
+                maxg.append(maxfabrik1);
+                String maxgo = maxg.toString();
+
+                countfab1.setText(strI + "/" + maxgo);
+
+              double goldphfab160= goldphfab1*60*60;
+
+                int goldphfab1int = (int)goldphfab160;
 
                 StringBuilder gph = new StringBuilder();
                 gph.append("");
-                gph.append(goldphfab1*60*60);
+                gph.append(goldphfab1int);
                 String goph = gph.toString();
                 GperH.setText(goph + "GOLD PER HOUR");
 
@@ -386,10 +396,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         int secondsElapsed = endTime - startTime;
 
-        //Sekunden die die Fabrik produziert hat bis zum sammeln speichern:
-        SharedPreferences.Editor editor = getSharedPreferences("resultatdersession", MODE_PRIVATE).edit();
-        editor.putInt("secondsElapsed", secondsElapsed);
-        editor.commit();
+
 
         //Timer Zurücksetzen
         SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
@@ -400,7 +407,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
        //Sekunden in gold mit kommas umwandeln
-       //LEVEL 1
        double goldtemp = (secondsElapsed * goldphfab1);
        long gold = (long) goldtemp;
 
@@ -417,6 +423,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        //checken ob das max schon erreicht wurde
 
        if(goldint>= maxfabrik1) {
+
            goldint = maxfabrik1;
        }
 
@@ -428,13 +435,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editor2.commit();
 
 
-        //Pooltext aktualisieren
 
-        String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
-        POOLtext.setText(Pooltext);
-
-
-        Toast.makeText(MainActivity.this, "sekunden:" + secondsElapsed + "Gold" +(goldint), Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "GOLD COLLECTED: " +(goldint), Toast.LENGTH_SHORT).show();
 
 
 

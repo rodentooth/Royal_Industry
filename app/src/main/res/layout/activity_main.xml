@@ -18,8 +18,8 @@
                 tools:ignore="UselessParent">
 
                 <Button
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Bank"
                     android:id="@+id/Bank"
                     android:layout_marginRight="41dp"
@@ -28,8 +28,8 @@
                     android:layout_alignParentRight="true"
                     />
                 <Button
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Fabrik1"
                     android:id="@+id/Fabrik1"
                     android:layout_marginRight="41dp"
@@ -39,8 +39,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
                 <Button
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="SammelnFabrik1"
                     android:id="@+id/SammelnFabrik1"
                     android:layout_marginRight="41dp"
@@ -58,6 +58,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="29dp"
                     android:textColor="#000000" />
+
 
 
             </RelativeLayout>

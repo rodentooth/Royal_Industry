@@ -1,6 +1,8 @@
 package com.frozensparks.royalindustry;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -10,7 +12,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,13 +37,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button Bank;
 
 
-    // int startTimeFabrik1;
-
-    // int is1started;
-    //SharedPreferences EndZeitFabrik1;
-    // SharedPreferences zeitFabrik1;
-     int POOL;
+    int POOL;
     TextView POOLtext;
+    TextView countfab1;
+
+
+    Handler h = new Handler();
+    int delay = 100; //milliseconds
+
+    ProgressBar progressBarFabrik1;
+
+    final Context context = this;
+
+    int Fabrik1Level;
+    int maxfabrik1;
+    int minfabrik1;
+    double goldphfab1;
+
+
 
 
     /**
@@ -149,7 +164,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Bank = (Button) findViewById(R.id.Bank);
         Bank.setOnClickListener(this);
 
-      POOLtext = (TextView) findViewById(R.id.POOL);
+
+
+        POOLtext = (TextView) findViewById(R.id.POOL);
+
+
+
 
         //counter für fabriken. Hat die fabrik schonmal produziert?
         SharedPreferences prefs = getSharedPreferences("resultatdersession", MODE_PRIVATE);
@@ -157,22 +177,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int secondsElapsed = prefs.getInt("secondsElapsed", 0); //0 is the default value.
 
         if (secondsElapsed <= 2) {
-
+            //erste startzeit speichern
             SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
             editor.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
             editor.commit();
 
-        }
-        if (secondsElapsed <= 10) {
+            //Pooltext aktualisieren
+            SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
+            String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
+            POOLtext.setText(Pooltext);
 
-            SammelnFabrik1.setVisibility(View.GONE);
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            SammelnFabrik1.setVisibility(View.VISIBLE);
+            //Fabrik auf lvl 1 setzen
+            SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+            editor1.putInt("Fabrik1Level", 1);
+            editor1.commit();
+
         }
+
+
+
+        h.postDelayed(new Runnable(){
+            public void run(){
+                //jede sekunde gold checken
+                //Jede sekunde sammler button aktualisieren
+                //wenn Long von gold über 1 dann visible, sammelbar machen.
+
+                SharedPreferences prefs = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE);
+                int startTime = prefs.getInt("startTime", 0); //0 is the default value.
+
+                int endTime = ((int) System.currentTimeMillis()/1000);
+                //aktualisierungszeit ausrechnen
+                int secondsElapsed = endTime - startTime;
+                //einheiten umwandeln
+                double goldtemp = (secondsElapsed * goldphfab1);
+                long gold = (long) goldtemp;
+                //checken obs soweit ist
+                if (gold<= minfabrik1) {
+                    SammelnFabrik1.setVisibility(View.GONE);
+                }
+                if(gold>= minfabrik1) {
+                    SammelnFabrik1.setVisibility(View.VISIBLE);
+                }
+
+                //check, welches level die Fabrik 1 hat
+                SharedPreferences prefs1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
+
+                if (prefs1.getInt("Fabrik1Level", 1) <= 1){
+
+                    maxfabrik1 = 500;
+                    minfabrik1 = 1;
+                    goldphfab1 = 0.05;
+                }
+
+                h.postDelayed(this, delay);
+            }
+        }, delay);
+
 
 
 
@@ -239,84 +299,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = v.getId();
         if (id == R.id.Fabrik1) {
 
-
-
-            // Toast.makeText(MainActivity.this, "gestartet um" + endTime, Toast.LENGTH_SHORT).show();
+            dialogFabr1();
         }
 
         if (id == R.id.SammelnFabrik1) {
 
-            SharedPreferences prefs = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE);
-
-            int startTime = prefs.getInt("startTime", 0); //0 is the default value.
-
-
-
-            int endTime = ((int) System.currentTimeMillis()/1000);
-
-            int secondsElapsed = endTime - startTime;
-
-            //Sekunden die die Fabrik produziert hat bis zum sammeln speichern:
-            SharedPreferences.Editor editor = getSharedPreferences("resultatdersession", MODE_PRIVATE).edit();
-            editor.putInt("secondsElapsed", secondsElapsed);
-            editor.commit();
-
-            //Timer Zurücksetzen
-            SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
-            editor1.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
-            editor1.commit();
-
-            //Die Sekunden zum pool hinzufügen
-            SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
-            SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
-            editor2.putInt("POOL", (secondsElapsed + (prefs1.getInt("POOL", 0))));
-            editor2.commit();
-
-
-            //Pooltext aktualisieren
-
-            String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
-            POOLtext.setText(Pooltext);
-
-
-            Toast.makeText(MainActivity.this, "sekunden:" + secondsElapsed, Toast.LENGTH_SHORT).show();
-
-
-
-
-
-
-
-
-
-
-/*
-             zeitFabrik1 = getSharedPreferences("zeitFabrik1", 0);
-            startTimeFabrik1 = zeitFabrik1.getInt("startTimeFabrik1", 0);
-
-            Calendar c = Calendar.getInstance();
-             endTime = c.get(Calendar.SECOND);
-            int secFabrik1 = endTime - startTimeFabrik1;
-
-            Toast.makeText(MainActivity.this, "sekunden:" + secFabrik1, Toast.LENGTH_SHORT).show();
-            //END TIME TO 0
-            //endTime = 0;
-            //START TIME to 0
-            //startTimeFabrik1 = 0;
-
-            //startTimeFabrik1 = c.get(Calendar.SECOND);
-            // start timer with save
-           /* SharedPreferences.Editor editor1 = getSharedPreferences( "zeitFabrik1", 0).edit();
-            editor1.putInt("startTimeFabrik1", c.get(Calendar.SECOND));
-            editor1.commit();
-
-
-            //HAS STARTED TO TRUE
-
-            SharedPreferences.Editor endZeitFab1 = getSharedPreferences( "EndZeitFabrik1", 0).edit();
-            endZeitFab1.putInt("is1started", secFabrik1);
-            endZeitFab1.commit();
-*/
+            sammelnfab1();
         }
 
         if (id == R.id.Bank) {
@@ -326,7 +314,131 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+    public void dialogFabr1(){
 
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.fabrik1);
+
+
+
+        countfab1 = (TextView) dialog.findViewById(R.id.countfab1);
+        final TextView GperH = (TextView) dialog.findViewById(R.id.GperH);
+        progressBarFabrik1 = (ProgressBar) dialog.findViewById(R.id.progressBarFabrik1);
+        progressBarFabrik1.setMax(maxfabrik1);
+
+
+        h.postDelayed(new Runnable() {
+            public void run() {
+                //jede sekunde gold checken
+                //Jede sekunde sammler button aktualisieren
+                //wenn Long von gold über 1 dann visible, sammelbar machen.
+
+                SharedPreferences prefs = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE);
+                int startTime = prefs.getInt("startTime", 0); //0 is the default value.
+
+                int endTime = ((int) System.currentTimeMillis() / 1000);
+                //aktualisierungszeit ausrechnen
+                int secondsElapsed = endTime - startTime;
+                //einheiten umwandeln
+                double goldtemp = (secondsElapsed * goldphfab1);
+                long gold = (long) goldtemp;
+                int goldprogress1 = (int) gold;
+
+                if (goldprogress1 >= maxfabrik1) {
+                    goldprogress1 = maxfabrik1;
+                }
+                progressBarFabrik1.setProgress(goldprogress1);
+                StringBuilder sb = new StringBuilder();
+                sb.append("");
+                sb.append(goldprogress1);
+                String strI = sb.toString();
+                countfab1.setText(strI);
+
+                StringBuilder gph = new StringBuilder();
+                gph.append("");
+                gph.append(goldphfab1*60*60);
+                String goph = gph.toString();
+                GperH.setText(goph + "GOLD PER HOUR");
+
+
+                h.postDelayed(this, delay);
+            }
+        }, delay);
+
+
+
+
+        dialog.show();
+
+
+
+    }
+   public void sammelnfab1(){
+
+        SharedPreferences prefs = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE);
+
+        int startTime = prefs.getInt("startTime", 0); //0 is the default value.
+
+
+
+        int endTime = ((int) System.currentTimeMillis()/1000);
+
+        int secondsElapsed = endTime - startTime;
+
+        //Sekunden die die Fabrik produziert hat bis zum sammeln speichern:
+        SharedPreferences.Editor editor = getSharedPreferences("resultatdersession", MODE_PRIVATE).edit();
+        editor.putInt("secondsElapsed", secondsElapsed);
+        editor.commit();
+
+        //Timer Zurücksetzen
+        SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
+        editor1.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+        editor1.commit();
+
+
+
+
+       //Sekunden in gold mit kommas umwandeln
+       //LEVEL 1
+       double goldtemp = (secondsElapsed * goldphfab1);
+       long gold = (long) goldtemp;
+
+
+
+
+
+
+
+
+       //gold von long zu int
+      int goldint = (int)(gold);
+
+       //checken ob das max schon erreicht wurde
+
+       if(goldint>= maxfabrik1) {
+           goldint = maxfabrik1;
+       }
+
+
+        //Das Gold zum pool hinzufügen
+        SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+        SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
+        editor2.putInt("POOL",  goldint + (prefs1.getInt("POOL", 0)));
+        editor2.commit();
+
+
+        //Pooltext aktualisieren
+
+        String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
+        POOLtext.setText(Pooltext);
+
+
+        Toast.makeText(MainActivity.this, "sekunden:" + secondsElapsed + "Gold" +(goldint), Toast.LENGTH_SHORT).show();
+
+
+
+    }
     @Override
     public void onStart() {
         super.onStart();

@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="DIAS"
-                android:id="@+id/DIAMONDS"
+                android:id="@+id/diatext"
                 android:layout_below="@+id/currentGoldBalance"
                 android:layout_alignLeft="@+id/currentGoldBalance"
                 android:layout_alignStart="@+id/currentGoldBalance"
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:text="convert"
                 android:id="@+id/GoldToDias"
-                android:layout_alignTop="@+id/DIAMONDS"
+                android:layout_alignTop="@+id/diatext"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
 

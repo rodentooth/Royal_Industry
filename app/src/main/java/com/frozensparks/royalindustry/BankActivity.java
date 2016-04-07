@@ -15,6 +15,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -98,7 +99,13 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         int maxdias;
         TextView howmanygoldtodias;
         TextView diasCost;
+        TextView currentGoldBalance;
+        TextView diatext;
         SeekBar seekbar;
+        Button confirmconvert;
+        Dialog dialogconvertdias;
+
+
 
 
 
@@ -139,12 +146,20 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        TextView currentGoldBalance = (TextView) findViewById(R.id.currentGoldBalance);
+         currentGoldBalance = (TextView) findViewById(R.id.currentGoldBalance);
+
+         diatext = (TextView) findViewById(R.id.diatext);
 
         //Aktualisiere den Kontostatus
         SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
         String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
         currentGoldBalance.setText("YOUR CURRENT BALANCE IS: " +Pooltext);
+
+        SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+        //Diapool text aktualisieren
+        String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
+        diatext.setText("Dias: " + diapooltext);
+
 
         if ((prefs1.getInt("POOL", 0)) >= 20000 ){
 
@@ -223,19 +238,29 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         if (id == R.id.GoldToDias) {
 
             View converter = View.inflate(this, R.layout.converter, null);
-            Dialog dialog = new Dialog(v.getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(converter);
+             dialogconvertdias = new Dialog(v.getContext());
+            dialogconvertdias.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialogconvertdias.setContentView(converter);
 
 
-             seekbar = (SeekBar) dialog.findViewById(R.id.seekBar);
-             howmanygoldtodias = (TextView) dialog.findViewById(R.id.howmanygoldtodias);
-            diasCost = (TextView) dialog.findViewById(R.id.diasCost);
+             seekbar = (SeekBar) dialogconvertdias.findViewById(R.id.seekBar);
+             howmanygoldtodias = (TextView) dialogconvertdias.findViewById(R.id.howmanygoldtodias);
+            diasCost = (TextView) dialogconvertdias.findViewById(R.id.diasCost);
 
-            seekbar.setMax(maxdias-1);
+            confirmconvert = (Button) dialogconvertdias.findViewById(R.id.confirmconvert);
+            confirmconvert.setOnClickListener(this);
+
+
+            if (maxdias >=2){
+                seekbar.setMax(maxdias-1);
+            }
+
+            if (maxdias <=2){
+                seekbar.setMax(maxdias);
+            }
             int progressvalue = 1;
             howmanygoldtodias.setText("CREATE" + progressvalue + "DIAS");
-            diasCost.setText("COSTS " + progressvalue*200 + " GOLD");
+            diasCost.setText("COSTS " + progressvalue * 200 + " GOLD");
 
 
             seekbar.setOnSeekBarChangeListener(
@@ -244,16 +269,20 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
                         int progressvalue;
+
                         @Override
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                            progressvalue = progress+1;
+                            progressvalue = progress + 1;
                             howmanygoldtodias.setText("CREATE " + progressvalue + " DIAS");
-                            diasCost.setText("COSTS " + progressvalue*200 + " GOLD");
+                            diasCost.setText("COSTS " + progressvalue * 200 + " GOLD");
                         }
 
                         @Override
                         public void onStartTrackingTouch(SeekBar seekBar) {
+
+                            howmanygoldtodias.setText("CREATE " + progressvalue + " DIAS");
+                            diasCost.setText("COSTS " + progressvalue * 200 + " GOLD");
 
                         }
 
@@ -261,7 +290,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         public void onStopTrackingTouch(SeekBar seekBar) {
 
                             howmanygoldtodias.setText("CREATE " + progressvalue + " DIAS");
-                            diasCost.setText("COSTS " + progressvalue*200 + " GOLD");
+                            diasCost.setText("COSTS " + progressvalue * 200 + " GOLD");
 
                             //den progressvalue (wieviele dias) speichern
                             SharedPreferences.Editor editor1 = getSharedPreferences("thatmanydias", MODE_PRIVATE).edit();
@@ -269,13 +298,70 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                             editor1.commit();
 
 
-
                         }
                     }
 
             );
 
-            dialog.show();
+
+            dialogconvertdias.show();
+
+
+        }
+
+
+        if (id == R.id.confirmconvert) {
+
+
+
+            //holen von wieviele diamanten erstellen
+            SharedPreferences prefs1 = getSharedPreferences("thatmanydias", MODE_PRIVATE);
+            //Holen von Pool
+            SharedPreferences prefs2 = getSharedPreferences("POOL", MODE_PRIVATE);
+
+            //diamantenanzahl in gold umwandeln
+            int goldweg = (prefs1.getInt("thatmanydias", 1))*200;
+
+
+            //checken obs genug gold für den convert hat
+            if (goldweg >= prefs2.getInt("POOL", 0)){
+
+                Toast.makeText(BankActivity.this, "you can not afford that", Toast.LENGTH_SHORT).show();
+
+
+            }
+
+            if (goldweg <= prefs2.getInt("POOL", 0)){
+
+
+
+
+
+            //Pool aktualisieren, gold abziehen
+            SharedPreferences.Editor editor1 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+            editor1.putInt("POOL", (prefs2.getInt("POOL", 0)) - goldweg);
+            editor1.commit();
+
+            //Pooltext aktualisieren
+            String Pooltext = String.valueOf(prefs2.getInt("POOL", 0));
+            currentGoldBalance.setText("GOLD: " + Pooltext);
+
+            //diamanten dem diamantenpool hinzufügen
+            SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+            SharedPreferences.Editor editor2 = getSharedPreferences("DIAMONDS", MODE_PRIVATE).edit();
+            editor2.putInt("DIAMONDS", (prefs3.getInt("DIAMONDS", 1 ))+ (prefs1.getInt("thatmanydias", 1)));
+            editor2.commit();
+
+
+
+            //Diapool text aktualisieren
+            String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
+            diatext.setText("Dias: " + diapooltext);
+
+            //dialog beenden
+            dialogconvertdias.dismiss();
+            }
+
         }
     }
 }

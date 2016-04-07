@@ -431,7 +431,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Das Gold zum pool hinzufügen
         SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
         SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
-        editor2.putInt("POOL",  goldint + (prefs1.getInt("POOL", 0)));
+        editor2.putInt("POOL", goldint + (prefs1.getInt("POOL", 0)));
         editor2.commit();
 
 

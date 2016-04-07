@@ -34,16 +34,16 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Costs: 0"
         android:id="@+id/diasCost"
-        android:layout_alignBottom="@+id/imageView2"
+        android:layout_above="@+id/confirmconvert"
         android:layout_centerHorizontal="true"
         />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"
-        android:layout_above="@+id/diasCost"
+        android:text="Confirm Convert"
+        android:id="@+id/confirmconvert"
+        android:layout_alignBottom="@+id/imageView2"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

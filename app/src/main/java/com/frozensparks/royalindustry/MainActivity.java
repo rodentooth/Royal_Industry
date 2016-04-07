@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         if (datafab1.getInt("Level", 1) == 2) {
 
-                            //Lvl4
+                            //LvL4
                             Toast.makeText(MainActivity.this, "you are already lvl 3 \n amana", Toast.LENGTH_SHORT).show();
                         }
                         editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);

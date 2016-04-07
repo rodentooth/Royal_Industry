@@ -54,6 +54,16 @@
                 android:id="@+id/GoldToDias"
                 android:layout_alignTop="@+id/diatext"
                 android:layout_centerHorizontal="true" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/diaconvertingtimeprogress"
+                android:layout_alignBottom="@+id/GoldToDias"
+                android:layout_toRightOf="@+id/GoldToDias"
+                android:layout_toEndOf="@+id/GoldToDias"
+                android:indeterminate="false" />
         </RelativeLayout>
 
 

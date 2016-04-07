@@ -1,8 +1,11 @@
 package com.frozensparks.royalindustry;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -30,43 +33,51 @@ import com.google.android.gms.common.api.GoogleApiClient;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
+
+
+    //Fabrik1
     Button Fabrik1;
     Button SammelnFabrik1;
-    Button Bank;
-
-
-    int POOL;
-    TextView POOLtext;
-    TextView countfab1;
-
-
-    Handler h = new Handler();
-    int delay = 100; //milliseconds
-
     ProgressBar progressBarFabrik1;
-
-    final Context context = this;
-
-    int Fabrik1Level;
+    Context context = this;
+   /* int Fabrik1Level;
     int maxfabrik1;
     int minfabrik1;
     double goldphfab1;
+    wird von sharedpreferences übernommen*/
+    SharedPreferences datafab1;
+    TextView countfab1;
+    TextView leveltextfabr1;
 
 
+    //Bank
+    Button Bank;
+    int POOL;
+    TextView POOLtext;
 
+
+    //Aktualisator
+    Handler h = new Handler();
+    int delay = 100; //milliseconds
+
+    //Bauhaus
+    Button bauhaus;
+    Dialog bauhausdialog;
+    Button upgradefab1;
+
+
+    //FULLSCREEN
 
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
      */
     private static final boolean AUTO_HIDE = true;
-
     /**
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
      * user interaction before hiding the system UI.
      */
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
     /**
      * Some older devices needs a small delay between UI widget updates
      * and a change of the status and navigation bar.
@@ -132,6 +143,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
+    //Start
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,26 +162,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
 
 
-        Fabrik1 = (Button) findViewById(R.id.Fabrik1);
-        Fabrik1.setOnClickListener(this);
 
-        SammelnFabrik1 = (Button) findViewById(R.id.SammelnFabrik1);
-        SammelnFabrik1.setOnClickListener(this);
 
+
+
+        //Bank
         Bank = (Button) findViewById(R.id.Bank);
         Bank.setOnClickListener(this);
 
 
 
+        //Bauhaus
+        bauhaus = (Button) findViewById(R.id.bauhaus);
+        bauhaus.setOnClickListener(this);
 
 
 
 
+        //Fabrik1
+        Fabrik1 = (Button) findViewById(R.id.Fabrik1);
+        Fabrik1.setOnClickListener(this);
+        SammelnFabrik1 = (Button) findViewById(R.id.SammelnFabrik1);
+        SammelnFabrik1.setOnClickListener(this);
+        leveltextfabr1 = (TextView) findViewById(R.id.leveltextfabr1);
 
         //counter für fabriken. Hat die fabrik schonmal produziert?
         SharedPreferences prefs = getSharedPreferences("resultatdersession", MODE_PRIVATE);
@@ -182,12 +201,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //Fabrik auf lvl 1 setzen
             SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
-            editor1.putInt("Fabrik1Level", 1);
+            editor1.putInt("maxfabrik1", 500);
+            editor1.putInt("minfabrik1", 1);
+            editor1.putFloat("goldphfab1", (float) 0.05);
+            editor1.putString("leveltextfab1", "Fabrik 1 Level: 1");
             editor1.commit();
 
         }
 
 
+
+
+        //Aktualisator
 
         h.postDelayed(new Runnable(){
             public void run(){
@@ -196,31 +221,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //wenn Long von gold über 1 dann visible, sammelbar machen.
 
                 SharedPreferences prefs = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE);
+                SharedPreferences prefs1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
                 int startTime = prefs.getInt("startTime", 0); //0 is the default value.
 
                 int endTime = ((int) System.currentTimeMillis()/1000);
                 //aktualisierungszeit ausrechnen
                 int secondsElapsed = endTime - startTime;
                 //einheiten umwandeln
-                double goldtemp = (secondsElapsed * goldphfab1);
+                double goldtemp = (secondsElapsed * prefs1.getFloat("goldphfab1",(float) 0.05));
                 long gold = (long) goldtemp;
                 //checken obs soweit ist
-                if (gold<= minfabrik1) {
+                if (gold<= prefs1.getInt("minfabrik1", 1 )) {
                     SammelnFabrik1.setVisibility(View.GONE);
                 }
-                if(gold>= minfabrik1) {
+                if(gold>= prefs1.getInt("minfabrik1", 1 )) {
                     SammelnFabrik1.setVisibility(View.VISIBLE);
                 }
 
                 //check, welches level die Fabrik 1 hat
-                SharedPreferences prefs1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
 
-                if (prefs1.getInt("Fabrik1Level", 1) <= 1){
 
-                    maxfabrik1 = 500;
-                    minfabrik1 = 1;
-                    goldphfab1 = 0.05;
-                }
+                //Level1
+
+                    leveltextfabr1.setText(prefs1.getString("leveltextfab1", "1"));
+
 
                 h.postDelayed(this, delay);
             }
@@ -309,9 +333,77 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         }
+        //Bauhaus
+        if (id == R.id.bauhaus) {
 
 
-    }
+            View bauhausdia = View.inflate(this, R.layout.bauhausdialog, null);
+            bauhausdialog = new Dialog(v.getContext());
+            bauhausdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            bauhausdialog.setContentView(bauhausdia);
+
+            upgradefab1 = (Button) bauhausdialog.findViewById(R.id.upgradefab1);
+            upgradefab1.setOnClickListener(this);
+
+
+            bauhausdialog.show();
+
+        }
+
+        if (id == R.id.upgradefab1) {
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    context);
+
+            // set title
+            alertDialogBuilder.setTitle("Fabrik 1");
+
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("Upgradebenefits&costs:...")
+                    .setCancelable(false)
+                    .setPositiveButton("Upgrade!",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                           //Upgrade
+
+                            //level2
+                            SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                            editor1.putInt("maxfabrik1", 1000);
+                            editor1.putInt("minfabrik1", 2);
+                            editor1.putFloat("goldphfab1", (float) 0.1);
+                            editor1.putString("leveltextfab1", "Fabrik 1 Level: 2");
+                            editor1.commit();
+                        }
+                    })
+                    .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+
+                            dialog.cancel();
+                        }
+                    });
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+
+
+
+            };
+
+
+        }
+
+
+
+
+
+
+
+
+
+    //Fabrik1
     public void dialogFabr1(){
 
         final Dialog dialog = new Dialog(context);
@@ -320,10 +412,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
+
+        datafab1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
+
+
+
         countfab1 = (TextView) dialog.findViewById(R.id.countfab1);
         final TextView GperH = (TextView) dialog.findViewById(R.id.GperH);
         progressBarFabrik1 = (ProgressBar) dialog.findViewById(R.id.progressBarFabrik1);
-        progressBarFabrik1.setMax(maxfabrik1);
+        progressBarFabrik1.setMax(datafab1.getInt("maxfabrik1", 500));
 
 
         h.postDelayed(new Runnable() {
@@ -339,12 +437,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //aktualisierungszeit ausrechnen
                 int secondsElapsed = endTime - startTime;
                 //einheiten umwandeln
-                double goldtemp = (secondsElapsed * goldphfab1);
+                double goldtemp = (secondsElapsed * datafab1.getFloat("goldphfab1", (float) 0.05));
                 long gold = (long) goldtemp;
                 int goldprogress1 = (int) gold;
 
-                if (goldprogress1 >= maxfabrik1) {
-                    goldprogress1 = maxfabrik1;
+                if (goldprogress1 >= datafab1.getInt("maxfabrik1", 500)) {
+                    goldprogress1 = datafab1.getInt("maxfabrik1", 500);
                 }
                 progressBarFabrik1.setProgress(goldprogress1);
 
@@ -356,12 +454,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //maximum storage to string
                 StringBuilder maxg = new StringBuilder();
                 maxg.append("");
-                maxg.append(maxfabrik1);
+                maxg.append(datafab1.getInt("maxfabrik1", 500));
                 String maxgo = maxg.toString();
 
                 countfab1.setText(strI + "/" + maxgo);
 
-              double goldphfab160= goldphfab1*60*60;
+              double goldphfab160= datafab1.getFloat("goldphfab1", (float) 0.05)*60*60;
 
                 int goldphfab1int = (int)goldphfab160;
 
@@ -407,7 +505,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
        //Sekunden in gold mit kommas umwandeln
-       double goldtemp = (secondsElapsed * goldphfab1);
+       double goldtemp = (secondsElapsed * datafab1.getFloat("goldphfab1", (float) 0.05));
        long gold = (long) goldtemp;
 
 
@@ -422,15 +520,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
        //checken ob das max schon erreicht wurde
 
-       if(goldint>= maxfabrik1) {
+       if(goldint>= datafab1.getInt("maxfabrik1", 500)) {
 
-           goldint = maxfabrik1;
+           goldint = datafab1.getInt("maxfabrik1", 500);
        }
 
 
         //Das Gold zum pool hinzufügen
         SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
         SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
+        //TODO 10000 löschen
         editor2.putInt("POOL", 10000 + goldint + (prefs1.getInt("POOL", 0)));
         editor2.commit();
 

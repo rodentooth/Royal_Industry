@@ -49,6 +49,25 @@
                     android:layout_alignParentRight="true"
                     />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Fabrik 1 Level:"
+                    android:id="@+id/leveltextfabr1"
+                    android:layout_alignTop="@+id/Bank"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bauhaus"
+                    android:id="@+id/bauhaus"
+                    android:layout_alignTop="@+id/leveltextfabr1"
+                    android:layout_toRightOf="@+id/leveltextfabr1"
+                    android:layout_toEndOf="@+id/leveltextfabr1" />
+
 
             </RelativeLayout>
 

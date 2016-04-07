@@ -202,12 +202,22 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                     int secondsElapsed = endTime - startTime;
 
+
+                if (secondsElapsed == 0) {
+                    //converterknopf auf 0 sec sichtbar
+                    GoldToDias.setVisibility(View.VISIBLE);
+                    //progbar update
+                    diaconvertingtimeprogress.setProgress(secondsElapsed);
+                }
+
+                if (secondsElapsed >= 1) {
                     if (secondsElapsed < 30) {
                         //converterknopf unsichtbar
                         GoldToDias.setVisibility(View.INVISIBLE);
                         //progbar update
                         diaconvertingtimeprogress.setProgress(secondsElapsed);
                     }
+                }
 
                 SharedPreferences prefs4 = getSharedPreferences("DiamantConvertContdownOFF", MODE_PRIVATE);
                 Boolean hatsdiaszumholen = (prefs4.getBoolean("trueorfalse", false));

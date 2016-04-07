@@ -95,8 +95,10 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-    final Context context = this;
-
+        int maxdias;
+        TextView howmanygoldtodias;
+        TextView diasCost;
+        SeekBar seekbar;
 
 
 
@@ -132,6 +134,9 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         Button closeBank = (Button) findViewById(R.id.closeBank);
         closeBank.setOnClickListener(this);
 
+        Button GoldToDias = (Button) findViewById(R.id.GoldToDias);
+        GoldToDias.setOnClickListener(this);
+
 
 
         TextView currentGoldBalance = (TextView) findViewById(R.id.currentGoldBalance);
@@ -140,6 +145,16 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
         String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
         currentGoldBalance.setText("YOUR CURRENT BALANCE IS: " +Pooltext);
+
+        if ((prefs1.getInt("POOL", 0)) >= 20000 ){
+
+            maxdias = 100;
+        }
+        if ((prefs1.getInt("POOL", 0)) <= 20000 ){
+
+            maxdias = ((prefs1.getInt("POOL", 0)) /200);
+        }
+
     }
 
     @Override
@@ -206,19 +221,35 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (id == R.id.GoldToDias) {
-            Dialog dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.converter);
 
-            SeekBar seekbar = (SeekBar) dialog.findViewById(R.id.seekBar);
-            TextView howmanygoldtodias = (TextView) dialog.findViewById(R.id.howmanygoldtodias);
-            howmanygoldtodias.setText("INT"  + "GOLD TO" + seekbar.getProgress() + "DIAS");
+            View converter = View.inflate(this, R.layout.converter, null);
+            Dialog dialog = new Dialog(v.getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(converter);
+
+
+             seekbar = (SeekBar) dialog.findViewById(R.id.seekBar);
+             howmanygoldtodias = (TextView) dialog.findViewById(R.id.howmanygoldtodias);
+            diasCost = (TextView) dialog.findViewById(R.id.diasCost);
+
+            seekbar.setMax(maxdias-1);
+            int progressvalue = 1;
+            howmanygoldtodias.setText("CREATE" + progressvalue + "DIAS");
+            diasCost.setText("COSTS " + progressvalue*200 + " GOLD");
+
 
             seekbar.setOnSeekBarChangeListener(
+
                     new SeekBar.OnSeekBarChangeListener() {
+
+
+                        int progressvalue;
                         @Override
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
+                            progressvalue = progress+1;
+                            howmanygoldtodias.setText("CREATE " + progressvalue + " DIAS");
+                            diasCost.setText("COSTS " + progressvalue*200 + " GOLD");
                         }
 
                         @Override
@@ -228,6 +259,16 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                         @Override
                         public void onStopTrackingTouch(SeekBar seekBar) {
+
+                            howmanygoldtodias.setText("CREATE " + progressvalue + " DIAS");
+                            diasCost.setText("COSTS " + progressvalue*200 + " GOLD");
+
+                            //den progressvalue (wieviele dias) speichern
+                            SharedPreferences.Editor editor1 = getSharedPreferences("thatmanydias", MODE_PRIVATE).edit();
+                            editor1.putInt("thatmanydias", progressvalue);
+                            editor1.commit();
+
+
 
                         }
                     }

@@ -248,6 +248,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         GoldToDias.setVisibility(View.VISIBLE);
 
                     }
+
                 }
 
                 h.postDelayed(this, delay);

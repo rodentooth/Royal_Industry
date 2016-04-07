@@ -243,6 +243,11 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         editor3.putBoolean("trueorfalse", false);
                         editor3.commit();
 
+                        //diaspeicher im seekbar löschen
+                        SharedPreferences.Editor editor1 = getSharedPreferences("thatmanydias", MODE_PRIVATE).edit();
+                        editor1.putInt("thatmanydias", 0);
+                        editor1.commit();
+
                         diaconvertingtimeprogress.setProgress(0);
                         //converterknopf sichtbar
                         GoldToDias.setVisibility(View.VISIBLE);

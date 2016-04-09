@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button bauhaus;
     Dialog bauhausdialog;
     Button upgradefab1;
+    ProgressBar  progressBarUpgradefab1;
 
 
     //FULLSCREEN
@@ -121,20 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             hide();
         }
     };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -187,13 +175,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SammelnFabrik1 = (Button) findViewById(R.id.SammelnFabrik1);
         SammelnFabrik1.setOnClickListener(this);
         leveltextfabr1 = (TextView) findViewById(R.id.leveltextfabr1);
+        progressBarUpgradefab1 = (ProgressBar) findViewById(R.id.progressBarUpgradefab1);
+        progressBarUpgradefab1.setVisibility(View.INVISIBLE);
 
         //counter für fabriken. Hat die fabrik schonmal produziert?
-        SharedPreferences prefs = getSharedPreferences("resultatdersession", MODE_PRIVATE);
+         datafab1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
 
-        int secondsElapsed = prefs.getInt("secondsElapsed", 0); //0 is the default value.
 
-        if (secondsElapsed <= 2) {
+
+        if ((datafab1.getInt("Level", 1)  == 1)) {
             //erste startzeit speichern
             SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
             editor.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
@@ -238,13 +228,73 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     SammelnFabrik1.setVisibility(View.VISIBLE);
                 }
 
-                //check, welches level die Fabrik 1 hat
+                    //upgrades
 
 
-                //Level1
+                    //Fabrik1
+                datafab1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
+                    Boolean cdfab1 = (datafab1.getBoolean("isLeveling", false));
+                    if (cdfab1) {
 
+                        progressBarUpgradefab1.setVisibility(View.VISIBLE);
+                        SammelnFabrik1.setVisibility(View.INVISIBLE);
                     leveltextfabr1.setText(prefs1.getString("leveltextfab1", "1"));
+                    //startzeit holen
+                    SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
+                    int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
+                    //endzeit als jetzt definieren
+                    int endTimefab1 = ((int) System.currentTimeMillis() / 1000);
+                    int elapsedSecondsfab1 = endTimefab1 - startTimefab1;
 
+                        //progressbar updaten
+                        progressBarUpgradefab1.setMax(Fab1upgradeContdown.getInt("countdown", 0));
+                        progressBarUpgradefab1.setProgress(elapsedSecondsfab1);
+
+                        //goldprod.während des lvlns stoppen
+                        SharedPreferences.Editor stopgold = getSharedPreferences("resultatdersession", MODE_PRIVATE).edit();
+                        stopgold.putInt("secondsElapsed", 1);
+                        stopgold.commit();
+
+                    if (elapsedSecondsfab1 > Fab1upgradeContdown.getInt("countdown", 0)) {
+
+                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+
+                        if (datafab1.getInt("Level", 1) == 1) {
+
+
+                            //definition level2
+                            editor1.putInt("maxfabrik1", 1000);
+                            editor1.putInt("minfabrik1", 2);
+                            editor1.putFloat("goldphfab1", (float) 0.1);
+                            editor1.putString("leveltextfab1", "Fabrik 1 Level: 2");
+                            editor1.putBoolean("isLeveling", false);
+                            progressBarUpgradefab1.setVisibility(View.INVISIBLE);
+                            SammelnFabrik1.setVisibility(View.VISIBLE);
+                        }
+
+
+                        if (datafab1.getInt("Level", 1) == 2) {
+
+                            //LEVEL3
+                            editor1.putInt("maxfabrik1", 1500);
+                            editor1.putInt("minfabrik1", 3);
+                            editor1.putFloat("goldphfab1", (float) 0.16667);
+                            editor1.putString("leveltextfab1", "Fabrik 1 Level: 3");
+                            editor1.putBoolean("isLeveling", false);
+                            progressBarUpgradefab1.setVisibility(View.INVISIBLE);
+                            SammelnFabrik1.setVisibility(View.VISIBLE);
+
+                        }
+                        if (datafab1.getInt("Level", 1) == 2) {
+
+                            //LvL4
+                            Toast.makeText(MainActivity.this, "you are already lvl 3 \n amana", Toast.LENGTH_SHORT).show();
+                        }
+                        editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
+                        editor1.commit();
+
+                    }
+                }
 
                 h.postDelayed(this, delay);
             }
@@ -345,6 +395,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             upgradefab1 = (Button) bauhausdialog.findViewById(R.id.upgradefab1);
             upgradefab1.setOnClickListener(this);
 
+            //  leveltextfabr1 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr1);
+          //  leveltextfabr1.setText(datafab1.getString("leveltextfab1", "1"));
 
             bauhausdialog.show();
 
@@ -352,47 +404,137 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (id == R.id.upgradefab1) {
 
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                    context);
 
-            // set title
-            alertDialogBuilder.setTitle("Fabrik 1");
-
-            // set dialog message
-            alertDialogBuilder
-                    .setMessage("Upgradebenefits&costs:...")
-                    .setCancelable(false)
-                    .setPositiveButton("Upgrade!",new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,int id) {
-                           //Upgrade
-
-                            //level2
-                            SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
-                            editor1.putInt("maxfabrik1", 1000);
-                            editor1.putInt("minfabrik1", 2);
-                            editor1.putFloat("goldphfab1", (float) 0.1);
-                            editor1.putString("leveltextfab1", "Fabrik 1 Level: 2");
-                            editor1.commit();
-                        }
-                    })
-                    .setNegativeButton("No",new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,int id) {
-
-                            dialog.cancel();
-                        }
-                    });
-
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-
-            // show it
-            alertDialog.show();
+            //ist ein upgrade am laufen?
 
 
+            datafab1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
 
-            };
+            Boolean cdfab1 = (datafab1.getBoolean("isLeveling", false));
+            if (cdfab1) {
+
+                Toast.makeText(MainActivity.this, "Wait until upgrade is finished", Toast.LENGTH_SHORT).show();
+
+            }
+
+            if (!cdfab1) {
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                        context);
+
+                // set title
+                alertDialogBuilder.setTitle("Fabrik 1");
+
+                // set dialog message
+
+                if (datafab1.getInt("Level", 1) == 1) {
+                    //text lvl2
+                    alertDialogBuilder.setMessage("Upgradebenefits & costs level 2: \n GOLD PER HOUR: 360 \n STORAGE: 1000 \n \n COST: 50 GOLD");
+                }
+                if (datafab1.getInt("Level", 1) == 2) {
+                    //text lvl2
+                    alertDialogBuilder.setMessage("Upgradebenefits & costs level 3: \n GOLD PER HOUR: 600 \n STORAGE: 1500 \n \n COST: 500 GOLD");
+                }
+
+                alertDialogBuilder.setCancelable(false);
+                alertDialogBuilder.setPositiveButton("Upgrade!", new DialogInterface.OnClickListener() {
 
 
+                            public void onClick(DialogInterface dialog, int id) {
+
+
+                                //Upgrade
+                                SharedPreferences prefs = getSharedPreferences("POOL", MODE_PRIVATE);
+
+                                if (datafab1.getInt("Level", 1) == 1) {
+                                    //LeveL2
+
+                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+
+                                    if ((prefs.getInt("POOL", 0)) >= 50) {
+                                        //bezahlen
+                                        editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 50));
+                                        editor2.commit();
+
+                                        //Countdown Starten
+                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                                        editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+
+                                        //Countdownzeit definieren
+                                        //TODO 3600 secs
+                                        editor3.putInt("countdown", 36);
+                                        editor3.commit();
+
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                                        editor1.putBoolean("isLeveling", true);
+                                        editor1.commit();
+
+                                    }
+
+                                    if ((prefs.getInt("POOL", 0)) <= 50) {
+                                        Toast.makeText(MainActivity.this, "NOT ENOUGH GOLD", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+
+
+                                if (datafab1.getInt("Level", 1) == 2) {
+
+                                    //LEVEL3
+                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+
+                                    if ((prefs.getInt("POOL", 0)) >= 500) {
+                                        //bezahlen
+                                        editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 500));
+                                        editor2.commit();
+
+                                        //Countdown Starten
+                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                                        editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+
+                                        //Countdownzeit definieren
+                                        //TODO lvl 3 secs
+                                        editor3.putInt("countdown", 36);
+                                        editor3.commit();
+
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                                        editor1.putBoolean("isLeveling", true);
+                                        editor1.commit();
+
+                                    }
+
+                                    if ((prefs.getInt("POOL", 0)) <= 500) {
+                                        Toast.makeText(MainActivity.this, "NOT ENOUGH GOLD", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+                                    }
+                                }
+
+
+                        )
+                        .
+
+                                setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+
+                                                dialog.cancel();
+                                            }
+                                        }
+
+                                );
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
+
+
+            }
+
+
+        }
         }
 
 

@@ -363,6 +363,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        datafab1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
+
         int id = v.getId();
         if (id == R.id.Fabrik1) {
 
@@ -395,8 +397,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             upgradefab1 = (Button) bauhausdialog.findViewById(R.id.upgradefab1);
             upgradefab1.setOnClickListener(this);
 
-            //  leveltextfabr1 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr1);
-          //  leveltextfabr1.setText(datafab1.getString("leveltextfab1", "1"));
+            leveltextfabr1 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr1);
+            leveltextfabr1.setText(datafab1.getString("leveltextfab1", "1"));
 
             bauhausdialog.show();
 

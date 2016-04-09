@@ -40,11 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button SammelnFabrik1;
     ProgressBar progressBarFabrik1;
     Context context = this;
-   /* int Fabrik1Level;
-    int maxfabrik1;
-    int minfabrik1;
-    double goldphfab1;
-    wird von sharedpreferences übernommen*/
     SharedPreferences datafab1;
     TextView countfab1;
     TextView leveltextfabr1;
@@ -174,7 +169,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Fabrik1.setOnClickListener(this);
         SammelnFabrik1 = (Button) findViewById(R.id.SammelnFabrik1);
         SammelnFabrik1.setOnClickListener(this);
-        leveltextfabr1 = (TextView) findViewById(R.id.leveltextfabr1);
         progressBarUpgradefab1 = (ProgressBar) findViewById(R.id.progressBarUpgradefab1);
         progressBarUpgradefab1.setVisibility(View.INVISIBLE);
 
@@ -238,7 +232,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         progressBarUpgradefab1.setVisibility(View.VISIBLE);
                         SammelnFabrik1.setVisibility(View.INVISIBLE);
-                    leveltextfabr1.setText(prefs1.getString("leveltextfab1", "1"));
                     //startzeit holen
                     SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
                     int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
@@ -285,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             SammelnFabrik1.setVisibility(View.VISIBLE);
 
                         }
-                        if (datafab1.getInt("Level", 1) == 2) {
+                        if (datafab1.getInt("Level", 1) == 3) {
 
                             //LvL4
                             Toast.makeText(MainActivity.this, "you are already lvl 3 \n amana", Toast.LENGTH_SHORT).show();

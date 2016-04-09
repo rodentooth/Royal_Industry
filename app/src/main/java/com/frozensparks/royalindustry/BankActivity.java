@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -165,12 +166,12 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         //Aktualisiere den Kontostatus
         SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
         String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
-        currentGoldBalance.setText("YOUR CURRENT BALANCE IS: " +Pooltext);
+        currentGoldBalance.setText("gold: " +Pooltext);
 
         SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
         //Diapool text aktualisieren
         String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
-        diatext.setText("Dias: " + diapooltext);
+        diatext.setText(Html.fromHtml("dias: " + diapooltext));
 
 
         if ((prefs1.getInt("POOL", 0)) > 20000 ){
@@ -349,7 +350,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             if (maxdias <=1){
                 seekbar.setMax(1);
             }
-            int progressvalue = 1;
+            int progressvalue = 0;
             howmanygoldtodias.setText("CREATE" + progressvalue + "DIAS");
             diasCost.setText("COSTS " + progressvalue * 200 + " GOLD");
 
@@ -407,55 +408,61 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
             //holen von wieviele diamanten erstellen
             SharedPreferences prefs1 = getSharedPreferences("thatmanydias", MODE_PRIVATE);
-            //Holen von Pool
-            SharedPreferences prefs2 = getSharedPreferences("POOL", MODE_PRIVATE);
 
-            //diamantenanzahl in gold umwandeln
-            int goldweg = (prefs1.getInt("thatmanydias", 1))*200;
+            //wenn 0 diamanten gewählt, abbrechen
+            if (prefs1.getInt("thatmanydias", 0) ==0){
 
 
-            //checken obs genug gold für den convert hat
-            if (goldweg >= prefs2.getInt("POOL", 0)){
-
-                Toast.makeText(BankActivity.this, "you can not afford that", Toast.LENGTH_SHORT).show();
-
-
+                //dialog beenden
+                dialogconvertdias.dismiss();
             }
 
-            if (goldweg <= prefs2.getInt("POOL", 0)){
+
+            if (prefs1.getInt("thatmanydias", 1) >=1) {
+                //Holen von Pool
+                SharedPreferences prefs2 = getSharedPreferences("POOL", MODE_PRIVATE);
+
+                //diamantenanzahl in gold umwandeln
+                int goldweg = (prefs1.getInt("thatmanydias", 1)) * 200;
 
 
+                //checken obs genug gold für den convert hat
+                if (goldweg >= prefs2.getInt("POOL", 0)) {
+
+                    Toast.makeText(BankActivity.this, "you can not afford that", Toast.LENGTH_SHORT).show();
 
 
+                }
 
-            //Pool aktualisieren, gold abziehen
-            SharedPreferences.Editor editor1 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
-            editor1.putInt("POOL", (prefs2.getInt("POOL", 0)) - goldweg);
-            editor1.commit();
-
-            //Pooltext aktualisieren
-            String Pooltext = String.valueOf(prefs2.getInt("POOL", 0));
-            currentGoldBalance.setText("GOLD: " + Pooltext);
+                if (goldweg <= prefs2.getInt("POOL", 0)) {
 
 
-                //Timer Starten
-                SharedPreferences.Editor editor3 = getSharedPreferences("DiamantConvertContdown", MODE_PRIVATE).edit();
-                editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
-                editor3.commit();
+                    //Pool aktualisieren, gold abziehen
+                    SharedPreferences.Editor editor1 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    editor1.putInt("POOL", (prefs2.getInt("POOL", 0)) - goldweg);
+                    editor1.commit();
+
+                    //Pooltext aktualisieren
+                    String Pooltext = String.valueOf(prefs2.getInt("POOL", 0));
+                    currentGoldBalance.setText("GOLD: " + Pooltext);
 
 
-                //es hat dias zu holen=true
-                SharedPreferences.Editor editor4 = getSharedPreferences("DiamantConvertContdownOFF", MODE_PRIVATE).edit();
-                editor4.putBoolean("trueorfalse", true);
-                editor4.commit();
+                    //Timer Starten
+                    SharedPreferences.Editor editor3 = getSharedPreferences("DiamantConvertContdown", MODE_PRIVATE).edit();
+                    editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+                    editor3.commit();
 
 
+                    //es hat dias zu holen=true
+                    SharedPreferences.Editor editor4 = getSharedPreferences("DiamantConvertContdownOFF", MODE_PRIVATE).edit();
+                    editor4.putBoolean("trueorfalse", true);
+                    editor4.commit();
 
 
-            //dialog beenden
-            dialogconvertdias.dismiss();
+                    //dialog beenden
+                    dialogconvertdias.dismiss();
+                }
             }
-
         }
     }
 }

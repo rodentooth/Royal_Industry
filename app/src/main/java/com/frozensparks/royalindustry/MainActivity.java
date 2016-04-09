@@ -8,11 +8,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -132,6 +137,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FontsOverride.setDefaultFont(this, "DEFAULT", "OldGlyphs.ttf");
 
         setContentView(R.layout.activity_main);
 
@@ -259,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             editor1.putInt("maxfabrik1", 1000);
                             editor1.putInt("minfabrik1", 2);
                             editor1.putFloat("goldphfab1", (float) 0.1);
-                            editor1.putString("leveltextfab1", "Fabrik 1 Level: 2");
+                            editor1.putString("leveltextfab1", "fabrik 1 level: 2");
                             editor1.putBoolean("isLeveling", false);
                             progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                             SammelnFabrik1.setVisibility(View.VISIBLE);
@@ -272,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             editor1.putInt("maxfabrik1", 1500);
                             editor1.putInt("minfabrik1", 3);
                             editor1.putFloat("goldphfab1", (float) 0.16667);
-                            editor1.putString("leveltextfab1", "Fabrik 1 Level: 3");
+                            editor1.putString("leveltextfab1", "fabrik 1 level: 3");
                             editor1.putBoolean("isLeveling", false);
                             progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                             SammelnFabrik1.setVisibility(View.VISIBLE);
@@ -391,8 +398,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             upgradefab1.setOnClickListener(this);
 
             leveltextfabr1 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr1);
-            leveltextfabr1.setText(datafab1.getString("leveltextfab1", "1"));
 
+
+
+
+
+            leveltextfabr1.setText(datafab1.getString("leveltextfab1", "1"));
             bauhausdialog.show();
 
         }
@@ -418,17 +429,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         context);
 
                 // set title
-                alertDialogBuilder.setTitle("Fabrik 1");
+                alertDialogBuilder.setTitle("fabrik 1");
 
                 // set dialog message
 
                 if (datafab1.getInt("Level", 1) == 1) {
                     //text lvl2
-                    alertDialogBuilder.setMessage("Upgradebenefits & costs level 2: \n GOLD PER HOUR: 360 \n STORAGE: 1000 \n \n COST: 50 GOLD");
+
+
+
+                    alertDialogBuilder.setMessage(TextUtils.concat("level 2: \n\n gold per hour: 180",Html.fromHtml(" <font color=#00ff00> + 180</font>"), "\n\n storage: 500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n cost: 50 gold"));
+
                 }
                 if (datafab1.getInt("Level", 1) == 2) {
-                    //text lvl2
-                    alertDialogBuilder.setMessage("Upgradebenefits & costs level 3: \n GOLD PER HOUR: 600 \n STORAGE: 1500 \n \n COST: 500 GOLD");
+                    //text lvl3
+                    alertDialogBuilder.setMessage(TextUtils.concat("level 3: \n\n gold per hour: 360 ",Html.fromHtml(" <font color=#00ff00> + 240</font>"), "\n\n storage: 1000 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n\n cost: 500 gold"));
                 }
 
                 alertDialogBuilder.setCancelable(false);
@@ -604,7 +619,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 gph.append("");
                 gph.append(goldphfab1int);
                 String goph = gph.toString();
-                GperH.setText(goph + "GOLD PER HOUR");
+                GperH.setText(goph + "gold per hour");
 
 
                 h.postDelayed(this, delay);

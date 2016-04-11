@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Royal Industry</string>
+
+
+
+<string name="title_activity_bank">BankActivity</string>
+    <string name="Gold">gold</string>
+    <string name="Diamonds">diamonds</string>
+    <string name="Costs">costs: </string>
+    <string name="Create">create</string>
+    <string name="Cantafford">not enough gold!</string>
+    <string name="Convert">convert</string>
+    <string name="Close">close</string>
+    <string name="confirm_convert">confirm convert</string>
+    <string name="architect">architect</string>
+    <string name="factory_1">factory 1</string>
+    <string name="bank">bank</string>
+
+
+    <string name="level1">level: 1</string>
+    <string name="level2">level: 2</string>
+    <string name="level3">level: 3</string>
+    <string name="level4">level: 4</string>
+    <string name="level5">level: 5</string>
+    <string name="level6">level: 6</string>
+    <string name="level7">level: 7</string>
+    <string name="level8">level: 8</string>
+    <string name="level9">level: 9</string>
+    <string name="level10">level: 10</string>
+
+    <string name="gold_per_hour">gold per hour: </string>
+    <string name="storage">storage: </string>
+
+    <string name="waitforupgradefinish">wait until upgrade is finished</string>
+
+    <string name="upgrade">upgrade !</string>
+    <string name="no">no</string>
+    <string name="gold_collected">gold collected: </string>
+</resources>

@@ -19,7 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="GOLD"
+                android:text="@string/Gold"
                 android:id="@+id/currentGoldBalance"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
@@ -31,29 +31,33 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CLOSE"
+                android:text="@string/Close"
                 android:id="@+id/closeBank"
                 android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:textAllCaps="false"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="DIAS"
+                android:text="dias"
                 android:id="@+id/diatext"
                 android:layout_below="@+id/currentGoldBalance"
                 android:layout_alignLeft="@+id/currentGoldBalance"
                 android:layout_alignStart="@+id/currentGoldBalance"
                 android:layout_marginTop="29dp" />
 
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="convert"
+                android:text="@string/Convert"
                 android:id="@+id/GoldToDias"
                 android:layout_alignTop="@+id/diatext"
-                android:layout_centerHorizontal="true" />
+                android:layout_alignLeft="@+id/closeBank"
+                android:layout_alignStart="@+id/closeBank"
+                android:textAllCaps="false"/>
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"

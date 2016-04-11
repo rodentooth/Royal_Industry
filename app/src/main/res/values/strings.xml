@@ -1,8 +1,15 @@
 <resources>
     <string name="app_name">Royal Industry</string>
 
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 
     <string name="title_activity_bank">BankActivity</string>
+    <string name="Gold">gold</string>
+    <string name="Convert">convert</string>
+    <string name="Close">close</string>
+    <string name="confirm_convert">confirm convert</string>
+    <string name="architect">architect</string>
+    <string name="factory_1">factory 1</string>
+    <string name="bank">bank</string>
+    <string name="waitforupgradefinish">wait until upgrade is finished</string>
 </resources>

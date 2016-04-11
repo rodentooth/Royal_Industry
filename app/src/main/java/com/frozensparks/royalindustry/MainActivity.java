@@ -138,7 +138,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        //schrift umstellen
         FontsOverride.setDefaultFont(this, "DEFAULT", "OldGlyphs.ttf");
+        FontsOverride.setDefaultFont(this, "MONOSPACE", "OldGlyphs.ttf");
+        FontsOverride.setDefaultFont(this, "SERIF", "OldGlyphs.ttf");
+        FontsOverride.setDefaultFont(this, "SANS_SERIF", "OldGlyphs.ttf");
+        FontsOverride.setDefaultFont(this, "DEFAULT_BOLD", "OldGlyphs.ttf");
+        FontsOverride.setDefaultFont(this, "DEFAULT_BOLD_ITALIC", "OldGlyphs.ttf");
+        FontsOverride.setDefaultFont(this, "DEFAULT_ITALIC", "OldGlyphs.ttf");
+
+
+
 
         setContentView(R.layout.activity_main);
 
@@ -182,24 +193,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //counter für fabriken. Hat die fabrik schonmal produziert?
          datafab1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
 
+        SharedPreferences firstopen = getSharedPreferences("firstopen", MODE_PRIVATE);
+        Boolean firstopenboo = (firstopen.getBoolean("firstopen", true));
+
+        //erste versicherung
+        if (firstopenboo) {
+            //zweite versicherung (damit die fabrick nicht versehentlich auf lvl 1 zurückgesetzt wird)
+            if ((datafab1.getInt("Level", 1) == 1)) {
+                //erste startzeit speichern
+                SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
+                editor.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+                editor.commit();
+
+                //Fabrik auf lvl 1 setzen
+                SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                editor1.putInt("maxfabrik1", 500);
+                editor1.putInt("minfabrik1", 1);
+                editor1.putFloat("goldphfab1", (float) 0.05);
+                editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level1));
+                editor1.commit();
 
 
-        if ((datafab1.getInt("Level", 1)  == 1)) {
-            //erste startzeit speichern
-            SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
-            editor.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
-            editor.commit();
+                //firstopen auf falsch stellen
+                SharedPreferences.Editor editor2 = getSharedPreferences("firstopen", MODE_PRIVATE).edit();
+                editor2.putBoolean("firstopen", false);
+                editor2.commit();
 
-            //Fabrik auf lvl 1 setzen
-            SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
-            editor1.putInt("maxfabrik1", 500);
-            editor1.putInt("minfabrik1", 1);
-            editor1.putFloat("goldphfab1", (float) 0.05);
-            editor1.putString("leveltextfab1", "Fabrik 1 Level: 1");
-            editor1.commit();
-
+            }
         }
-
 
 
 
@@ -266,10 +287,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             editor1.putInt("maxfabrik1", 1000);
                             editor1.putInt("minfabrik1", 2);
                             editor1.putFloat("goldphfab1", (float) 0.1);
-                            editor1.putString("leveltextfab1", "fabrik 1 level: 2");
+                            editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level2));
                             editor1.putBoolean("isLeveling", false);
                             progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                             SammelnFabrik1.setVisibility(View.VISIBLE);
+                            editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
+                            editor1.commit();
                         }
 
 
@@ -279,19 +302,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             editor1.putInt("maxfabrik1", 1500);
                             editor1.putInt("minfabrik1", 3);
                             editor1.putFloat("goldphfab1", (float) 0.16667);
-                            editor1.putString("leveltextfab1", "fabrik 1 level: 3");
+                            editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level3));
                             editor1.putBoolean("isLeveling", false);
                             progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                             SammelnFabrik1.setVisibility(View.VISIBLE);
+                            editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
+                            editor1.commit();
 
                         }
                         if (datafab1.getInt("Level", 1) == 3) {
 
                             //LvL4
-                            Toast.makeText(MainActivity.this, "you are already lvl 3 \n amana", Toast.LENGTH_SHORT).show();
+
+                            editor1.putInt("maxfabrik1", 2000);
+                            editor1.putInt("minfabrik1", 4);
+                            editor1.putFloat("goldphfab1", (float) 0.222222222222);
+                            editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level4));
+                            editor1.putBoolean("isLeveling", false);
+                            progressBarUpgradefab1.setVisibility(View.INVISIBLE);
+                            SammelnFabrik1.setVisibility(View.VISIBLE);
+                            editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
+                            editor1.commit();
                         }
-                        editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
-                        editor1.commit();
+                        if (datafab1.getInt("Level", 1) == 4) {
+
+                            //todo LvL5   !! still lvl 4!!!
+                            /*editor1.putInt("maxfabrik1", 2000);
+                            editor1.putInt("minfabrik1", 4);
+                            editor1.putFloat("goldphfab1", (float) 0.222222222222);
+                            editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level3));
+                            editor1.putBoolean("isLeveling", false);
+                            progressBarUpgradefab1.setVisibility(View.INVISIBLE);
+                            SammelnFabrik1.setVisibility(View.VISIBLE);*/
+                        }
+
 
                     }
                 }
@@ -419,7 +463,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Boolean cdfab1 = (datafab1.getBoolean("isLeveling", false));
             if (cdfab1) {
 
-                Toast.makeText(MainActivity.this, "Wait until upgrade is finished", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.waitforupgradefinish, Toast.LENGTH_SHORT).show();
 
             }
 
@@ -429,7 +473,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         context);
 
                 // set title
-                alertDialogBuilder.setTitle("fabrik 1");
+                alertDialogBuilder.setTitle(getString(R.string.factory_1));
 
                 // set dialog message
 
@@ -438,16 +482,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-                    alertDialogBuilder.setMessage(TextUtils.concat("level 2: \n\n gold per hour: 180",Html.fromHtml(" <font color=#00ff00> + 180</font>"), "\n\n storage: 500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n cost: 50 gold"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.gold_per_hour)," 180",Html.fromHtml(" <font color=#00ff00> + 180</font>"), "\n\n ",getString(R.string.storage)," 500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"50", getString(R.string.Gold)));
 
                 }
                 if (datafab1.getInt("Level", 1) == 2) {
                     //text lvl3
-                    alertDialogBuilder.setMessage(TextUtils.concat("level 3: \n\n gold per hour: 360 ",Html.fromHtml(" <font color=#00ff00> + 240</font>"), "\n\n storage: 1000 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n\n cost: 500 gold"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.gold_per_hour),"360",Html.fromHtml(" <font color=#00ff00> + 220</font>"), "\n\n ",getString(R.string.storage)," 1000 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)));
+                }
+                if (datafab1.getInt("Level", 1) == 3) {
+                    //text lvl4
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.gold_per_hour),"600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 1500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"1500", getString(R.string.Gold)));
                 }
 
                 alertDialogBuilder.setCancelable(false);
-                alertDialogBuilder.setPositiveButton("Upgrade!", new DialogInterface.OnClickListener() {
+                alertDialogBuilder.setPositiveButton(getString(R.string.upgrade), new DialogInterface.OnClickListener() {
 
 
                             public void onClick(DialogInterface dialog, int id) {
@@ -472,7 +520,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                         //Countdownzeit definieren
                                         //TODO 3600 secs
-                                        editor3.putInt("countdown", 36);
+                                        editor3.putInt("countdown", 20);
                                         editor3.commit();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
@@ -482,7 +530,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }
 
                                     if ((prefs.getInt("POOL", 0)) <= 50) {
-                                        Toast.makeText(MainActivity.this, "NOT ENOUGH GOLD", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
                                     }
                                 }
@@ -504,7 +552,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                         //Countdownzeit definieren
                                         //TODO lvl 3 secs
-                                        editor3.putInt("countdown", 36);
+                                        editor3.putInt("countdown", 30);
                                         editor3.commit();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
@@ -514,10 +562,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }
 
                                     if ((prefs.getInt("POOL", 0)) <= 500) {
-                                        Toast.makeText(MainActivity.this, "NOT ENOUGH GOLD", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
                                     }
                                 }
+                                if (datafab1.getInt("Level", 1) == 3) {
+
+                                    //LEVEL4
+                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+
+                                    if ((prefs.getInt("POOL", 0)) >= 1500) {
+                                        //bezahlen
+                                        editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 1500));
+                                        editor2.commit();
+
+                                        //Countdown Starten
+                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                                        editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+
+                                        //Countdownzeit definieren
+                                        //TODO lvl 4 secs
+                                        editor3.putInt("countdown", 40);
+                                        editor3.commit();
+
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                                        editor1.putBoolean("isLeveling", true);
+                                        editor1.commit();
+
+                                    }
+
+                                    if ((prefs.getInt("POOL", 0)) <= 1500) {
+                                        Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+
                                     }
                                 }
 
@@ -525,7 +604,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         )
                         .
 
-                                setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
 
                                                 dialog.cancel();
@@ -619,7 +698,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 gph.append("");
                 gph.append(goldphfab1int);
                 String goph = gph.toString();
-                GperH.setText(goph + "gold per hour");
+                GperH.setText(getString(R.string.gold_per_hour)+ goph);
 
 
                 h.postDelayed(this, delay);
@@ -687,7 +766,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        Toast.makeText(MainActivity.this, "GOLD COLLECTED: " +(goldint), Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, getString(R.string.gold_collected) +(goldint), Toast.LENGTH_SHORT).show();
 
 
 

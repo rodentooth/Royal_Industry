@@ -13,24 +13,26 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bank"
+                    android:text="@string/bank"
                     android:id="@+id/Bank"
                     android:layout_marginRight="41dp"
                     android:layout_marginTop="32dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
+                    android:textAllCaps="false"
                     />
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Fabrik1"
+                    android:text="@string/factory_1"
                     android:id="@+id/Fabrik1"
                     android:layout_marginRight="41dp"
                     android:layout_marginEnd="41dp"
                     android:layout_marginBottom="32dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_alignParentEnd="true"
+                    android:textAllCaps="false"/>
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -39,14 +41,16 @@
                     android:layout_marginRight="41dp"
                     android:layout_above="@+id/Fabrik1"
                     android:layout_alignParentRight="true"
+                    android:textAllCaps="false"
                     />
 
     <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bauhaus"
+                    android:text="@string/architect"
                     android:id="@+id/bauhaus"
-                    android:layout_alignTop="@+id/Bank" />
+                    android:layout_alignTop="@+id/Bank"
+                    android:textAllCaps="false"/>
 
                 <ProgressBar
                     style="?android:attr/progressBarStyleHorizontal"

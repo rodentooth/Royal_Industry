@@ -166,12 +166,12 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         //Aktualisiere den Kontostatus
         SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
         String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
-        currentGoldBalance.setText("gold: " +Pooltext);
+        currentGoldBalance.setText(getString(R.string.Gold)+ ": " +Pooltext);
 
         SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
         //Diapool text aktualisieren
         String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
-        diatext.setText(Html.fromHtml("dias: " + diapooltext));
+        diatext.setText((getString(R.string.Diamonds) +": " + diapooltext));
 
 
         if ((prefs1.getInt("POOL", 0)) > 20000 ){
@@ -236,7 +236,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                         //Diapool text aktualisieren
                         String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
-                        diatext.setText("Dias: " + diapooltext);
+                        diatext.setText(getString(R.string.Diamonds)+": " + diapooltext);
 
 
                         //keine dias mehr zu holen also false
@@ -351,8 +351,8 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                 seekbar.setMax(1);
             }
             int progressvalue = 0;
-            howmanygoldtodias.setText("CREATE" + progressvalue + "DIAS");
-            diasCost.setText("COSTS " + progressvalue * 200 + " GOLD");
+            howmanygoldtodias.setText(getString(R.string.Create) +" " + progressvalue + getString(R.string.Diamonds));
+            diasCost.setText(getString(R.string.Costs)+" " + progressvalue * 200 + getString(R.string.Gold));
 
 
             seekbar.setOnSeekBarChangeListener(
@@ -366,23 +366,23 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
                             progressvalue = progress;
-                            howmanygoldtodias.setText("CREATE " + progressvalue + " DIAS");
-                            diasCost.setText("COSTS " + progressvalue * 200 + " GOLD");
+                            howmanygoldtodias.setText(getString(R.string.Create) + progressvalue + getString(R.string.Diamonds));
+                            diasCost.setText(getString(R.string.Costs) + progressvalue * 200 + getString(R.string.Gold));
                         }
 
                         @Override
                         public void onStartTrackingTouch(SeekBar seekBar) {
 
-                            howmanygoldtodias.setText("CREATE " + progressvalue + " DIAS");
-                            diasCost.setText("COSTS " + progressvalue * 200 + " GOLD");
+                            howmanygoldtodias.setText(getString(R.string.Create) + progressvalue + getString(R.string.Diamonds));
+                            diasCost.setText(getString(R.string.Costs) + progressvalue * 200 + getString(R.string.Gold));
 
                         }
 
                         @Override
                         public void onStopTrackingTouch(SeekBar seekBar) {
 
-                            howmanygoldtodias.setText("CREATE " + progressvalue + " DIAS");
-                            diasCost.setText("COSTS " + progressvalue * 200 + " GOLD");
+                            howmanygoldtodias.setText(getString(R.string.Create)+ progressvalue + getString(R.string.Diamonds));
+                            diasCost.setText(getString(R.string.Costs) + progressvalue * 200 + getString(R.string.Gold));
 
                             //den progressvalue (wieviele dias) speichern
                             SharedPreferences.Editor editor1 = getSharedPreferences("thatmanydias", MODE_PRIVATE).edit();
@@ -429,7 +429,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                 //checken obs genug gold für den convert hat
                 if (goldweg >= prefs2.getInt("POOL", 0)) {
 
-                    Toast.makeText(BankActivity.this, "you can not afford that", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BankActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
 
                 }
@@ -444,7 +444,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                     //Pooltext aktualisieren
                     String Pooltext = String.valueOf(prefs2.getInt("POOL", 0));
-                    currentGoldBalance.setText("GOLD: " + Pooltext);
+                    currentGoldBalance.setText(getString(R.string.Gold) +": " + Pooltext);
 
 
                     //Timer Starten

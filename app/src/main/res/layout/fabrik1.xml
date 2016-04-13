@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
+            android:text="loading..."
             android:id="@+id/countfab1"
             android:layout_alignBottom="@+id/imageView"
             android:layout_centerHorizontal="true"
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
+            android:text="loading..."
             android:id="@+id/GperH"
             android:layout_alignTop="@+id/imageView"
             android:layout_centerHorizontal="true" />

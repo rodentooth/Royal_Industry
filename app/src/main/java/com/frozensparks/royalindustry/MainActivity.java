@@ -910,6 +910,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
+
                                         //Countdownzeit definieren
                                         //TODO lvl 10 secs
                                         editor3.putInt("countdown", 100);

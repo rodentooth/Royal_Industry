@@ -54,7 +54,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="time left: 100000000"
+            android:text="loading..."
             android:id="@+id/upcdfab1"
             android:layout_column="5" />
 
@@ -94,7 +94,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="time left: 100000000"
+                android:text="loading..."
                 android:id="@+id/upcdfab2"
                 android:layout_column="5" />
 
@@ -134,7 +134,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="time left: 100000000"
+                android:text="loading..."
                 android:id="@+id/upcdfab3"
                 android:layout_column="5" />
 
@@ -174,7 +174,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="time left: 100000000"
+                android:text="loading..."
                 android:id="@+id/upcdfab4"
                 android:layout_column="5" />
 
@@ -214,7 +214,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="time left: 100000000"
+                android:text="loading..."
                 android:id="@+id/upcdBank"
                 android:layout_column="5" />
 
@@ -254,7 +254,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="time left: 100000000"
+                android:text="loading..."
                 android:id="@+id/upcdAgentur"
                 android:layout_column="5" />
 

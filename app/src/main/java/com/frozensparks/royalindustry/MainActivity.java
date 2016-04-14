@@ -31,6 +31,8 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -64,10 +66,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Bauhaus
     Button bauhaus;
     Dialog bauhausdialog;
+    Button closeBauhaus;
+    //BauhausFabrik1
     Button upgradefab1;
     ProgressBar  progressBarUpgradefab1;
-    Button closeBauhaus;
-
+    TextView upcdfab1;
 
     //FULLSCREEN
 
@@ -438,6 +441,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
 
+
                 h.postDelayed(this, delay);
             }
         }, delay);
@@ -545,19 +549,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             closeBauhaus.setOnClickListener(this);
 
 
-
+            //Fabrik1
             upgradefab1 = (Button) bauhausdialog.findViewById(R.id.upgradefab1);
             upgradefab1.setOnClickListener(this);
-
             leveltextfabr1 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr1);
-
-
-
-
-
+            upcdfab1 = (TextView) bauhausdialog.findViewById(R.id.upcdfab1);
             leveltextfabr1.setText(datafab1.getString("leveltextfab1", "1"));
+
+
+
+
             bauhausdialog.show();
             bauhausdialog.getWindow().setAttributes(lp);
+
+
+            //Aktualisator
+
+            h.postDelayed(new Runnable(){
+                public void run(){
+                    //jede sec upgradecountdown aktualisieren
+
+                    //Fabrik1
+                    SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
+                    int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
+                    int countdownfab1 = Fab1upgradeContdown.getInt("countdown", 0); //0 is the default value.
+                        //endzeit als jetzt definieren
+                    int endTimefab1 = ((int) System.currentTimeMillis() / 1000);
+                    int elapsedSecondsfab1 = endTimefab1 - startTimefab1;
+                    int restTimefab1 = countdownfab1 - elapsedSecondsfab1;
+                    String dhmsfab1;
+                    if (restTimefab1 >= 0) {
+                         dhmsfab1 = String.format("%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab1), TimeUnit.SECONDS.toHours(restTimefab1),
+                                TimeUnit.SECONDS.toMinutes(restTimefab1) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab1)),
+                                TimeUnit.SECONDS.toSeconds(restTimefab1) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab1)));
+                        upcdfab1.setText(dhmsfab1);
+                    }
+                    if (restTimefab1 < 0) {
+                        upcdfab1.setText("00:00:00:00");
+                    }
+
+
+                    h.postDelayed(this, delay);
+                }
+            }, delay);
 
         }
 
@@ -577,6 +611,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (cdfab1) {
 
                 Toast.makeText(MainActivity.this, R.string.waitforupgradefinish, Toast.LENGTH_SHORT).show();
+
+
+                //zeit um 10 sec verringern
+                SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
+                int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
+                SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                editor3.putInt("startTime", startTimefab1 - 10);
+                editor3.commit();
 
             }
 

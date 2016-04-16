@@ -31,11 +31,12 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/Close"
+                android:text="X"
                 android:id="@+id/closeBank"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:textAllCaps="false"/>
+                android:textAllCaps="false"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -54,10 +55,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/Convert"
                 android:id="@+id/GoldToDias"
+                android:textAllCaps="false"
                 android:layout_alignTop="@+id/diatext"
-                android:layout_alignLeft="@+id/closeBank"
-                android:layout_alignStart="@+id/closeBank"
-                android:textAllCaps="false"/>
+                android:layout_centerHorizontal="true" />
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"

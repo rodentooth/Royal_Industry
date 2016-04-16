@@ -10,7 +10,7 @@
     <string name="Costs">costs: </string>
     <string name="Create">create</string>
     <string name="Cantafford">not enough gold!</string>
-    <string name="Convert">convert</string>
+    <string name="Convert">create dias</string>
     <string name="Close">close</string>
     <string name="confirm_convert">confirm convert</string>
     <string name="architect">architect</string>
@@ -38,4 +38,8 @@
     <string name="no">no</string>
     <string name="gold_collected">gold collected: </string>
     <string name="time">time: </string>
+    <string name="Bankisfull">your bank storage is full!</string>
+
+    <string name="goldstorage">gold storage: </string>
+    <string name="diastorage">diamond storage: </string>
 </resources>

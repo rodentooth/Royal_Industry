@@ -34,16 +34,33 @@
             android:id="@+id/countfab1"
             android:layout_alignBottom="@+id/imageView"
             android:layout_centerHorizontal="true"
-             />
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="loading..."
             android:id="@+id/GperH"
-            android:layout_alignTop="@+id/imageView"
-            android:layout_centerHorizontal="true" />
+            android:layout_above="@+id/countfab1"
+            android:layout_centerHorizontal="true"
+            />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="1"
+        android:id="@+id/textView2"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="loading..."
+        android:id="@+id/leveltextdiafab1"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

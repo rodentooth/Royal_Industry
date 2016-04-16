@@ -3,22 +3,17 @@ package com.frozensparks.royalindustry;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -29,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.concurrent.TimeUnit;
@@ -51,12 +47,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     SharedPreferences datafab1;
     TextView countfab1;
     TextView leveltextfabr1;
+    TextView leveltextdiafab1;
 
 
     //Bank
     Button Bank;
-    int POOL;
-    TextView POOLtext;
+    ProgressBar  progressBarUpgradeBank;
+
 
 
     //Aktualisator
@@ -71,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button upgradefab1;
     ProgressBar  progressBarUpgradefab1;
     TextView upcdfab1;
+    //Bauhaus Bank
+    Button upgradeBank;
+    TextView leveltextBank;
+    TextView upcdBank;
 
     //FULLSCREEN
 
@@ -78,12 +79,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
      */
-    private static final boolean AUTO_HIDE = true;
+    //private static final boolean AUTO_HIDE = true;
     /**
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
      * user interaction before hiding the system UI.
      */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+   // private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     /**
      * Some older devices needs a small delay between UI widget updates
      * and a change of the status and navigation bar.
@@ -177,7 +178,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Bank
         Bank = (Button) findViewById(R.id.Bank);
         Bank.setOnClickListener(this);
-
+        progressBarUpgradeBank = (ProgressBar) findViewById(R.id.progressBarUpgradeBank);
+        progressBarUpgradeBank.setVisibility(View.INVISIBLE);
 
 
         //Bauhaus
@@ -196,33 +198,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBarUpgradefab1.setVisibility(View.INVISIBLE);
 
         //counter für fabriken. Hat die fabrik schonmal produziert?
-         datafab1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
+         datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
 
         SharedPreferences firstopen = getSharedPreferences("firstopen", MODE_PRIVATE);
         Boolean firstopenboo = (firstopen.getBoolean("firstopen", true));
 
-        //erste versicherung
+        //Sachen, nur auf das allererste öffnen ausführen
         if (firstopenboo) {
+
             //zweite versicherung (damit die fabrick nicht versehentlich auf lvl 1 zurückgesetzt wird)
             if ((datafab1.getInt("Level", 1) == 1)) {
                 //erste startzeit speichern
                 SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
-                editor.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
-                editor.commit();
+                editor.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - 979);
+                editor.apply();
 
                 //Fabrik auf lvl 1 setzen
-                SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
-                editor1.putInt("maxfabrik1", 500);
-                editor1.putInt("minfabrik1", 1);
-                editor1.putFloat("goldphfab1", (float) 0.05);
-                editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level1));
-                editor1.commit();
+                SharedPreferences.Editor editorfab1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                editorfab1.putInt("maxfabrik1", 500);
+                editorfab1.putInt("minfabrik1", 1);
+                editorfab1.putFloat("goldphfab1", (float) 0.05);
+                editorfab1.putString("leveltextfab1", getString(R.string.factory_1)+" " + getString(R.string.level1));
+                editorfab1.apply();
+
+
+                //Bank auf lvl 1
+                SharedPreferences.Editor editorBank = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
+                editorBank.putInt("maxGoldStorage", 1000);
+                editorBank.putInt("maxDiaStorage", 20);
+                editorBank.putString("leveltext", getString(R.string.bank)+" " + getString(R.string.level1));
+                editorBank.apply();
+
 
 
                 //firstopen auf falsch stellen
                 SharedPreferences.Editor editor2 = getSharedPreferences("firstopen", MODE_PRIVATE).edit();
                 editor2.putBoolean("firstopen", false);
-                editor2.commit();
+                editor2.apply();
 
             }
         }
@@ -237,8 +249,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //Jede sekunde sammler button aktualisieren
                 //wenn Long von gold über 1 dann visible, sammelbar machen.
 
+
+
+                //Gold check Fabrik1
                 SharedPreferences prefs = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE);
-                SharedPreferences prefs1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
+                SharedPreferences prefs1 = getSharedPreferences("datafab1", MODE_PRIVATE);
                 int startTime = prefs.getInt("startTime", 0); //0 is the default value.
 
                 int endTime = ((int) System.currentTimeMillis()/1000);
@@ -255,11 +270,97 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     SammelnFabrik1.setVisibility(View.VISIBLE);
                 }
 
+
+
+
+
+
+
                     //upgrades
 
 
+                //Bank
+                SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
+                Boolean cdBank = (dataBank.getBoolean("isLeveling", false));
+                if (cdBank) {
+
+                    progressBarUpgradeBank.setVisibility(View.VISIBLE);
+                    //startzeit holen
+                    SharedPreferences BankupgradeContdown = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE);
+                    int startTimeBank = BankupgradeContdown.getInt("startTime", 0); //0 is the default value.
+                    //endzeit als jetzt definieren
+                    int endTimeBank = ((int) System.currentTimeMillis() / 1000);
+                    int elapsedSecondsBank = endTimeBank - startTimeBank;
+
+                    //progressbar updaten
+                    progressBarUpgradeBank.setMax(BankupgradeContdown.getInt("countdown", 0));
+                    progressBarUpgradeBank.setProgress(elapsedSecondsBank);
+
+
+
+                    if (elapsedSecondsBank > BankupgradeContdown.getInt("countdown", 0)) {
+
+
+                        SharedPreferences.Editor editorBank = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
+
+                        if (dataBank.getInt("Level", 1) == 1) {
+
+
+                            //definition level2
+                            editorBank.putInt("maxGoldStorage", 20000);
+                            editorBank.putInt("maxDiaStorage", 100);
+                            editorBank.putString("leveltext", getString(R.string.bank)+" " + getString(R.string.level2));
+                            editorBank.apply();
+                            editorBank.putBoolean("isLeveling", false);
+                            cdBank = false;
+                            progressBarUpgradeBank.setVisibility(View.INVISIBLE);
+                            editorBank.putInt("Level", dataBank.getInt("Level", 1) + 1);
+                            editorBank.apply();
+                        }
+
+                        if (cdBank) {
+                            if (dataBank.getInt("Level", 1) == 2) {
+
+
+                                //definition level3
+                                editorBank.putInt("maxGoldStorage", 75000);
+                                editorBank.putInt("maxDiaStorage", 1000);
+                                editorBank.putString("leveltext", getString(R.string.bank)+" " + getString(R.string.level3));
+                                editorBank.apply();
+                                editorBank.putBoolean("isLeveling", false);
+                                cdBank = false;
+                                progressBarUpgradeBank.setVisibility(View.INVISIBLE);
+                                editorBank.putInt("Level", dataBank.getInt("Level", 1) + 1);
+                                editorBank.apply();
+                            }
+                        }
+
+                        if (cdBank) {
+                            if (dataBank.getInt("Level", 1) == 3) {
+
+
+                                //definition level4
+                                editorBank.putInt("maxGoldStorage", 150000);
+                                editorBank.putInt("maxDiaStorage", 2000);
+                                editorBank.putString("leveltext", getString(R.string.bank)+" " + getString(R.string.level4));
+                                editorBank.apply();
+                                editorBank.putBoolean("isLeveling", false);
+                                // bei weiteren lvl aktivieren cdBank = false;
+                                progressBarUpgradeBank.setVisibility(View.INVISIBLE);
+                                editorBank.putInt("Level", dataBank.getInt("Level", 1) + 1);
+                                editorBank.apply();
+                            }
+                        }
+
+
+
+
+                    }
+                }
+
+
                     //Fabrik1
-                datafab1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
+                datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
                     Boolean cdfab1 = (datafab1.getBoolean("isLeveling", false));
                     if (cdfab1) {
 
@@ -279,14 +380,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //goldprod.während des lvlns stoppen
                         SharedPreferences.Editor stopgold = getSharedPreferences("resultatdersession", MODE_PRIVATE).edit();
                         stopgold.putInt("secondsElapsed", 1);
-                        stopgold.commit();
+                        stopgold.apply();
 
                     if (elapsedSecondsfab1 > Fab1upgradeContdown.getInt("countdown", 0)) {
 
                         stopgold.putInt("secondsElapsed", 1);
-                        stopgold.commit();
+                        stopgold.apply();
 
-                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
 
                         if (datafab1.getInt("Level", 1) == 1) {
 
@@ -295,13 +396,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             editor1.putInt("maxfabrik1", 1000);
                             editor1.putInt("minfabrik1", 2);
                             editor1.putFloat("goldphfab1", (float) 0.1);
-                            editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level2));
+                            editor1.putString("leveltextfab1", getString(R.string.factory_1)+" " + getString(R.string.level2));
                             editor1.putBoolean("isLeveling", false);
                             cdfab1 = false;
                             progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                             SammelnFabrik1.setVisibility(View.VISIBLE);
                             editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
-                            editor1.commit();
+                            editor1.apply();
                         }
 
                         if (cdfab1) {
@@ -311,13 +412,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 editor1.putInt("maxfabrik1", 1500);
                                 editor1.putInt("minfabrik1", 3);
                                 editor1.putFloat("goldphfab1", (float) 0.16667);
-                                editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level3));
+                                editor1.putString("leveltextfab1", getString(R.string.factory_1)+" " + getString(R.string.level3));
                                 editor1.putBoolean("isLeveling", false);
                                 cdfab1 = false;
                                 progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                                 SammelnFabrik1.setVisibility(View.VISIBLE);
                                 editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
-                                editor1.commit();
+                                editor1.apply();
 
                             }
                         }
@@ -330,13 +431,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 editor1.putInt("maxfabrik1", 2000);
                                 editor1.putInt("minfabrik1", 4);
                                 editor1.putFloat("goldphfab1", (float) 0.222222222222);
-                                editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level4));
+                                editor1.putString("leveltextfab1", getString(R.string.factory_1)+" " + getString(R.string.level4));
                                 editor1.putBoolean("isLeveling", false);
                                 cdfab1 = false;
                                 progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                                 SammelnFabrik1.setVisibility(View.VISIBLE);
                                 editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
-                                editor1.commit();
+                                editor1.apply();
                             }
                         }
 
@@ -347,13 +448,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 editor1.putInt("maxfabrik1", 5000);
                                 editor1.putInt("minfabrik1", 5);
                                 editor1.putFloat("goldphfab1", (float) 0.277777777778);
-                                editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level5));
+                                editor1.putString("leveltextfab1", getString(R.string.factory_1)+" " + getString(R.string.level5));
                                 editor1.putBoolean("isLeveling", false);
                                 cdfab1 = false;
                                 progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                                 SammelnFabrik1.setVisibility(View.VISIBLE);
                                 editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
-                                editor1.commit();
+                                editor1.apply();
                             }
                         }
                             if (cdfab1) {
@@ -363,29 +464,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     editor1.putInt("maxfabrik1", 10000);
                                     editor1.putInt("minfabrik1", 6);
                                     editor1.putFloat("goldphfab1", (float) 0.3333333333);
-                                    editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level6));
+                                    editor1.putString("leveltextfab1", getString(R.string.factory_1)+" " + getString(R.string.level6));
                                     editor1.putBoolean("isLeveling", false);
                                     cdfab1 = false;
                                     progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                                     SammelnFabrik1.setVisibility(View.VISIBLE);
                                     editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
-                                    editor1.commit();
+                                    editor1.apply();
                                 }
                             }
-                        if (cdfab1) {
-                            if (datafab1.getInt("Level", 1) == 6) {
+                                if (cdfab1) {
+                                    if (datafab1.getInt("Level", 1) == 6) {
 
                                 //lvl7
                                 editor1.putInt("maxfabrik1", 15000);
                                 editor1.putInt("minfabrik1", 7);
                                 editor1.putFloat("goldphfab1", (float) 0.388888888);
-                                editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level7));
+                                editor1.putString("leveltextfab1", getString(R.string.factory_1)+" " + getString(R.string.level7));
                                 editor1.putBoolean("isLeveling", false);
                                 cdfab1 = false;
                                 progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                                 SammelnFabrik1.setVisibility(View.VISIBLE);
                                 editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
-                                editor1.commit();
+                                editor1.apply();
                             }
                         }
                         if (cdfab1) {
@@ -395,13 +496,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             editor1.putInt("maxfabrik1", 20000);
                             editor1.putInt("minfabrik1", 8);
                             editor1.putFloat("goldphfab1", (float) 0.44444444444444);
-                            editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level8));
+                            editor1.putString("leveltextfab1", getString(R.string.factory_1)+" " + getString(R.string.level8));
                             editor1.putBoolean("isLeveling", false);
                             cdfab1 = false;
                             progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                             SammelnFabrik1.setVisibility(View.VISIBLE);
                             editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
-                            editor1.commit();
+                            editor1.apply();
                         }
                         }
                         if (cdfab1) {
@@ -411,13 +512,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             editor1.putInt("maxfabrik1", 25000);
                             editor1.putInt("minfabrik1", 9);
                             editor1.putFloat("goldphfab1", (float) 0.5);
-                            editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level9));
+                            editor1.putString("leveltextfab1", getString(R.string.factory_1)+" " + getString(R.string.level9));
                             editor1.putBoolean("isLeveling", false);
                             cdfab1 = false;
                             progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                             SammelnFabrik1.setVisibility(View.VISIBLE);
                             editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
-                            editor1.commit();
+                            editor1.apply();
                         }
                         }
                         if (cdfab1) {
@@ -427,13 +528,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             editor1.putInt("maxfabrik1", 30000);
                             editor1.putInt("minfabrik1", 10);
                             editor1.putFloat("goldphfab1", (float) 0.5555555555555556);
-                            editor1.putString("leveltextfab1", getString(R.string.factory_1) + getString(R.string.level10));
+                            editor1.putString("leveltextfab1", getString(R.string.factory_1)+" " + getString(R.string.level10));
                             editor1.putBoolean("isLeveling", false);
-                            cdfab1 = false;
+                           // bei weiteren lvl aktivieren cdfab1 = false;
                             progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                             SammelnFabrik1.setVisibility(View.VISIBLE);
                             editor1.putInt("Level", datafab1.getInt("Level", 1) + 1);
-                            editor1.commit();
+                            editor1.apply();
                         }
                         }
 
@@ -486,17 +587,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
-    @SuppressLint("InlinedApi")
-    private void show() {
-        // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
 
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-    }
 
     /**
      * Schedules a call to hide() in [delay] milliseconds, canceling any
@@ -509,7 +600,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        datafab1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
+        //FAbrik 1
+        datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
+        //Bank
+        SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
+
 
         int id = v.getId();
         if (id == R.id.Fabrik1) {
@@ -542,8 +637,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
             lp.copyFrom(bauhausdialog.getWindow().getAttributes());
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT;;
-
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
 
             closeBauhaus = (Button)bauhausdialog.findViewById(R.id.closeBauhaus);
             closeBauhaus.setOnClickListener(this);
@@ -558,36 +652,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+            //Bank
+            upgradeBank = (Button) bauhausdialog.findViewById(R.id.upgradeBank);
+            upgradeBank.setOnClickListener(this);
+            upcdBank = (TextView) bauhausdialog.findViewById(R.id.upcdBank);
+            leveltextBank = (TextView) bauhausdialog.findViewById(R.id.leveltextBank);
+            leveltextBank.setText(dataBank.getString("leveltext", "1"));
+
+
+
 
             bauhausdialog.show();
             bauhausdialog.getWindow().setAttributes(lp);
 
 
-            //Aktualisator
+            //Aktualisator bauhaus
 
             h.postDelayed(new Runnable(){
                 public void run(){
                     //jede sec upgradecountdown aktualisieren
 
                     //Fabrik1
-                    SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
-                    int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
-                    int countdownfab1 = Fab1upgradeContdown.getInt("countdown", 0); //0 is the default value.
-                        //endzeit als jetzt definieren
-                    int endTimefab1 = ((int) System.currentTimeMillis() / 1000);
-                    int elapsedSecondsfab1 = endTimefab1 - startTimefab1;
-                    int restTimefab1 = countdownfab1 - elapsedSecondsfab1;
-                    String dhmsfab1;
-                    if (restTimefab1 >= 0) {
-                         dhmsfab1 = String.format("%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab1), TimeUnit.SECONDS.toHours(restTimefab1),
-                                TimeUnit.SECONDS.toMinutes(restTimefab1) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab1)),
-                                TimeUnit.SECONDS.toSeconds(restTimefab1) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab1)));
-                        upcdfab1.setText(dhmsfab1);
-                    }
-                    if (restTimefab1 < 0) {
-                        upcdfab1.setText("00:00:00:00");
-                    }
+                    Boolean cdfab1 = (datafab1.getBoolean("isLeveling", false));
 
+                        SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
+                        int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
+                        int countdownfab1 = Fab1upgradeContdown.getInt("countdown", 0); //0 is the default value.
+                        //endzeit als jetzt definieren
+                        int endTimefab1 = ((int) System.currentTimeMillis() / 1000);
+                        int elapsedSecondsfab1 = endTimefab1 - startTimefab1;
+                        int restTimefab1 = countdownfab1 - elapsedSecondsfab1;
+                        String dhmsfab1;
+                    //wenn nicht am leveln, counter ausblenden
+                    if (!cdfab1){
+                        upcdfab1.setText("");
+                    }
+                    if (cdfab1) {
+
+
+                        if (restTimefab1 >= 0) {
+                            dhmsfab1 = String.format("%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab1), TimeUnit.SECONDS.toHours(restTimefab1),
+                                    TimeUnit.SECONDS.toMinutes(restTimefab1) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab1)),
+                                    TimeUnit.SECONDS.toSeconds(restTimefab1) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab1)));
+                            upcdfab1.setText(dhmsfab1);
+                        }
+                        if (restTimefab1 < 0) {
+                            upcdfab1.setText("00:00:00:00");
+                        }
+                    }
 
                     h.postDelayed(this, delay);
                 }
@@ -599,26 +711,201 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             bauhausdialog.dismiss();
         }
+
+        //BANK
+        if (id == R.id.upgradeBank) {
+
+            dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
+            Boolean cdbank = dataBank.getBoolean("isLeveling", false);
+
+            //wenn ein upgrade am laufen ist, toast machen
+            if (cdbank) {
+
+                Toast.makeText(MainActivity.this, R.string.waitforupgradefinish, Toast.LENGTH_SHORT).show();
+
+
+            }
+
+            //sonst, upgradedialog
+            if (!cdbank) {
+
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                        context);
+
+                // set title
+                alertDialogBuilder.setTitle(getString(R.string.bank));
+
+                // set dialog message
+
+                if (dataBank.getInt("Level", 1) == 1) {
+                    //text lvl2
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.goldstorage)," 1000",Html.fromHtml(" <font color=#00ff00> + 19000</font>"), "\n\n ",getString(R.string.diastorage)," 20 ",Html.fromHtml("<font color=#00ff00> + 80</font>")," \n \n",getString(R.string.Costs),"100", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
+                }
+                if (dataBank.getInt("Level", 1) == 2) {
+                    //text lvl3
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.goldstorage),"20000",Html.fromHtml(" <font color=#00ff00> + 55000</font>"), "\n\n ",getString(R.string.diastorage)," 100 ",Html.fromHtml("<font color=#00ff00> + 900</font>")," \n \n",getString(R.string.Costs),"20000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:30"));
+                }
+                if (dataBank.getInt("Level", 1) == 3) {
+                    //text lvl4
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.goldstorage),"75000",Html.fromHtml(" <font color=#00ff00> + 75000</font>"), "\n\n ",getString(R.string.diastorage)," 1000 ",Html.fromHtml("<font color=#00ff00> + 1000</font>")," \n \n",getString(R.string.Costs),"75000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:40"));
+                }
+
+
+                alertDialogBuilder.setCancelable(false);
+                alertDialogBuilder.setPositiveButton(getString(R.string.upgrade), new DialogInterface.OnClickListener() {
+
+
+                            public void onClick(DialogInterface dialog, int id) {
+
+
+                                //Upgrade
+                                SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
+                                SharedPreferences prefs = getSharedPreferences("POOL", MODE_PRIVATE);
+
+
+                                //Level 2
+                                if (dataBank.getInt("Level", 1) == 1) {
+                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    if ((prefs.getInt("POOL", 0)) <= 100) {
+                                        Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
+
+                                    }
+                                    if ((prefs.getInt("POOL", 0)) >= 100) {
+                                        //bezahlen
+                                        editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 100));
+                                        editor2.apply();
+
+                                        //Countdown Starten
+                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE).edit();
+                                        editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+
+                                        //Countdownzeit definieren
+                                        //TODO bank lvl 1 secs
+                                        editor3.putInt("countdown", 20);
+                                        editor3.apply();
+
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
+                                        editor1.putBoolean("isLeveling", true);
+                                        editor1.apply();
+
+                                    }
+
+
+                                }
+                                //Level 3
+                                if (dataBank.getInt("Level", 1) == 2) {
+                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    if ((prefs.getInt("POOL", 0)) <= 20000) {
+                                        Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
+
+                                    }
+                                    if ((prefs.getInt("POOL", 0)) >= 20000) {
+                                        //bezahlen
+                                        editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 20000));
+                                        editor2.apply();
+
+                                        //Countdown Starten
+                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE).edit();
+                                        editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+
+                                        //Countdownzeit definieren
+                                        //TODO bank lvl 2 secs
+                                        editor3.putInt("countdown", 30);
+                                        editor3.apply();
+
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
+                                        editor1.putBoolean("isLeveling", true);
+                                        editor1.apply();
+
+                                    }
+
+
+                                }
+
+                                //Level 4
+                                if (dataBank.getInt("Level", 1) == 1) {
+                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    if ((prefs.getInt("POOL", 0)) <= 750000) {
+                                        Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
+
+                                    }
+                                    if ((prefs.getInt("POOL", 0)) >= 750000) {
+                                        //bezahlen
+                                        editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 75000));
+                                        editor2.apply();
+
+                                        //Countdown Starten
+                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE).edit();
+                                        editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+
+                                        //Countdownzeit definieren
+                                        //TODO bank lvl 4 secs
+                                        editor3.putInt("countdown", 40);
+                                        editor3.apply();
+
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
+                                        editor1.putBoolean("isLeveling", true);
+                                        editor1.apply();
+
+                                    }
+
+
+                                }
+
+
+
+
+
+                            }
+                        }
+
+
+                )
+
+
+                                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+
+                                                dialog.cancel();
+                                            }
+                                        }
+
+                                );
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
+
+
+
+
+            }
+        }
+
+
+        //FAbrik1
         if (id == R.id.upgradefab1) {
 
 
             //ist ein upgrade am laufen?
 
 
-            datafab1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
-
+            datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
             Boolean cdfab1 = (datafab1.getBoolean("isLeveling", false));
             if (cdfab1) {
 
                 Toast.makeText(MainActivity.this, R.string.waitforupgradefinish, Toast.LENGTH_SHORT).show();
 
 
-                //zeit um 10 sec verringern
+                //TODO zeit um 10 sec verringern
                 SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
                 int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
                 SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
                 editor3.putInt("startTime", startTimefab1 - 10);
-                editor3.commit();
+                editor3.apply();
 
             }
 
@@ -700,7 +987,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     if ((prefs.getInt("POOL", 0)) >= 50) {
                                         //bezahlen
                                         editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 50));
-                                        editor2.commit();
+                                        editor2.apply();
 
                                         //Countdown Starten
                                         SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
@@ -709,11 +996,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         //Countdownzeit definieren
                                         //TODO 3600 secs
                                         editor3.putInt("countdown", 20);
-                                        editor3.commit();
+                                        editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
                                         editor1.putBoolean("isLeveling", true);
-                                        editor1.commit();
+                                        editor1.apply();
 
                                     }
 
@@ -732,7 +1019,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     if ((prefs.getInt("POOL", 0)) >= 500) {
                                         //bezahlen
                                         editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 500));
-                                        editor2.commit();
+                                        editor2.apply();
 
                                         //Countdown Starten
                                         SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
@@ -741,11 +1028,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         //Countdownzeit definieren
                                         //TODO lvl 3 secs
                                         editor3.putInt("countdown", 30);
-                                        editor3.commit();
+                                        editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
                                         editor1.putBoolean("isLeveling", true);
-                                        editor1.commit();
+                                        editor1.apply();
 
                                     }
 
@@ -763,7 +1050,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     if ((prefs.getInt("POOL", 0)) >= 1500) {
                                         //bezahlen
                                         editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 1500));
-                                        editor2.commit();
+                                        editor2.apply();
 
                                         //Countdown Starten
                                         SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
@@ -772,11 +1059,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         //Countdownzeit definieren
                                         //TODO lvl 4 secs
                                         editor3.putInt("countdown", 40);
-                                        editor3.commit();
+                                        editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
                                         editor1.putBoolean("isLeveling", true);
-                                        editor1.commit();
+                                        editor1.apply();
 
                                     }
 
@@ -794,7 +1081,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     if ((prefs.getInt("POOL", 0)) >= 5000) {
                                         //bezahlen
                                         editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 5000));
-                                        editor2.commit();
+                                        editor2.apply();
 
                                         //Countdown Starten
                                         SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
@@ -803,11 +1090,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         //Countdownzeit definieren
                                         //TODO lvl 5 secs
                                         editor3.putInt("countdown", 50);
-                                        editor3.commit();
+                                        editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
                                         editor1.putBoolean("isLeveling", true);
-                                        editor1.commit();
+                                        editor1.apply();
 
                                     }
 
@@ -825,7 +1112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     if ((prefs.getInt("POOL", 0)) >= 20000) {
                                         //bezahlen
                                         editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 20000));
-                                        editor2.commit();
+                                        editor2.apply();
 
                                         //Countdown Starten
                                         SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
@@ -834,11 +1121,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         //Countdownzeit definieren
                                         //TODO lvl 6 secs
                                         editor3.putInt("countdown", 60);
-                                        editor3.commit();
+                                        editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
                                         editor1.putBoolean("isLeveling", true);
-                                        editor1.commit();
+                                        editor1.apply();
 
                                     }
 
@@ -856,7 +1143,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     if ((prefs.getInt("POOL", 0)) >= 35000) {
                                         //bezahlen
                                         editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 35000));
-                                        editor2.commit();
+                                        editor2.apply();
 
                                         //Countdown Starten
                                         SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
@@ -865,11 +1152,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         //Countdownzeit definieren
                                         //TODO lvl 7 secs
                                         editor3.putInt("countdown", 70);
-                                        editor3.commit();
+                                        editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
                                         editor1.putBoolean("isLeveling", true);
-                                        editor1.commit();
+                                        editor1.apply();
 
                                     }
 
@@ -886,7 +1173,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     if ((prefs.getInt("POOL", 0)) >= 70000) {
                                         //bezahlen
                                         editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 70000));
-                                        editor2.commit();
+                                        editor2.apply();
 
                                         //Countdown Starten
                                         SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
@@ -895,11 +1182,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         //Countdownzeit definieren
                                         //TODO lvl 8 secs
                                         editor3.putInt("countdown", 80);
-                                        editor3.commit();
+                                        editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
                                         editor1.putBoolean("isLeveling", true);
-                                        editor1.commit();
+                                        editor1.apply();
 
                                     }
 
@@ -916,7 +1203,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     if ((prefs.getInt("POOL", 0)) >= 110000) {
                                         //bezahlen
                                         editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 110000));
-                                        editor2.commit();
+                                        editor2.apply();
 
                                         //Countdown Starten
                                         SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
@@ -925,11 +1212,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         //Countdownzeit definieren
                                         //TODO lvl 9 secs
                                         editor3.putInt("countdown", 90);
-                                        editor3.commit();
+                                        editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
                                         editor1.putBoolean("isLeveling", true);
-                                        editor1.commit();
+                                        editor1.apply();
 
                                     }
 
@@ -946,7 +1233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     if ((prefs.getInt("POOL", 0)) >= 150000) {
                                         //bezahlen
                                         editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 150000));
-                                        editor2.commit();
+                                        editor2.apply();
 
                                         //Countdown Starten
                                         SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
@@ -956,11 +1243,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         //Countdownzeit definieren
                                         //TODO lvl 10 secs
                                         editor3.putInt("countdown", 100);
-                                        editor3.commit();
+                                        editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE).edit();
+                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
                                         editor1.putBoolean("isLeveling", true);
-                                        editor1.commit();
+                                        editor1.apply();
 
                                     }
 
@@ -1015,7 +1302,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        datafab1 = getSharedPreferences("Fabrik1Level", MODE_PRIVATE);
+        datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
 
 
 
@@ -1023,6 +1310,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final TextView GperH = (TextView) dialog.findViewById(R.id.GperH);
         progressBarFabrik1 = (ProgressBar) dialog.findViewById(R.id.progressBarFabrik1);
         progressBarFabrik1.setMax(datafab1.getInt("maxfabrik1", 500));
+        leveltextdiafab1 = (TextView) dialog.findViewById(R.id.leveltextdiafab1);
+
+        String lvltext = (datafab1.getString("leveltextfab1", "level 1"));
+        leveltextdiafab1.setText(lvltext);
 
 
         h.postDelayed(new Runnable() {
@@ -1085,6 +1376,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
    public void sammelnfab1(){
 
+
+
+
+
+
         SharedPreferences prefs = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE);
 
         int startTime = prefs.getInt("startTime", 0); //0 is the default value.
@@ -1097,10 +1393,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        //Timer Zurücksetzen
-        SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
-        editor1.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
-        editor1.commit();
+
 
 
 
@@ -1126,19 +1419,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
            goldint = datafab1.getInt("maxfabrik1", 500);
        }
 
+        //schauen, ist der pool schon auf maxStorage der bank?
+       SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
+       int intBankmax = BankMax.getInt("maxGoldStorage", 1000);
+       SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
+       if (intBankmax < (prefs1.getInt("POOL", 0))){
 
-        //Das Gold zum pool hinzufügen
-        SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
-        SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
-        //TODO 10000 löschen
-        editor2.putInt("POOL", 10000 + goldint + (prefs1.getInt("POOL", 0)));
-        editor2.commit();
-
-
-
-        Toast.makeText(MainActivity.this, getString(R.string.gold_collected) +(goldint), Toast.LENGTH_SHORT).show();
+           Toast.makeText(MainActivity.this, getString(R.string.Bankisfull), Toast.LENGTH_SHORT).show();
+       }
 
 
+       if (intBankmax >= (prefs1.getInt("POOL", 0))) {
+           //Timer Zurücksetzen
+           SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
+           editor1.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+           editor1.apply();
+
+           //Das Gold zum pool hinzufügen
+           SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+           //TODO 10000 löschen
+           editor2.putInt("POOL", 10000 + goldint + (prefs1.getInt("POOL", 0)));
+           editor2.apply();
+
+           //rücklauf falls das max erfüllt wurde(nicht vorhanden
+
+
+
+
+           Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
+
+       }
 
     }
     @Override

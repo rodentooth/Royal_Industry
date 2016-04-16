@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import org.w3c.dom.Text;
 
 /**
@@ -26,17 +31,6 @@ import org.w3c.dom.Text;
  * status bar and navigation/system bar) with user interaction.
  */
 public class BankActivity extends AppCompatActivity implements View.OnClickListener {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
 
     /**
      * Some older devices needs a small delay between UI widget updates
@@ -62,7 +56,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-    private View mControlsView;
+
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -86,42 +80,29 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
      * system UI. This is to prevent the jarring behavior of controls going away
      * while interacting with activity UI.
      */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
 
 
 
-        int maxdias;
-        TextView howmanygoldtodias;
-        TextView diasCost;
-        TextView currentGoldBalance;
-        TextView diatext;
-        SeekBar seekbar;
-        Button confirmconvert;
-        Dialog dialogconvertdias;
+    int maxdias;
+    TextView howmanygoldtodias;
+    TextView diasCost;
+    TextView currentGoldBalance;
+    TextView diatext;
+    SeekBar seekbar;
+    Button confirmconvert;
+    Dialog dialogconvertdias;
 
-        Button GoldToDias;
+    Button GoldToDias;
 
-        Handler h = new Handler();
-        int delay = 100; //milliseconds
+    Handler h = new Handler();
+    int delay = 100; //milliseconds
 
-        ProgressBar diaconvertingtimeprogress;
-
-
-
-
-
-
-
-
-
+    ProgressBar diaconvertingtimeprogress;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
@@ -136,7 +117,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
         // Set up the user interaction to manually show or hide the system UI.
-       mContentView.setOnClickListener(new View.OnClickListener() {
+        mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toggle();
@@ -150,58 +131,58 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         Button closeBank = (Button) findViewById(R.id.closeBank);
         closeBank.setOnClickListener(this);
 
-         GoldToDias = (Button) findViewById(R.id.GoldToDias);
+        GoldToDias = (Button) findViewById(R.id.GoldToDias);
         GoldToDias.setOnClickListener(this);
 
 
+        currentGoldBalance = (TextView) findViewById(R.id.currentGoldBalance);
 
-         currentGoldBalance = (TextView) findViewById(R.id.currentGoldBalance);
-
-         diatext = (TextView) findViewById(R.id.diatext);
+        diatext = (TextView) findViewById(R.id.diatext);
 
         diaconvertingtimeprogress = (ProgressBar) findViewById(R.id.diaconvertingtimeprogress);
 
         diaconvertingtimeprogress.setMax(30);
 
+
+        SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
+        String stringGoldmax = String.valueOf(BankMax.getInt("maxGoldStorage", 1000));
+        String stringDiamax = String.valueOf(BankMax.getInt("maxDiaStorage", 21));
+
         //Aktualisiere den Kontostatus
         SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
         String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
-        currentGoldBalance.setText(getString(R.string.Gold)+ ": " +Pooltext);
+        currentGoldBalance.setText(getString(R.string.Gold) + ": " + Pooltext + "/" + stringGoldmax);
 
         SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
         //Diapool text aktualisieren
         String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
-        diatext.setText((getString(R.string.Diamonds) +": " + diapooltext));
+        diatext.setText((getString(R.string.Diamonds) + ": " + diapooltext) + "/" + stringDiamax);
 
 
-        if ((prefs1.getInt("POOL", 0)) > 20000 ){
+        if ((prefs1.getInt("POOL", 0)) > 20000) {
 
             maxdias = 100;
         }
-        if ((prefs1.getInt("POOL", 0)) <= 20000 ){
+        if ((prefs1.getInt("POOL", 0)) <= 20000) {
 
-            maxdias = ((prefs1.getInt("POOL", 0)) /200);
+            maxdias = ((prefs1.getInt("POOL", 0)) / 200);
         }
 
 
+        h.postDelayed(new Runnable() {
+            public void run() {
+                //jede 0.1 sekunde folgendes aktualisieren
 
 
-
-        h.postDelayed(new Runnable(){
-            public void run(){
-                //jede 0.1 sekunde timer aktualisieren
-
+                //startzeit holen
+                SharedPreferences DiamantConvertCountdown = getSharedPreferences("DiamantConvertCountdown", MODE_PRIVATE);
+                int startTime = DiamantConvertCountdown.getInt("startTime", 0); //0 is the default value.
 
 
-                    //startzeit holen
-                    SharedPreferences DiamantConvertContdown = getSharedPreferences("DiamantConvertContdown", MODE_PRIVATE);
-                    int startTime = DiamantConvertContdown.getInt("startTime", 0); //0 is the default value.
+                //endzeit als jetzt definieren
+                int endTime = ((int) System.currentTimeMillis() / 1000);
 
-
-                    //endzeit als jetzt definieren
-                    int endTime = ((int) System.currentTimeMillis() / 1000);
-
-                    int secondsElapsed = endTime - startTime;
+                int secondsElapsed = endTime - startTime;
 
 
                 if (secondsElapsed == 0) {
@@ -220,7 +201,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
 
-                SharedPreferences prefs4 = getSharedPreferences("DiamantConvertContdownOFF", MODE_PRIVATE);
+                SharedPreferences prefs4 = getSharedPreferences("DiamantConvertCountdownOFF", MODE_PRIVATE);
                 Boolean hatsdiaszumholen = (prefs4.getBoolean("trueorfalse", false));
 
                 if (hatsdiaszumholen) {
@@ -230,24 +211,28 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         SharedPreferences thatmanydias = getSharedPreferences("thatmanydias", MODE_PRIVATE);
                         SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
                         SharedPreferences.Editor editor2 = getSharedPreferences("DIAMONDS", MODE_PRIVATE).edit();
-                        editor2.putInt("DIAMONDS", (prefs3.getInt("DIAMONDS", 1)) + (thatmanydias.getInt("thatmanydias", 1)));
-                        editor2.commit();
+                        editor2.putInt("DIAMONDS", (prefs3.getInt("DIAMONDS", 0)) + (thatmanydias.getInt("thatmanydias", 1)));
+                        editor2.apply();
 
 
                         //Diapool text aktualisieren
+
+                        SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
+                        String stringDiamax = String.valueOf(BankMax.getInt("maxDiaStorage", 1000));
+
                         String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
-                        diatext.setText(getString(R.string.Diamonds)+": " + diapooltext);
+                        diatext.setText(getString(R.string.Diamonds) + ": " + diapooltext + "/" + stringDiamax);
 
 
                         //keine dias mehr zu holen also false
-                        SharedPreferences.Editor editor3 = getSharedPreferences("DiamantConvertContdownOFF", MODE_PRIVATE).edit();
+                        SharedPreferences.Editor editor3 = getSharedPreferences("DiamantConvertCountdownOFF", MODE_PRIVATE).edit();
                         editor3.putBoolean("trueorfalse", false);
-                        editor3.commit();
+                        editor3.apply();
 
                         //diaspeicher im seekbar löschen
                         SharedPreferences.Editor editor1 = getSharedPreferences("thatmanydias", MODE_PRIVATE).edit();
                         editor1.putInt("thatmanydias", 0);
-                        editor1.commit();
+                        editor1.apply();
 
                         diaconvertingtimeprogress.setProgress(0);
                         //converterknopf sichtbar
@@ -262,6 +247,9 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         }, delay);
 
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -330,29 +318,29 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         if (id == R.id.GoldToDias) {
 
             View converter = View.inflate(this, R.layout.converter, null);
-             dialogconvertdias = new Dialog(v.getContext());
+            dialogconvertdias = new Dialog(v.getContext());
             dialogconvertdias.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialogconvertdias.setContentView(converter);
 
 
-             seekbar = (SeekBar) dialogconvertdias.findViewById(R.id.seekBar);
-             howmanygoldtodias = (TextView) dialogconvertdias.findViewById(R.id.howmanygoldtodias);
+            seekbar = (SeekBar) dialogconvertdias.findViewById(R.id.seekBar);
+            howmanygoldtodias = (TextView) dialogconvertdias.findViewById(R.id.howmanygoldtodias);
             diasCost = (TextView) dialogconvertdias.findViewById(R.id.diasCost);
 
             confirmconvert = (Button) dialogconvertdias.findViewById(R.id.confirmconvert);
             confirmconvert.setOnClickListener(this);
 
 
-            if (maxdias >=2){
+            if (maxdias >= 2) {
                 seekbar.setMax(maxdias);
             }
 
-            if (maxdias <=1){
+            if (maxdias <= 1) {
                 seekbar.setMax(1);
             }
             int progressvalue = 0;
-            howmanygoldtodias.setText(getString(R.string.Create) +" " + progressvalue + getString(R.string.Diamonds));
-            diasCost.setText(getString(R.string.Costs)+" " + progressvalue * 200 + getString(R.string.Gold));
+            howmanygoldtodias.setText(getString(R.string.Create) + " " + progressvalue + getString(R.string.Diamonds));
+            diasCost.setText(getString(R.string.Costs) + " " + progressvalue * 200 + getString(R.string.Gold));
 
 
             seekbar.setOnSeekBarChangeListener(
@@ -381,13 +369,13 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void onStopTrackingTouch(SeekBar seekBar) {
 
-                            howmanygoldtodias.setText(getString(R.string.Create)+ progressvalue + getString(R.string.Diamonds));
+                            howmanygoldtodias.setText(getString(R.string.Create) + progressvalue + getString(R.string.Diamonds));
                             diasCost.setText(getString(R.string.Costs) + progressvalue * 200 + getString(R.string.Gold));
 
                             //den progressvalue (wieviele dias) speichern
                             SharedPreferences.Editor editor1 = getSharedPreferences("thatmanydias", MODE_PRIVATE).edit();
                             editor1.putInt("thatmanydias", progressvalue);
-                            editor1.commit();
+                            editor1.apply();
 
 
                         }
@@ -405,12 +393,11 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         if (id == R.id.confirmconvert) {
 
 
-
             //holen von wieviele diamanten erstellen
             SharedPreferences prefs1 = getSharedPreferences("thatmanydias", MODE_PRIVATE);
 
             //wenn 0 diamanten gewählt, abbrechen
-            if (prefs1.getInt("thatmanydias", 0) ==0){
+            if (prefs1.getInt("thatmanydias", 0) == 0) {
 
 
                 //dialog beenden
@@ -418,51 +405,109 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             }
 
 
-            if (prefs1.getInt("thatmanydias", 1) >=1) {
-                //Holen von Pool
-                SharedPreferences prefs2 = getSharedPreferences("POOL", MODE_PRIVATE);
+            if (prefs1.getInt("thatmanydias", 1) >= 1) {
 
-                //diamantenanzahl in gold umwandeln
-                int goldweg = (prefs1.getInt("thatmanydias", 1)) * 200;
+                //CHECKEN OB ES DEN DIASPEICHER nicht überschreitet
+                SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
+                int diastor = BankMax.getInt("maxDiaStorage", 1000);
+                SharedPreferences DIAMONDS = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+                int diainpool = DIAMONDS.getInt("DIAMONDS", 0);
+                int freespace = diastor - diainpool;
 
+                if (prefs1.getInt("thatmanydias", 1) > freespace) {
 
-                //checken obs genug gold für den convert hat
-                if (goldweg >= prefs2.getInt("POOL", 0)) {
-
-                    Toast.makeText(BankActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
-
-
+                    Toast.makeText(BankActivity.this, "you can only create" + freespace + "diamonds", Toast.LENGTH_SHORT).show();
                 }
 
-                if (goldweg <= prefs2.getInt("POOL", 0)) {
+                if (prefs1.getInt("thatmanydias", 1) <= freespace) {
+
+                    //Holen von Pool
+                    SharedPreferences prefs2 = getSharedPreferences("POOL", MODE_PRIVATE);
+
+                    //diamantenanzahl in gold umwandeln
+                    int goldweg = (prefs1.getInt("thatmanydias", 1)) * 200;
 
 
-                    //Pool aktualisieren, gold abziehen
-                    SharedPreferences.Editor editor1 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
-                    editor1.putInt("POOL", (prefs2.getInt("POOL", 0)) - goldweg);
-                    editor1.commit();
+                    //checken obs genug gold für den convert hat
+                    if (goldweg >= prefs2.getInt("POOL", 0)) {
 
-                    //Pooltext aktualisieren
-                    String Pooltext = String.valueOf(prefs2.getInt("POOL", 0));
-                    currentGoldBalance.setText(getString(R.string.Gold) +": " + Pooltext);
+                        Toast.makeText(BankActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
 
-                    //Timer Starten
-                    SharedPreferences.Editor editor3 = getSharedPreferences("DiamantConvertContdown", MODE_PRIVATE).edit();
-                    editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
-                    editor3.commit();
+                    }
+
+                    if (goldweg <= prefs2.getInt("POOL", 0)) {
 
 
-                    //es hat dias zu holen=true
-                    SharedPreferences.Editor editor4 = getSharedPreferences("DiamantConvertContdownOFF", MODE_PRIVATE).edit();
-                    editor4.putBoolean("trueorfalse", true);
-                    editor4.commit();
+                        //Pool aktualisieren, gold abziehen
+                        SharedPreferences.Editor editor1 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                        editor1.putInt("POOL", (prefs2.getInt("POOL", 0)) - goldweg);
+                        editor1.apply();
+
+                        //Pooltext aktualisieren
+
+                        String stringGoldmax = String.valueOf(BankMax.getInt("maxGoldStorage", 1000));
+                        String Pooltext = String.valueOf(prefs2.getInt("POOL", 0));
+                        currentGoldBalance.setText(getString(R.string.Gold) + ": " + Pooltext + "/" + stringGoldmax);
 
 
-                    //dialog beenden
-                    dialogconvertdias.dismiss();
+                        //Timer Starten
+                        SharedPreferences.Editor editor3 = getSharedPreferences("DiamantConvertCountdown", MODE_PRIVATE).edit();
+                        editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+                        editor3.apply();
+
+
+                        //es hat dias zu holen=true
+                        SharedPreferences.Editor editor4 = getSharedPreferences("DiamantConvertCountdownOFF", MODE_PRIVATE).edit();
+                        editor4.putBoolean("trueorfalse", true);
+                        editor4.apply();
+
+
+                        //dialog beenden
+                        dialogconvertdias.dismiss();
+                    }
                 }
             }
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Bank Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.frozensparks.royalindustry/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Bank Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.frozensparks.royalindustry/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 }

@@ -25,14 +25,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="50dp"
-            android:text="UPGRADE"
             android:id="@+id/upgradefab1"
             android:layout_gravity="right"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/levelupbtns" />
 
 
         <TextView
@@ -61,7 +61,7 @@
 
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:text="build"
                 android:id="@+id/upgradefab2"
@@ -96,7 +96,7 @@
 
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:text="build"
                 android:id="@+id/upgradefab3"
@@ -131,7 +131,7 @@
 
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:text="build"
                 android:id="@+id/upgradefab4"
@@ -166,14 +166,14 @@
 
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:text="upgrade"
                 android:id="@+id/upgradeBank"
                 android:layout_gravity="right"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/levelupbtns" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -201,7 +201,7 @@
 
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:text="build"
                 android:id="@+id/upgradeAgentur"

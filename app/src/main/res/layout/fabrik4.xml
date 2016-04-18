@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fullscreen_content"
+    android:background="#ffffff"
+    >
+
+
+    <ImageView
+        android:layout_width="210dp"
+        android:layout_height="150dp"
+        android:id="@+id/imageView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBarFabrik4"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:background="#0800ff"
+        android:indeterminate="false" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="loading..."
+        android:id="@+id/countfab4"
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="loading..."
+        android:id="@+id/GperH4"
+        android:layout_above="@+id/countfab4"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="4"
+        android:id="@+id/textView2fab4"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="loading..."
+        android:id="@+id/leveltextdiafab4"
+        android:layout_below="@+id/textView2fab4"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>

@@ -34,7 +34,7 @@
 
     <string name="waitforupgradefinish">wait until upgrade is finished</string>
 
-    <string name="upgrade">upgrade !</string>
+    <string name="upgrade">upgrade </string>
     <string name="no">no</string>
     <string name="gold_collected">gold collected: </string>
     <string name="time">time: </string>

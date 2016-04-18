@@ -5,17 +5,22 @@
 
 
     <string name="title_activity_bank">BankActivity</string>
-    <string name="Gold">gold</string>
-    <string name="Diamonds">diamonds</string>
+    <string name="Gold">gold </string>
+    <string name="Diamonds">diamonds </string>
     <string name="Costs">costs: </string>
-    <string name="Create">create</string>
+    <string name="Create">create </string>
     <string name="Cantafford">not enough gold!</string>
-    <string name="Convert">create dias</string>
+    <string name="Convert"> create dias </string>
     <string name="Close">close</string>
     <string name="confirm_convert">confirm convert</string>
-    <string name="architect">architect</string>
-    <string name="factory_1">factory 1</string>
-    <string name="bank">bank</string>
+    <string name="architect">architect </string>
+    <string name="factory_1">factory 1 </string>
+    <string name="factory_2">factory 2 </string>
+    <string name="factory_3">factory 3 </string>
+    <string name="factory_4">factory 4 </string>
+    <string name="bank">bank </string>
+    <string name="factories">factories </string>
+    <string name="agency">agency </string>
 
 
     <string name="level1">level: 1</string>
@@ -34,7 +39,7 @@
 
     <string name="waitforupgradefinish">wait until upgrade is finished</string>
 
-    <string name="upgrade">upgrade !</string>
+    <string name="upgrade">upgrade </string>
     <string name="no">no</string>
     <string name="gold_collected">gold collected: </string>
     <string name="time">time: </string>
@@ -42,4 +47,10 @@
 
     <string name="goldstorage">gold storage: </string>
     <string name="diastorage">diamond storage: </string>
+
+    <string name="zu"> to </string>
+
+    <string name="unlock">unlocks: </string>
+
+
 </resources>

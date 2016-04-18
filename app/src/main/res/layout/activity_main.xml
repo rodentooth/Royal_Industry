@@ -15,52 +15,135 @@
                     android:layout_height="wrap_content"
                     android:text="@string/bank"
                     android:id="@+id/Bank"
-                    android:layout_marginRight="41dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
                     android:textAllCaps="false"
                     />
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:text="@string/factory_1"
                     android:id="@+id/Fabrik1"
-                    android:layout_marginRight="41dp"
-                    android:layout_marginEnd="41dp"
-                    android:layout_marginBottom="32dp"
+                    android:textAllCaps="false"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:textAllCaps="false"/>
+                    android:layout_alignParentEnd="true" />
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SammelnFabrik1"
+                    android:text="$"
                     android:id="@+id/SammelnFabrik1"
-                    android:layout_marginRight="41dp"
-                    android:layout_above="@+id/Fabrik1"
-                    android:layout_alignParentRight="true"
                     android:textAllCaps="false"
-                    />
+                    android:layout_above="@+id/Fabrik1"
+                    android:layout_alignRight="@+id/Fabrik1"
+                    android:layout_alignEnd="@+id/Fabrik1" />
+                 <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBarUpgradefab1"
+        android:layout_above="@+id/Fabrik1"
+        android:layout_alignRight="@+id/Fabrik1"
+        android:layout_alignEnd="@+id/Fabrik1"
+        android:indeterminate="false" />
+
+
 
     <Button
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:text="@string/factory_2"
+        android:id="@+id/Fabrik2"
+        android:textAllCaps="false"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/Bank"
+        android:layout_toEndOf="@+id/Bank" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$"
+        android:id="@+id/SammelnFabrik2"
+        android:textAllCaps="false"
+        android:layout_above="@+id/Fabrik2"
+        android:layout_alignRight="@+id/progressBarUpgradefab2"
+        android:layout_alignEnd="@+id/progressBarUpgradefab2" />
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBarUpgradefab2"
+        android:layout_above="@+id/Fabrik2"
+        android:layout_alignRight="@+id/Fabrik2"
+        android:layout_alignEnd="@+id/Fabrik2"
+        android:indeterminate="false" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:text="@string/factory_3"
+        android:id="@+id/Fabrik3"
+        android:textAllCaps="false"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/Bank"
+        android:layout_toStartOf="@+id/Bank" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$"
+        android:id="@+id/SammelnFabrik3"
+        android:textAllCaps="false"
+        android:layout_above="@+id/Fabrik3"
+        android:layout_alignRight="@+id/progressBarUpgradefab3"
+        android:layout_alignEnd="@+id/progressBarUpgradefab3" />
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBarUpgradefab3"
+        android:layout_above="@+id/Fabrik3"
+        android:layout_alignRight="@+id/Fabrik3"
+        android:layout_alignEnd="@+id/Fabrik3"
+        android:indeterminate="false" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:text="@string/factory_4"
+        android:id="@+id/Fabrik4"
+        android:textAllCaps="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$"
+        android:id="@+id/SammelnFabrik4"
+        android:textAllCaps="false"
+        android:layout_above="@+id/Fabrik4"
+        android:layout_alignRight="@+id/progressBarUpgradefab4"
+        android:layout_alignEnd="@+id/progressBarUpgradefab4" />
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBarUpgradefab4"
+        android:layout_above="@+id/Fabrik4"
+        android:layout_alignRight="@+id/Fabrik4"
+        android:layout_alignEnd="@+id/Fabrik4"
+        android:indeterminate="false" />
+
+                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/architect"
                     android:id="@+id/bauhaus"
-                    android:layout_alignTop="@+id/Bank"
-                    android:textAllCaps="false"/>
+                    android:textAllCaps="false"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
 
-                <ProgressBar
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/progressBarUpgradefab1"
-                    android:layout_above="@+id/Fabrik1"
-                    android:layout_alignRight="@+id/Fabrik1"
-                    android:layout_alignEnd="@+id/Fabrik1"
-                    android:indeterminate="false" />
+
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
@@ -69,8 +152,7 @@
         android:id="@+id/progressBarUpgradeBank"
         android:indeterminate="false"
         android:layout_below="@+id/Bank"
-        android:layout_alignRight="@+id/Bank"
-        android:layout_alignEnd="@+id/Bank" />
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

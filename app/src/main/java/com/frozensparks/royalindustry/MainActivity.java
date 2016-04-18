@@ -1565,6 +1565,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             leveltextfabr2 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr2);
             upcdfab2 = (TextView) bauhausdialog.findViewById(R.id.upcdfab2);
             leveltextfabr2.setText(datafab2.getString("leveltextfab2", "2"));
+            datafab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
+            //btn auf upgrade wechseln, wenn gebàude gebaut
+            if (datafab2.getInt("Level", 0) >= 1){
+
+                upgradefab2.setBackgroundResource(R.drawable.levelupbtns);
+            }
 
             //Fabrik3
             upgradefab3 = (Button) bauhausdialog.findViewById(R.id.upgradefab3);
@@ -1572,6 +1578,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             leveltextfabr3 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr3);
             upcdfab3 = (TextView) bauhausdialog.findViewById(R.id.upcdfab3);
             leveltextfabr3.setText(datafab3.getString("leveltextfab3", "3"));
+            datafab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
+            //btn auf upgrade wechseln, wenn gebàude gebaut
+            if (datafab3.getInt("Level", 0) >= 1){
+
+                upgradefab3.setBackgroundResource(R.drawable.levelupbtns);
+            }
 
             //Fabrik4
             upgradefab4 = (Button) bauhausdialog.findViewById(R.id.upgradefab4);
@@ -1579,6 +1591,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             leveltextfabr4 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr4);
             upcdfab4 = (TextView) bauhausdialog.findViewById(R.id.upcdfab4);
             leveltextfabr4.setText(datafab4.getString("leveltextfab4", "4"));
+            datafab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
+            //btn auf upgrade wechseln, wenn gebàude gebaut
+            if (datafab4.getInt("Level", 0) >= 1){
+
+                upgradefab4.setBackgroundResource(R.drawable.levelupbtns);
+            }
 
 
             //Bank

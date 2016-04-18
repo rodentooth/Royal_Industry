@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -24,9 +25,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 
@@ -53,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button Fabrik2;
     Button SammelnFabrik2;
     ProgressBar progressBarFabrik2;
-    Context context2 = this;
     SharedPreferences datafab2;
     TextView countfab2;
     TextView leveltextfabr2;
@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button Fabrik3;
     Button SammelnFabrik3;
     ProgressBar progressBarFabrik3;
-    Context context3 = this;
     SharedPreferences datafab3;
     TextView countfab3;
     TextView leveltextfabr3;
@@ -73,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button Fabrik4;
     Button SammelnFabrik4;
     ProgressBar progressBarFabrik4;
-    Context context4 = this;
     SharedPreferences datafab4;
     TextView countfab4;
     TextView leveltextfabr4;
@@ -114,61 +112,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView leveltextBank;
     TextView upcdBank;
 
+    String uporbld;
+
+
     //FULLSCREEN
 
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    //private static final boolean AUTO_HIDE = true;
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-   // private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
-    private static final int UI_ANIMATION_DELAY = 300;
-    private final Handler mHideHandler = new Handler();
-    private View mContentView;
-    private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
-        @Override
-        public void run() {
-            // Delayed removal of status and navigation bar
-
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
-            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        }
-    };
-
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-
-        }
-    };
-    private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -200,17 +148,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_main);
 
-        mVisible = true;
-        mContentView = findViewById(R.id.fullscreen_content);
-        // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
-
-
+        //Fullscreen
+        if (Build.VERSION.SDK_INT < 16) { //ye olde method
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } else { // Jellybean and up, new hotness
+            View decorView = getWindow().getDecorView();
+            // Hide the status bar.
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+            // Remember that you should never show the action bar if the
+            // status bar is hidden, so hide that too if necessary.
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.hide();
+        }
 
 
 
@@ -341,6 +292,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         h.postDelayed(new Runnable(){
             public void run(){
+
+
+                //Fullscreen
+                if (Build.VERSION.SDK_INT < 16) { //ye olde method
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                } else { // Jellybean and up, new hotness
+                    View decorView = getWindow().getDecorView();
+                    // Hide the status bar.
+                    int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+                    decorView.setSystemUiVisibility(uiOptions);
+                    // Remember that you should never show the action bar if the
+                    // status bar is hidden, so hide that too if necessary.
+                    ActionBar actionBar = getSupportActionBar();
+                    actionBar.hide();
+                }
 
 
                 datafab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
@@ -601,7 +568,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         //goldprod.während des lvlns stoppen
 
-                        SharedPreferences fab1goldstop = getSharedPreferences("resultatdersession", MODE_PRIVATE);
                         SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
                         editor.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
                         editor.apply();
@@ -1224,7 +1190,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     //goldprod.während des lvlns stoppen
 
-                    SharedPreferences fab4oldstop = getSharedPreferences("resultatdersessionfab4", MODE_PRIVATE);
                     SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE).edit();
                     editor.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
                     editor.apply();
@@ -1427,46 +1392,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
-
     }
-
-    private void toggle() {
-        if (mVisible) {
-            hide();
-        }
-    }
-
-    private void hide() {
-        // Hide UI first
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-
-        mVisible = false;
-
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable);
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
-    }
-
-
-
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
-    }
-
     @Override
     public void onClick(View v) {
+
+
+
         //FAbrik 1
         datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
 
@@ -1569,7 +1500,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //btn auf upgrade wechseln, wenn gebàude gebaut
             if (datafab2.getInt("Level", 0) >= 1){
 
-                upgradefab2.setBackgroundResource(R.drawable.levelupbtns);
+                    upgradefab2.setBackgroundResource(R.drawable.levelupbtns);
+
+               }
+            if (datafab2.getInt("Level", 0) < 1) {
+                if (datafab2.getBoolean("bedingungenerfüllt", false)) {
+                    upgradefab2.setBackgroundResource(R.drawable.buildbtns);
+                }
+                if (!datafab2.getBoolean("bedingungenerfüllt", false)){
+
+                    upgradefab2.setBackgroundResource(R.mipmap.nobuildbtn);
+                }
             }
 
             //Fabrik3
@@ -1583,6 +1524,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (datafab3.getInt("Level", 0) >= 1){
 
                 upgradefab3.setBackgroundResource(R.drawable.levelupbtns);
+
+            }
+            if (datafab3.getInt("Level", 0) < 1) {
+                if (datafab3.getBoolean("bedingungenerfüllt", false)) {
+                    upgradefab3.setBackgroundResource(R.drawable.buildbtns);
+                }
+                if (!datafab3.getBoolean("bedingungenerfüllt", false)){
+
+                    upgradefab3.setBackgroundResource(R.mipmap.nobuildbtn);
+                }
             }
 
             //Fabrik4
@@ -1596,6 +1547,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (datafab4.getInt("Level", 0) >= 1){
 
                 upgradefab4.setBackgroundResource(R.drawable.levelupbtns);
+
+            }
+            if (datafab4.getInt("Level", 0) < 1) {
+                if (datafab4.getBoolean("bedingungenerfüllt", false)) {
+                    upgradefab4.setBackgroundResource(R.drawable.buildbtns);
+                }
+                if (!datafab4.getBoolean("bedingungenerfüllt", false)){
+
+                    upgradefab4.setBackgroundResource(R.mipmap.nobuildbtn);
+                }
             }
 
 
@@ -1639,7 +1600,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (cdBank) {
 
                         if (restTimeBank >= 0) {
-                            dhmsBank = String.format("%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimeBank), TimeUnit.SECONDS.toHours(restTimeBank),
+                            dhmsBank = String.format(Locale.US,"%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimeBank), TimeUnit.SECONDS.toHours(restTimeBank),
                                     TimeUnit.SECONDS.toMinutes(restTimeBank) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimeBank)),
                                     TimeUnit.SECONDS.toSeconds(restTimeBank) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimeBank)));
                             upcdBank.setText(dhmsBank);
@@ -1668,7 +1629,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (cdfab1) {
 
                         if (restTimefab1 >= 0) {
-                            dhmsfab1 = String.format("%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab1), TimeUnit.SECONDS.toHours(restTimefab1),
+                            dhmsfab1 = String.format(Locale.US,"%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab1), TimeUnit.SECONDS.toHours(restTimefab1),
                                     TimeUnit.SECONDS.toMinutes(restTimefab1) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab1)),
                                     TimeUnit.SECONDS.toSeconds(restTimefab1) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab1)));
                             upcdfab1.setText(dhmsfab1);
@@ -1695,7 +1656,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (cdfab2) {
 
                         if (restTimefab2 >= 0) {
-                            dhmsfab2 = String.format("%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab2), TimeUnit.SECONDS.toHours(restTimefab2),
+                            dhmsfab2 = String.format(Locale.US,"%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab2), TimeUnit.SECONDS.toHours(restTimefab2),
                                     TimeUnit.SECONDS.toMinutes(restTimefab2) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab2)),
                                     TimeUnit.SECONDS.toSeconds(restTimefab2) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab2)));
                             upcdfab2.setText(dhmsfab2);
@@ -1722,7 +1683,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (cdfab3) {
 
                         if (restTimefab3 >= 0) {
-                            dhmsfab3 = String.format("%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab3), TimeUnit.SECONDS.toHours(restTimefab3),
+                            dhmsfab3 = String.format(Locale.US,"%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab3), TimeUnit.SECONDS.toHours(restTimefab3),
                                     TimeUnit.SECONDS.toMinutes(restTimefab3) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab3)),
                                     TimeUnit.SECONDS.toSeconds(restTimefab3) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab3)));
                             upcdfab3.setText(dhmsfab3);
@@ -1750,7 +1711,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (cdfab4) {
 
                         if (restTimefab4 >= 0) {
-                            dhmsfab4 = String.format("%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab4), TimeUnit.SECONDS.toHours(restTimefab4),
+                            dhmsfab4 = String.format(Locale.US,"%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab4), TimeUnit.SECONDS.toHours(restTimefab4),
                                     TimeUnit.SECONDS.toMinutes(restTimefab4) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab4)),
                                     TimeUnit.SECONDS.toSeconds(restTimefab4) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab4)));
                             upcdfab4.setText(dhmsfab4);
@@ -2475,7 +2436,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 alertDialogBuilder.setCancelable(false);
-                alertDialogBuilder.setPositiveButton(getString(R.string.upgrade), new DialogInterface.OnClickListener() {
+
+
+//button upgrade oder build
+                if (datafab2.getInt("Level", 0) == 0) {
+                    uporbld = getString(R.string.build);
+
+                }
+                if (datafab2.getInt("Level", 0) >= 1) {
+                    uporbld = getString(R.string.upgrade);
+
+                }
+
+                alertDialogBuilder.setPositiveButton((uporbld),
+                        new DialogInterface.OnClickListener() {
 
 
                             public void onClick(DialogInterface dialog, int id) {
@@ -2872,7 +2846,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (datafab3.getInt("Level", 0) == 0) {
 
                     //Text lvl 1
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level1),": \n\n", getString(R.string.gold_per_hour)," 180", "\n\n ",getString(R.string.storage)," 500 "," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level1),": \n\n", getString(R.string.gold_per_hour)," 180", "\n\n ",getString(R.string.storage)," 500 "," \n \n",getString(R.string.Costs),"1000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
                 }
                 if (datafab3.getInt("Level", 0) == 1) {
                     //text lvl2
@@ -2918,7 +2892,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 alertDialogBuilder.setCancelable(false);
-                alertDialogBuilder.setPositiveButton(getString(R.string.upgrade), new DialogInterface.OnClickListener() {
+
+                //button upgrade oder build
+                if (datafab3.getInt("Level", 0) == 0) {
+                    uporbld = getString(R.string.build);
+
+                }
+                if (datafab3.getInt("Level", 0) >= 1) {
+                    uporbld = getString(R.string.upgrade);
+
+                }
+
+                alertDialogBuilder.setPositiveButton((uporbld), new DialogInterface.OnClickListener() {
 
 
                             public void onClick(DialogInterface dialog, int id) {
@@ -2943,13 +2928,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         //LeveL1
 
                                         SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
-                                        if ((prefs.getInt("POOL", 0)) < 500) {
+                                        if ((prefs.getInt("POOL", 0)) < 1000) {
                                             Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
                                         }
-                                        if ((prefs.getInt("POOL", 0)) >= 500) {
+                                        if ((prefs.getInt("POOL", 0)) >= 1000) {
                                             //bezahlen
-                                            editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 500));
+                                            editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 1000));
                                             editor2.apply();
 
                                             //Countdown Starten
@@ -3316,7 +3301,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (datafab4.getInt("Level", 0) == 0) {
 
                     //Text lvl 1
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level1),": \n\n", getString(R.string.gold_per_hour)," 180", "\n\n ",getString(R.string.storage)," 500 "," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level1),": \n\n", getString(R.string.gold_per_hour)," 180", "\n\n ",getString(R.string.storage)," 500 "," \n \n",getString(R.string.Costs),"10000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
                 }
                 if (datafab4.getInt("Level", 0) == 1) {
                     //text lvl2
@@ -3362,7 +3347,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 alertDialogBuilder.setCancelable(false);
-                alertDialogBuilder.setPositiveButton(getString(R.string.upgrade), new DialogInterface.OnClickListener() {
+
+                //button upgrade oder build
+                if (datafab4.getInt("Level", 0) == 0) {
+                    uporbld = getString(R.string.build);
+
+                }
+                if (datafab4.getInt("Level", 0) >= 1) {
+                    uporbld = getString(R.string.upgrade);
+
+                }
+
+                alertDialogBuilder.setPositiveButton((uporbld), new DialogInterface.OnClickListener() {
 
 
                             public void onClick(DialogInterface dialog, int id) {
@@ -3387,13 +3383,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         //LeveL1
 
                                         SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
-                                        if ((prefs.getInt("POOL", 0)) < 500) {
+                                        if ((prefs.getInt("POOL", 0)) < 10000) {
                                             Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
                                         }
-                                        if ((prefs.getInt("POOL", 0)) >= 500) {
+                                        if ((prefs.getInt("POOL", 0)) >= 10000) {
                                             //bezahlen
-                                            editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 500));
+                                            editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 10000));
                                             editor2.apply();
 
                                             //Countdown Starten
@@ -3790,15 +3786,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 progressBarFabrik1.setProgress(goldprogress1);
 
                 //
-                StringBuilder sb = new StringBuilder();
-                sb.append("");
-                sb.append(goldprogress1);
-                String strI = sb.toString();
+                String strI = "" +
+                        goldprogress1;
                 //maximum storage to string
-                StringBuilder maxg = new StringBuilder();
-                maxg.append("");
-                maxg.append(datafab1.getInt("maxfabrik1", 500));
-                String maxgo = maxg.toString();
+
+                String maxgo = "" +
+                        datafab1.getInt("maxfabrik1", 500);
 
                 countfab1.setText(strI + "/" + maxgo);
 
@@ -3806,10 +3799,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 int goldphfab1int = (int)goldphfab160;
 
-                StringBuilder gph = new StringBuilder();
-                gph.append("");
-                gph.append(goldphfab1int);
-                String goph = gph.toString();
+                String goph = "" +
+                        goldphfab1int;
                 GperH.setText(getString(R.string.gold_per_hour)+ goph);
 
 
@@ -3932,15 +3923,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 progressBarFabrik2.setProgress(goldprogress1);
 
                 //
-                StringBuilder sb = new StringBuilder();
-                sb.append("");
-                sb.append(goldprogress1);
-                String strI = sb.toString();
+                String strI = "" +
+                        goldprogress1;
                 //maximum storage to string
-                StringBuilder maxg = new StringBuilder();
-                maxg.append("");
-                maxg.append(datafab2.getInt("maxfabrik2", 500));
-                String maxgo = maxg.toString();
+                String maxgo = "" +
+                        datafab2.getInt("maxfabrik2", 500);
 
                 countfab2.setText(strI + "/" + maxgo);
 
@@ -3948,10 +3935,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 int goldphfab1int = (int)goldphfab160;
 
-                StringBuilder gph = new StringBuilder();
-                gph.append("");
-                gph.append(goldphfab1int);
-                String goph = gph.toString();
+                String goph = "" +
+                        goldphfab1int;
                 GperH2.setText(getString(R.string.gold_per_hour)+ goph);
 
 
@@ -4074,15 +4059,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 progressBarFabrik3.setProgress(goldprogress1);
 
                 //
-                StringBuilder sb = new StringBuilder();
-                sb.append("");
-                sb.append(goldprogress1);
-                String strI = sb.toString();
+                String strI = "" +
+                        goldprogress1;
                 //maximum storage to string
-                StringBuilder maxg = new StringBuilder();
-                maxg.append("");
-                maxg.append(datafab3.getInt("maxfabrik3", 500));
-                String maxgo = maxg.toString();
+                String maxgo = "" +
+                        datafab3.getInt("maxfabrik3", 500);
 
                 countfab3.setText(strI + "/" + maxgo);
 
@@ -4090,10 +4071,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 int goldphfab1int = (int)goldphfab160;
 
-                StringBuilder gph = new StringBuilder();
-                gph.append("");
-                gph.append(goldphfab1int);
-                String goph = gph.toString();
+                String goph = "" +
+                        goldphfab1int;
                 GperH3.setText(getString(R.string.gold_per_hour)+ goph);
 
 
@@ -4215,15 +4194,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 progressBarFabrik4.setProgress(goldprogress1);
 
                 //
-                StringBuilder sb = new StringBuilder();
-                sb.append("");
-                sb.append(goldprogress1);
-                String strI = sb.toString();
+                String strI = "" +
+                        goldprogress1;
                 //maximum storage to string
-                StringBuilder maxg = new StringBuilder();
-                maxg.append("");
-                maxg.append(datafab4.getInt("maxfabrik4", 500));
-                String maxgo = maxg.toString();
+                String maxgo = "" +
+                        datafab4.getInt("maxfabrik4", 500);
 
                 countfab4.setText(strI + "/" + maxgo);
 
@@ -4231,10 +4206,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 int goldphfab1int = (int)goldphfab160;
 
-                StringBuilder gph = new StringBuilder();
-                gph.append("");
-                gph.append(goldphfab1int);
-                String goph = gph.toString();
+                String goph = "" +
+                        goldphfab1int;
                 GperH4.setText(getString(R.string.gold_per_hour)+ goph);
 
 
@@ -4317,39 +4290,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onStart() {
         super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.frozensparks.royalindustry/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.frozensparks.royalindustry/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
+
     }
 }

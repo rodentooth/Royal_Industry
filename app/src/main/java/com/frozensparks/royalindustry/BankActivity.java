@@ -3,10 +3,13 @@ package com.frozensparks.royalindustry;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,12 +17,16 @@ import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,57 +39,7 @@ import org.w3c.dom.Text;
  */
 public class BankActivity extends AppCompatActivity implements View.OnClickListener {
 
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
-    private static final int UI_ANIMATION_DELAY = 300;
-    private final Handler mHideHandler = new Handler();
-    private View mContentView;
-    private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
-        @Override
-        public void run() {
-            // Delayed removal of status and navigation bar
-
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
-            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        }
-    };
-
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-
-        }
-    };
-    private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-
-
-
+    Context context = this;
     int maxdias;
     TextView howmanygoldtodias;
     TextView diasCost;
@@ -91,6 +48,8 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
     SeekBar seekbar;
     Button confirmconvert;
     Dialog dialogconvertdias;
+
+    InterstitialAd mInterstitialAd;
 
     Button GoldToDias;
 
@@ -104,29 +63,41 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
      */
     private GoogleApiClient client;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Fullscreen
+        if (Build.VERSION.SDK_INT < 16) { //ye olde method
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } else { // Jellybean and up, new hotness
+            View decorView = getWindow().getDecorView();
+            // Hide the status bar.
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+            // Remember that you should never show the action bar if the
+            // status bar is hidden, so hide that too if necessary.
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.hide();
+        }
+
         setContentView(R.layout.activity_bank);
 
-        mVisible = true;
-
-        mContentView = findViewById(R.id.fullscreen_content);
 
 
-        // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
+        //ad
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        //ad laden
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("16201-16201")
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
+
+
 
         Button closeBank = (Button) findViewById(R.id.closeBank);
         closeBank.setOnClickListener(this);
@@ -172,6 +143,21 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         h.postDelayed(new Runnable() {
             public void run() {
                 //jede 0.1 sekunde folgendes aktualisieren
+
+                //Fullscreen
+                if (Build.VERSION.SDK_INT < 16) { //ye olde method
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                } else { // Jellybean and up, new hotness
+                    View decorView = getWindow().getDecorView();
+                    // Hide the status bar.
+                    int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+                    decorView.setSystemUiVisibility(uiOptions);
+                    // Remember that you should never show the action bar if the
+                    // status bar is hidden, so hide that too if necessary.
+                    ActionBar actionBar = getSupportActionBar();
+                    actionBar.hide();
+                }
 
 
                 //startzeit holen
@@ -246,63 +232,9 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             }
         }, delay);
 
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
-    }
-
-    private void toggle() {
-        if (mVisible) {
-            hide();
-        } else {
-            hide();
-        }
-    }
-
-    private void hide() {
-        // Hide UI first
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-
-        mVisible = false;
-
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable);
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
-    }
-
-    @SuppressLint("InlinedApi")
-    private void show() {
-        // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
-
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-    }
-
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
     @Override
@@ -392,122 +324,175 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
         if (id == R.id.confirmconvert) {
 
+            AlertDialog.Builder werbungcreatedias = new AlertDialog.Builder(
+                    context);
+            werbungcreatedias.setMessage("a short ad will pop up to confirm the convert");
 
-            //holen von wieviele diamanten erstellen
-            SharedPreferences prefs1 = getSharedPreferences("thatmanydias", MODE_PRIVATE);
-
-            //wenn 0 diamanten gewählt, abbrechen
-            if (prefs1.getInt("thatmanydias", 0) == 0) {
-
-
-                //dialog beenden
-                dialogconvertdias.dismiss();
-            }
+            werbungcreatedias.setPositiveButton("convert", new DialogInterface.OnClickListener() {
 
 
-            if (prefs1.getInt("thatmanydias", 1) >= 1) {
-
-                //CHECKEN OB ES DEN DIASPEICHER nicht überschreitet
-                SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
-                int diastor = BankMax.getInt("maxDiaStorage", 1000);
-                SharedPreferences DIAMONDS = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
-                int diainpool = DIAMONDS.getInt("DIAMONDS", 0);
-                int freespace = diastor - diainpool;
-
-                if (prefs1.getInt("thatmanydias", 1) > freespace) {
-
-                    Toast.makeText(BankActivity.this, "you can only create" + freespace + "diamonds", Toast.LENGTH_SHORT).show();
-                }
-
-                if (prefs1.getInt("thatmanydias", 1) <= freespace) {
-
-                    //Holen von Pool
-                    SharedPreferences prefs2 = getSharedPreferences("POOL", MODE_PRIVATE);
-
-                    //diamantenanzahl in gold umwandeln
-                    int goldweg = (prefs1.getInt("thatmanydias", 1)) * 200;
+                public void onClick(DialogInterface dialog, int id) {
 
 
-                    //checken obs genug gold für den convert hat
-                    if (goldweg >= prefs2.getInt("POOL", 0)) {
 
-                        Toast.makeText(BankActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
+
+                    //werbung starten
+                    // Nur wenn die ad geladen hat, das converten erlauben
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+
+
+
+
+
+
+
+
+                                //holen von wieviele diamanten erstellen
+                                SharedPreferences prefs1 = getSharedPreferences("thatmanydias", MODE_PRIVATE);
+
+                                //wenn 0 diamanten gewählt, abbrechen
+                                if (prefs1.getInt("thatmanydias", 0) == 0) {
+
+
+                                    //dialog beenden
+                                    dialogconvertdias.dismiss();
+                                }
+
+
+                                if (prefs1.getInt("thatmanydias", 1) >= 1) {
+
+                                    //CHECKEN OB ES DEN DIASPEICHER nicht überschreitet
+                                    SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
+                                    int diastor = BankMax.getInt("maxDiaStorage", 1000);
+                                    SharedPreferences DIAMONDS = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+                                    int diainpool = DIAMONDS.getInt("DIAMONDS", 0);
+                                    int freespace = diastor - diainpool;
+
+                                    if (prefs1.getInt("thatmanydias", 1) > freespace) {
+
+                                        Toast.makeText(BankActivity.this, "you can only create" + freespace + "diamonds", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    if (prefs1.getInt("thatmanydias", 1) <= freespace) {
+
+                                        //Holen von Pool
+                                        SharedPreferences prefs2 = getSharedPreferences("POOL", MODE_PRIVATE);
+
+                                        //diamantenanzahl in gold umwandeln
+                                        int goldweg = (prefs1.getInt("thatmanydias", 1)) * 200;
+
+
+                                        //checken obs genug gold für den convert hat
+                                        if (goldweg >= prefs2.getInt("POOL", 0)) {
+
+                                            Toast.makeText(BankActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
+
+
+                                        }
+
+                                        if (goldweg <= prefs2.getInt("POOL", 0)) {
+
+
+                                            //Pool aktualisieren, gold abziehen
+                                            SharedPreferences.Editor editor1 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                            editor1.putInt("POOL", (prefs2.getInt("POOL", 0)) - goldweg);
+                                            editor1.apply();
+
+                                            //Pooltext aktualisieren
+
+                                            String stringGoldmax = String.valueOf(BankMax.getInt("maxGoldStorage", 1000));
+                                            String Pooltext = String.valueOf(prefs2.getInt("POOL", 0));
+                                            currentGoldBalance.setText(getString(R.string.Gold) + ": " + Pooltext + "/" + stringGoldmax);
+
+
+                                            //Timer Starten
+                                            SharedPreferences.Editor editor3 = getSharedPreferences("DiamantConvertCountdown", MODE_PRIVATE).edit();
+                                            editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+                                            editor3.apply();
+
+
+                                            //es hat dias zu holen=true
+                                            SharedPreferences.Editor editor4 = getSharedPreferences("DiamantConvertCountdownOFF", MODE_PRIVATE).edit();
+                                            editor4.putBoolean("trueorfalse", true);
+                                            editor4.apply();
+
+
+                                            //dialog beenden
+                                            dialogconvertdias.dismiss();
+
+                                        }
+                                    }
+                                }
+
+                        mInterstitialAd.setAdListener(new AdListener() {
+
+                            @Override
+
+                            public void onAdLoaded() {
+                                Toast.makeText(BankActivity.this, "loaded", Toast.LENGTH_SHORT).show();
+
+                            }
+                            @Override
+                            public void onAdFailedToLoad(int errorCode) {
+                                Toast.makeText(BankActivity.this, "you have to be connected to the internet", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onAdClosed() {
+                                //thanks
+                                Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
+                                dialogconvertdias.dismiss();
+                                AdRequest adRequest = new AdRequest.Builder()
+                                        .addTestDevice("16201-16201")
+                                        .build();
+
+                                mInterstitialAd.loadAd(adRequest);
+                            }
+                        });
+
+                    }
+                    else {
+                        Toast.makeText(BankActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
+                        AdRequest adRequest = new AdRequest.Builder()
+                                .addTestDevice("04157df49ce5de15")
+                                .build();
+
+                        mInterstitialAd.loadAd(adRequest);
 
                     }
 
-                    if (goldweg <= prefs2.getInt("POOL", 0)) {
-
-
-                        //Pool aktualisieren, gold abziehen
-                        SharedPreferences.Editor editor1 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
-                        editor1.putInt("POOL", (prefs2.getInt("POOL", 0)) - goldweg);
-                        editor1.apply();
-
-                        //Pooltext aktualisieren
-
-                        String stringGoldmax = String.valueOf(BankMax.getInt("maxGoldStorage", 1000));
-                        String Pooltext = String.valueOf(prefs2.getInt("POOL", 0));
-                        currentGoldBalance.setText(getString(R.string.Gold) + ": " + Pooltext + "/" + stringGoldmax);
-
-
-                        //Timer Starten
-                        SharedPreferences.Editor editor3 = getSharedPreferences("DiamantConvertCountdown", MODE_PRIVATE).edit();
-                        editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
-                        editor3.apply();
-
-
-                        //es hat dias zu holen=true
-                        SharedPreferences.Editor editor4 = getSharedPreferences("DiamantConvertCountdownOFF", MODE_PRIVATE).edit();
-                        editor4.putBoolean("trueorfalse", true);
-                        editor4.apply();
-
-
-                        //dialog beenden
-                        dialogconvertdias.dismiss();
-                    }
                 }
             }
-        }
+            ).setNegativeButton("no", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+                    }
+                }
+
+                );
+
+                // create alert dialog
+              //  android.app.AlertDialog alertDialog = goldconvertad.create();
+
+                // show it
+            werbungcreatedias.show();
+            }
+
     }
+
+
 
     @Override
     public void onStart() {
         super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Bank Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.frozensparks.royalindustry/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
     }
-
     @Override
     public void onStop() {
         super.onStop();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Bank Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.frozensparks.royalindustry/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
     }
 }

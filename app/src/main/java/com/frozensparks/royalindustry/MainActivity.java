@@ -15,27 +15,41 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import com.google.android.gms.*;
+//import com.google.example.games.basegameutils.BaseGameUtils;
+
 
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity  implements View.OnClickListener {
+
+
 
 
 
@@ -115,6 +129,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String uporbld;
 
 
+    //SYNC
+    Button sync;
+
+
+
     //FULLSCREEN
 
 
@@ -123,6 +142,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+
+    //Google sign in
 
 
 
@@ -144,9 +165,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FontsOverride.setDefaultFont(this, "DEFAULT_ITALIC", "OldGlyphs.ttf");
 
 
-
-
         setContentView(R.layout.activity_main);
+
+
+
 
         //Fullscreen
         if (Build.VERSION.SDK_INT < 16) { //ye olde method
@@ -164,7 +186,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-
+        sync = (Button) findViewById(R.id.sync);
+        sync.setOnClickListener(this);
 
 
         //Bank
@@ -195,7 +218,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SammelnFabrik2 = (Button) findViewById(R.id.SammelnFabrik2);
         SammelnFabrik2.setOnClickListener(this);
         progressBarUpgradefab2 = (ProgressBar) findViewById(R.id.progressBarUpgradefab2);
-        progressBarUpgradefab2.setVisibility(View.INVISIBLE);
+        if (progressBarUpgradefab2 != null) {
+            progressBarUpgradefab2.setVisibility(View.INVISIBLE);
+        }
 
         //Fabrik3
         Fabrik3 = (Button) findViewById(R.id.Fabrik3);
@@ -278,10 +303,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
                 //firstopen auf falsch stellen
                 SharedPreferences.Editor editor2 = getSharedPreferences("firstopen", MODE_PRIVATE).edit();
                 editor2.putBoolean("firstopen", false);
                 editor2.apply();
+
+
+
+
+
 
             }
         }
@@ -1733,8 +1764,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bauhausdialog.dismiss();
         }
 
+//SYNC
+if (id== R.id.sync){
 
-
+    String toBeSent = "hallooooo";
+    String connection="http://localhost:8080/royalindustry/request.jsp?data="+toBeSent;
+    Intent accessTheJSP=new Intent();
+    //accessTheJSP.setType("image/*");
+    Log.i("Suma","Suma" + toBeSent);
+    //accessTheJSP.setAction(Intent.ACTION_VIEW);
+    accessTheJSP.setData(Uri.parse(connection));
+    startActivity(accessTheJSP);
+}
 
 
         //BANK
@@ -4285,7 +4326,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -4298,4 +4338,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+
+
 }

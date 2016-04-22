@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Royal Industry</string>
 
-
+<string name="app_id">1039988370556</string>
     <string name="title_activity_bank">BankActivity</string>
     <string name="Gold">gold </string>
     <string name="Diamonds">diamonds </string>
@@ -64,6 +64,9 @@
     <!- -->
     <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
     <string name="title_activity_gold_to_dias_ad">GoldToDiasAd</string>
+    <string name="loading">loading</string>
+    <string name="signed_out">signed out!</string>
+    <string name="signed_in_fmt">signed in</string>
 
 
 </resources>

@@ -129,8 +129,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     String uporbld;
 
 
-    //SYNC
-    Button sync;
+    //werkstatt
+    Button werkstatt;
 
 
 
@@ -186,8 +186,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         }
 
 
-        sync = (Button) findViewById(R.id.sync);
-        sync.setOnClickListener(this);
+        werkstatt = (Button) findViewById(R.id.werkstatt);
+        werkstatt.setOnClickListener(this);
 
 
         //Bank
@@ -1765,16 +1765,10 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         }
 
 //SYNC
-if (id== R.id.sync){
+if (id== R.id.werkstatt){
 
-    String toBeSent = "hallooooo";
-    String connection="http://localhost:8080/royalindustry/request.jsp?data="+toBeSent;
-    Intent accessTheJSP=new Intent();
-    //accessTheJSP.setType("image/*");
-    Log.i("Suma","Suma" + toBeSent);
-    //accessTheJSP.setAction(Intent.ACTION_VIEW);
-    accessTheJSP.setData(Uri.parse(connection));
-    startActivity(accessTheJSP);
+    Intent intent = new Intent(this, multiplayer.class);
+    startActivity(intent);
 }
 
 

@@ -156,11 +156,11 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sync"
-        android:id="@+id/sync"
-        android:layout_above="@+id/Bank"
-        android:layout_alignLeft="@+id/progressBarUpgradeBank"
-        android:layout_alignStart="@+id/progressBarUpgradeBank" />
+        android:text="werkstatt"
+        android:id="@+id/werkstatt"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/progressBarUpgradefab1"
+        android:layout_alignStart="@+id/progressBarUpgradefab1" />
 
 
 </RelativeLayout>

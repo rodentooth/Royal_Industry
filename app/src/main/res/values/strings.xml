@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Royal Industry</string>
 
-<string name="app_id">1039988370556</string>
+    <string name="app_id">1039988370556</string>
     <string name="title_activity_bank">BankActivity</string>
     <string name="Gold">gold </string>
     <string name="Diamonds">diamonds </string>
@@ -67,6 +67,7 @@
     <string name="loading">loading</string>
     <string name="signed_out">signed out!</string>
     <string name="signed_in_fmt">signed in</string>
+    <string name="signin_other_error">other error</string>
 
 
 </resources>

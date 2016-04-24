@@ -14,11 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
+import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.matesnetwork.Cognalys.VerifyMobile;
 
 import org.w3c.dom.Text;
 
@@ -52,6 +55,11 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
     InterstitialAd mInterstitialAd;
 
     Button GoldToDias;
+
+    //nrveri
+    Button verify;
+    EditText phnr;
+    EditText coucod;
 
     Handler h = new Handler();
     int delay = 100; //milliseconds
@@ -246,8 +254,31 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             finish();
 
         }
-
+        final EditText input;
         if (id == R.id.GoldToDias) {
+
+
+            //if (mobileverification= false){}
+
+            View verification = View.inflate(this, R.layout.verification, null);
+            Dialog veridia = new Dialog(v.getContext());
+            veridia.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            veridia.setContentView(verification);
+
+            coucod = (EditText) veridia.findViewById(R.id.coucod);
+            phnr = (EditText) veridia.findViewById(R.id.phnr);
+            coucod.setText(VerifyMobile
+                    .getCountryCode(getApplicationContext()));
+
+            verify = (Button) veridia.findViewById(R.id.verify);
+            verify.setOnClickListener(this);
+            String m_Text = coucod.getText().toString()+phnr.getText().toString();
+
+            veridia.show();
+
+
+
+
 
             View converter = View.inflate(this, R.layout.converter, null);
             dialogconvertdias = new Dialog(v.getContext());
@@ -316,13 +347,43 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             );
 
 
-            dialogconvertdias.show();
+        //    dialogconvertdias.show();
 
 
         }
+        if (id == R.id.verify) {
+          final  String m_Text = coucod.getText().toString()+phnr.getText().toString();
 
+            AlertDialog.Builder nrcheck = new AlertDialog.Builder(context);
+            nrcheck.setMessage("is \n"+m_Text+"\n\ncorrect?");
+
+
+            nrcheck.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    Intent in = new Intent(BankActivity.this, VerifyMobile.class);
+                    in.putExtra("app_id", "1648eb2ffc0d4dadbabc4b0");
+                    in.putExtra("access_token","a093629e19f74f66936a3b726f5eabb02c3e79ce");
+                    in.putExtra("mobile", m_Text);
+
+                    startActivityForResult(in,VerifyMobile.REQUEST_CODE);
+                }
+            });
+
+            nrcheck.show();
+        }
 
         if (id == R.id.confirmconvert) {
+
+
+
+
+
+            /*if (mobileverification= true){}
+
+
+
 
             AlertDialog.Builder werbungcreatedias = new AlertDialog.Builder(
                     context);
@@ -479,7 +540,28 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                 // show it
             werbungcreatedias.show();
-            }
+
+
+           */ }
+
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int arg0, int arg1, Intent arg2) {
+// TODO Auto-generated method stub
+        super.onActivityResult(arg0, arg1, arg2);
+
+        if (arg0 == VerifyMobile.REQUEST_CODE) {
+            String message = arg2.getStringExtra("message");
+            int result=arg2.getIntExtra("result", 0);
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+
+                String restring = Integer.toString(result);
+
+            Toast.makeText(BankActivity.this, restring, Toast.LENGTH_SHORT).show();
+        }
 
     }
 

@@ -1,13 +1,11 @@
 package com.frozensparks.royalindustry;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,30 +13,19 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
-import com.google.android.gms.*;
 //import com.google.example.games.basegameutils.BaseGameUtils;
 
 
@@ -156,13 +143,13 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
 
         //schrift umstellen
-        FontsOverride.setDefaultFont(this, "DEFAULT", "OldGlyphs.ttf");
-        FontsOverride.setDefaultFont(this, "MONOSPACE", "OldGlyphs.ttf");
-        FontsOverride.setDefaultFont(this, "SERIF", "OldGlyphs.ttf");
-        FontsOverride.setDefaultFont(this, "SANS_SERIF", "OldGlyphs.ttf");
-        FontsOverride.setDefaultFont(this, "DEFAULT_BOLD", "OldGlyphs.ttf");
-        FontsOverride.setDefaultFont(this, "DEFAULT_BOLD_ITALIC", "OldGlyphs.ttf");
-        FontsOverride.setDefaultFont(this, "DEFAULT_ITALIC", "OldGlyphs.ttf");
+        FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/OldGlyphs.ttf");
+        FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/OldGlyphs.ttf");
+        FontsOverride.setDefaultFont(this, "SERIF", "fonts/OldGlyphs.ttf");
+        FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/OldGlyphs.ttf");
+        FontsOverride.setDefaultFont(this, "DEFAULT_BOLD", "fonts/OldGlyphs.ttf");
+        FontsOverride.setDefaultFont(this, "DEFAULT_BOLD_ITALIC", "fonts/OldGlyphs.ttf");
+        FontsOverride.setDefaultFont(this, "DEFAULT_ITALIC", "fonts/OldGlyphs.ttf");
 
 
         setContentView(R.layout.activity_main);
@@ -270,7 +257,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 //Bank auf lvl 1
                 SharedPreferences.Editor editorBank = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
                 editorBank.putInt("maxGoldStorage", 1000);
-                editorBank.putInt("maxDiaStorage", 20);
                 editorBank.putString("leveltext", getString(R.string.bank)+" " + getString(R.string.level1));
                 editorBank.apply();
 
@@ -484,7 +470,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
                             //definition level2
                             editorBank.putInt("maxGoldStorage", 20000);
-                            editorBank.putInt("maxDiaStorage", 100);
                             editorBank.putString("leveltext", getString(R.string.bank)+" " + getString(R.string.level2));
                             editorBank.apply();
                             editorBank.putBoolean("isLeveling", false);
@@ -518,7 +503,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
                                 //definition level3
                                 editorBank.putInt("maxGoldStorage", 75000);
-                                editorBank.putInt("maxDiaStorage", 1000);
                                 editorBank.putString("leveltext", getString(R.string.bank)+" " + getString(R.string.level3));
                                 editorBank.apply();
                                 editorBank.putBoolean("isLeveling", false);
@@ -553,7 +537,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
                                 //definition level4
                                 editorBank.putInt("maxGoldStorage", 150000);
-                                editorBank.putInt("maxDiaStorage", 2000);
                                 editorBank.putString("leveltext", getString(R.string.bank)+" " + getString(R.string.level4));
                                 editorBank.apply();
                                 editorBank.putBoolean("isLeveling", false);
@@ -1800,15 +1783,15 @@ if (id== R.id.werkstatt){
 
                 if (dataBank.getInt("Level", 1) == 1) {
                     //text bank lvl2
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.goldstorage)," 1000",Html.fromHtml(" <font color=#00ff00> + 19000</font>"), "\n\n ",getString(R.string.diastorage)," 20 ",Html.fromHtml("<font color=#00ff00> + 80</font>")," \n \n", getString(R.string.unlock)," \n \n",  getString(R.string.factories)," ", getString(R.string.level3),",",getString(R.string.factory_2),", ", getString(R.string.agency)," \n \n",getString(R.string.Costs),"100", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.goldstorage)," 1000",Html.fromHtml(" <font color=#00ff00> + 19000</font>"), "\n\n ", getString(R.string.unlock)," \n \n",  getString(R.string.factories)," ", getString(R.string.level3),",",getString(R.string.factory_2),", ", getString(R.string.agency)," \n \n",getString(R.string.Costs),"100", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
                 }
                 if (dataBank.getInt("Level", 1) == 2) {
                     //text lvl3
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.goldstorage),"20000",Html.fromHtml(" <font color=#00ff00> + 55000</font>"), "\n\n ",getString(R.string.diastorage)," 100 ",Html.fromHtml("<font color=#00ff00> + 900</font>")," \n \n",getString(R.string.Costs),"20000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:30"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.goldstorage),"20000",Html.fromHtml(" <font color=#00ff00> + 55000</font>"), "\n\n ",getString(R.string.Costs),"20000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:30"));
                 }
                 if (dataBank.getInt("Level", 1) == 3) {
                     //text lvl4
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.goldstorage),"75000",Html.fromHtml(" <font color=#00ff00> + 75000</font>"), "\n\n ",getString(R.string.diastorage)," 1000 ",Html.fromHtml("<font color=#00ff00> + 1000</font>")," \n \n",getString(R.string.Costs),"75000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:40"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.goldstorage),"75000",Html.fromHtml(" <font color=#00ff00> + 75000</font>"), "\n \n",getString(R.string.Costs),"75000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:40"));
                 }
 
 

@@ -69,6 +69,36 @@
                 android:layout_toRightOf="@+id/GoldToDias"
                 android:layout_toEndOf="@+id/GoldToDias"
                 android:indeterminate="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/diatimer"
+                android:layout_alignBottom="@+id/GoldToDias"
+                android:layout_toLeftOf="@+id/diaconvertingtimeprogress"
+                android:layout_toStartOf="@+id/diaconvertingtimeprogress"
+                android:text="loading..."
+                android:visibility="invisible" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="cashout"
+                android:id="@+id/cashout"
+                android:layout_below="@+id/GoldToDias"
+                android:layout_alignRight="@+id/GoldToDias"
+                android:layout_alignEnd="@+id/GoldToDias" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="cash"
+                android:id="@+id/cashoutonwait"
+                android:layout_below="@+id/cashout"
+                android:layout_alignLeft="@+id/diatext"
+                android:layout_alignStart="@+id/diatext" />
+
         </RelativeLayout>
 
 

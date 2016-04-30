@@ -1,0 +1,117 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/hintergrundmaingame"
+    tools:context="com.frozensparks.royalindustry.MainActivity"
+    android:id="@+id/fullscreen_content">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#aa000000">
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:text="@string/factory_1"
+            android:id="@+id/tutfab"
+            android:textAllCaps="false"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$"
+            android:id="@+id/samtutfab"
+            android:textAllCaps="false"
+            android:layout_above="@+id/tutfab"
+            android:layout_alignRight="@+id/tutfab"
+            android:layout_alignEnd="@+id/tutfab"
+            android:visibility="invisible" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome"
+            android:id="@+id/welcome"
+            android:textColor="#ffffff"
+            android:textSize="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/cont"
+            android:layout_toStartOf="@+id/cont" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/architect"
+            android:id="@+id/tutarch"
+            android:textAllCaps="false"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:visibility="invisible" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bank"
+            android:id="@+id/tutbank"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textAllCaps="false"
+            android:visibility="invisible" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="pfeil"
+            android:id="@+id/cont"
+            android:layout_alignParentTop="true"
+            android:layout_alignLeft="@+id/samtutfab"
+            android:layout_alignStart="@+id/samtutfab" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/facproduce"
+            android:id="@+id/facprod"
+            android:textSize="25dp"
+            android:textColor="#ffffff"
+            android:visibility="invisible"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/tutfab"
+            android:layout_toStartOf="@+id/tutfab" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/collect"
+            android:id="@+id/gold"
+            android:layout_above="@+id/tutfab"
+            android:layout_alignRight="@+id/facprod"
+            android:layout_alignEnd="@+id/facprod"
+            android:visibility="invisible"
+            android:textSize="25dp"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/insidebank"
+            android:id="@+id/insidebank"
+            android:layout_above="@+id/tutbank"
+            android:layout_centerHorizontal="true"
+            android:textColor="#ffffff"
+            android:textSize="15dp"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+
+</RelativeLayout>

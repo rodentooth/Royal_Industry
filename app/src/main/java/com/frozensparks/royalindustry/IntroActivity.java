@@ -1,8 +1,14 @@
 package com.frozensparks.royalindustry;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +29,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 //import com.google.example.games.basegameutils.BaseGameUtils;
 
 public class IntroActivity extends AppCompatActivity implements
@@ -40,11 +60,28 @@ public class IntroActivity extends AppCompatActivity implements
     String personEmail;
     String personId;
     Uri personPhoto;
+    int connectcode;
+    Context context = this;
+
+    Typeface typeface;
+
+    String str_result;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
+
+
+       AssetManager am = context.getApplicationContext().getAssets();
+
+        typeface = Typeface.createFromAsset(am,
+                String.format(Locale.US, "fonts/%2s", "OldGlyphs.ttf"));
+
+         splash = (TextView) findViewById(R.id.splash);
+        splash.setTypeface(typeface);
+       splash.setText("frozen \n sparks");
         //Fullscreen
         if (Build.VERSION.SDK_INT < 16) { //ye olde method
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -60,7 +97,7 @@ public class IntroActivity extends AppCompatActivity implements
             actionBar.hide();
         }
 
-    splash = (TextView)findViewById(R.id.splash);
+        splash = (TextView) findViewById(R.id.splash);
         splash.setVisibility(View.INVISIBLE);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -83,40 +120,42 @@ public class IntroActivity extends AppCompatActivity implements
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
-        @Override
-        public void onStart() {
-            super.onStart();
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
 
-            signIn();
-            new Handler().postDelayed(new Runnable(){
-                @Override
-                public void run() {
+        signIn();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
 
-                    AlphaAnimation fadeOutAnimation = new AlphaAnimation(0, 1); // start alpha, end alpha
-                    fadeOutAnimation.setDuration(700); // time for animation in milliseconds
-                    fadeOutAnimation.setFillAfter(true); // make the transformation persist
-                    fadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
+                AlphaAnimation fadeOutAnimation = new AlphaAnimation(0, 1); // start alpha, end alpha
+                fadeOutAnimation.setDuration(700); // time for animation in milliseconds
+                fadeOutAnimation.setFillAfter(true); // make the transformation persist
+                fadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onAnimationRepeat(Animation animation) { }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
 
-                        @Override
-                        public void onAnimationStart(Animation animation) {splash.setVisibility(View.VISIBLE); }
-                    });
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        splash.setVisibility(View.VISIBLE);
+                    }
+                });
 
-                    splash.setAnimation(fadeOutAnimation);
-
-
-                }
-            }, 100);
-        }
+                splash.setAnimation(fadeOutAnimation);
 
 
+            }
+        }, 100);
+    }
 
 
     private void signIn() {
@@ -136,8 +175,17 @@ public class IntroActivity extends AppCompatActivity implements
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-        }
+            if (result != null) {
+                handleSignInResult(result);
+            }
+            if (result == null) {
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+
+            }
+
+            }
     }
 
 
@@ -147,25 +195,68 @@ public class IntroActivity extends AppCompatActivity implements
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             personName = acct.getDisplayName();
-             personEmail = acct.getEmail();
-             personId = acct.getId();
-             personPhoto = acct.getPhotoUrl();
+            personEmail = acct.getEmail();
+            personId = acct.getId();
+            personPhoto = acct.getPhotoUrl();
             String pph = "0";
             String type = "logreg";
-            if (personPhoto != null){
-                 pph = personPhoto.toString();
+            if (personPhoto != null) {
+                pph = personPhoto.toString();
             }
-            if (personName == null){
+            if (personName == null) {
                 personName = "0";
             }
-            if (personEmail == null){
+            if (personEmail == null) {
                 personEmail = "0";
             }
 
-            bgworker bgworker = new bgworker(this);
-            bgworker.execute(type, personId, personEmail, personName, pph);
 
-            new Handler().postDelayed(new Runnable(){
+            bgworkerintro bgworkerintro = new bgworkerintro(IntroActivity.this);
+            try {
+                str_result = bgworkerintro.execute(type, personId, personEmail, personName, pph).get();
+
+
+                String dat = "request";
+                String gid =personId;
+                bgworkerdias lol = new bgworkerdias(context);
+                lol.execute(dat, gid, "diacollect");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+
+            int connectcode = Integer.parseInt(str_result);
+
+
+            if (connectcode == 0) {
+
+                Toast.makeText(this, "server error", Toast.LENGTH_SHORT).show();
+            }
+            if (connectcode == 11) {
+
+                Toast.makeText(this, "login success", Toast.LENGTH_SHORT).show();
+                SharedPreferences.Editor editor1 = getSharedPreferences("google", MODE_PRIVATE).edit();
+                editor1.putString("id", personId);
+                editor1.apply();
+
+            }
+
+            if (connectcode == 121) {
+
+                Toast.makeText(this, "new account created", Toast.LENGTH_SHORT).show();
+                SharedPreferences.Editor editor1 = getSharedPreferences("google", MODE_PRIVATE).edit();
+                editor1.putString("id", personId);
+                editor1.apply();
+            }
+
+            if (str_result.toLowerCase().contains("error")) {
+                Toast.makeText(this, str_result, Toast.LENGTH_SHORT).show();
+            }
+
+
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     AlphaAnimation fadeOutAnimation = new AlphaAnimation(1, 0); // start alpha, end alpha
@@ -178,42 +269,276 @@ public class IntroActivity extends AppCompatActivity implements
                         }
 
                         @Override
-                        public void onAnimationRepeat(Animation animation) { }
+                        public void onAnimationRepeat(Animation animation) {
+                        }
 
                         @Override
-                        public void onAnimationStart(Animation animation) { }
+                        public void onAnimationStart(Animation animation) {
+                        }
                     });
 
                     splash.setAnimation(fadeOutAnimation);
 
-                    new Handler().postDelayed(new Runnable(){
+                    new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+
                 /* Create an Intent that will start the Menu-Activity. */
-                            Intent intent = new Intent(IntroActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            IntroActivity.this.finish();
+
+                            SharedPreferences firstopen = getSharedPreferences("firstope", MODE_PRIVATE);
+                            Boolean datopen = firstopen.getBoolean("firstope", true);
+                            if (!datopen){
+
+                                Intent intent = new Intent(IntroActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                IntroActivity.this.finish();
+                            }
+
+
+
+                            if (datopen) {
+                                Intent intent = new Intent(IntroActivity.this, Tutorial.class);
+                                startActivity(intent);
+
+                                IntroActivity.this.finish();
+
+                            }
+
+                        }
+                    }, 200);
                 }
             }, 200);
-                }
-                }, 200);
 
 
         } else {
             // Signed out, show unauthenticated UI.
             signIn();
-            Toast.makeText(IntroActivity.this, "log in!!", Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
     @Override
-        public void onConnectionSuspended ( int i){
+    public void onConnectionSuspended(int i) {
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+
+    class bgworkerintro extends AsyncTask<String, Void, String> {
+        String doafter;
+
+
+        public bgworkerintro(IntroActivity activity) {
+
+            Dialog dialog = new Dialog(activity);
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String type = params[0];
+            String login_url = "http://frozensparks.com/login.php";
+            String veri_url = "http://frozensparks.com/verify.php";
+            String collect_url = "http://frozensparks.com/collect.php";
+
+
+            if (type.equals("logreg")) {
+                try {
+                    String googleID = params[1];
+                    String email = params[2];
+                    String name = params[3];
+                    String photourl = params[4];
+
+
+                    URL url = new URL(login_url);
+                    HttpURLConnection httpurlconn = (HttpURLConnection) url.openConnection();
+                    httpurlconn.setRequestMethod("POST");
+                    httpurlconn.setDoOutput(true);
+                    httpurlconn.setDoInput(true);
+                    OutputStream outputStream = httpurlconn.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    String post_data = URLEncoder.encode("googleID", "UTF-8") + "=" + URLEncoder.encode(googleID, "UTF-8") + "&"
+                            + URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8") + "&"
+                            + URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode(name, "UTF-8") + "&"
+                            + URLEncoder.encode("photourl", "UTF-8") + "=" + URLEncoder.encode(photourl, "UTF-8");
+                    bufferedWriter.write(post_data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+
+                    InputStream inputStream = httpurlconn.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                    String result = "";
+                    String line = "";
+
+                    while ((line = bufferedReader.readLine()) != null) {
+                        result += line;
+
+
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpurlconn.disconnect();
+
+                    return result;
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            if (type.equals("request")) {
+                try {
+                    doafter = params[2];
+                    String googleID = params[1];
+
+
+                    URL url = new URL(collect_url);
+                    HttpURLConnection httpurlconn = (HttpURLConnection) url.openConnection();
+                    httpurlconn.setRequestMethod("POST");
+                    httpurlconn.setDoOutput(true);
+                    httpurlconn.setDoInput(true);
+                    OutputStream outputStream = httpurlconn.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    String post_data = URLEncoder.encode("googleID", "UTF-8") + "=" + URLEncoder.encode(googleID, "UTF-8");
+                    bufferedWriter.write(post_data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+
+                    InputStream inputStream = httpurlconn.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                    String result = "";
+                    String line = "";
+
+                    while ((line = bufferedReader.readLine()) != null) {
+                        result += line;
+
+
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpurlconn.disconnect();
+
+                    return result;
+
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            if (type.equals("verify")) {
+                try {
+                    String googleID = params[1];
+                    String deviceID = params[2];
+                    String number = params[3];
+
+
+                    URL url = new URL(veri_url);
+                    HttpURLConnection httpurlconn = (HttpURLConnection) url.openConnection();
+                    httpurlconn.setRequestMethod("POST");
+                    httpurlconn.setDoOutput(true);
+                    httpurlconn.setDoInput(true);
+                    OutputStream outputStream = httpurlconn.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    String post_data = URLEncoder.encode("googleID", "UTF-8") + "=" + URLEncoder.encode(googleID, "UTF-8") + "&"
+                            + URLEncoder.encode("deviceID", "UTF-8") + "=" + URLEncoder.encode(deviceID, "UTF-8") + "&"
+                            + URLEncoder.encode("number", "UTF-8") + "=" + URLEncoder.encode(number, "UTF-8");
+                    bufferedWriter.write(post_data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+
+                    InputStream inputStream = httpurlconn.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                    String result = "";
+                    String line = "";
+
+                    while ((line = bufferedReader.readLine()) != null) {
+                        result += line;
+
+
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpurlconn.disconnect();
+
+                    return result;
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+
+            return null;
         }
 
         @Override
-        public void onClick (View v){
+        protected void onPreExecute() {
+
 
         }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+
+            if (str_result != null) {
+
+                str_result = str_result.replace(" ", "");
+                connectcode = Integer.parseInt(str_result);
+            }
+
+
+
+            if (doafter == "diacollect") {
+                if (connectcode >= 1) {
+                    //
+                //    Toast.makeText(IntroActivity.this, str_result, Toast.LENGTH_SHORT).show();
+
+                /*    //databank aktualisieren
+                    SharedPreferences.Editor editor1 = getSharedPreferences("DIAMONDS", MODE_PRIVATE).edit();
+                    editor1.putInt("DIAMONDS", connectcode);
+                    editor1.commit();*/
+
+
+                }
+
+
+            }
+
+            // else{
+            //    Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
+
+            // }
+
+        }
+
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+
+        }
+
+
     }
+}

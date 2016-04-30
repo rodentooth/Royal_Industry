@@ -15,5 +15,7 @@
         android:layout_centerHorizontal="true"
         android:textColor="#ffffff"
         android:textSize="100dp"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
 </RelativeLayout>

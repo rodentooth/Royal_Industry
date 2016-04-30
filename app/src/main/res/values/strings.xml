@@ -68,6 +68,14 @@
     <string name="signed_out">signed out!</string>
     <string name="signed_in_fmt">signed in</string>
     <string name="signin_other_error">other error</string>
+    <string name="welcome">welcome to royal industry!</string>
+    <string name="facproduce">factories produce gold for you</string>
+    <string name="collect">collect your first gold:</string>
+    <string name="goldcollectedtutorial">gold collected!</string>
+    <string name="banktutorial">your gold is now in the bank.</string>
+    <string name="insidebank">inside the bank, you can create real money</string>
+    <string name="insidearch">inside the architect\'s office, you can upgrade your buildings.</string>
+    <string name="tutcomplete">you completed the tutorial. have fun!</string>
 
 
 </resources>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.frozensparks.royalindustry.Agency"
+    android:background="@mipmap/bgagency">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView10"
+        android:layout_gravity="center_vertical"
+        android:src="@mipmap/bgagency_dialog_gold"
+        android:layout_weight="0.2"
+        android:layout_alignTop="@+id/imageView9"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/imageView9"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView9"
+        android:layout_gravity="center_vertical"
+        android:src="@mipmap/bgagency_dialog_build"
+        android:layout_weight="0.2"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_alignParentBottom="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/agency"
+        android:id="@+id/agencytitle"
+        android:textSize="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:id="@+id/doublegold"
+        android:background="@drawable/goldx2"
+        android:layout_alignLeft="@+id/imageView10"
+        android:layout_marginTop="90dp"
+        android:layout_marginLeft="10dp"
+        android:layout_alignRight="@+id/imageView10"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:id="@+id/get5000gold"
+        android:background="@drawable/b5000gold"
+        android:layout_alignRight="@+id/imageView10"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignLeft="@+id/imageView10"
+        android:layout_below="@+id/doublegold" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:id="@+id/buildboost"
+        android:background="@drawable/b30minboost"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+        android:layout_marginTop="90dp"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/imageView9"
+        android:layout_alignRight="@+id/imageView9"
+        android:layout_marginRight="10dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="X"
+        android:id="@+id/closeAgency"
+        android:textAllCaps="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/imageView11"
+        android:background="@mipmap/gold"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/buildboost"
+        android:layout_alignStart="@+id/buildboost" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Gold"
+        android:id="@+id/goldagency"
+        android:textColor="#ffffff"
+        android:layout_alignBottom="@+id/imageView11"
+        android:layout_toRightOf="@+id/imageView11"
+        android:layout_toEndOf="@+id/imageView11" />
+
+</RelativeLayout>

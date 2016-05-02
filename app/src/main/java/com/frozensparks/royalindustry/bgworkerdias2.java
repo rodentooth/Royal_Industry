@@ -2,6 +2,11 @@
 package com.frozensparks.royalindustry;
 
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -13,31 +18,16 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Random;
-
-import android.app.Dialog;
-import android.content.AsyncTaskLoader;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 
-public class bgworkerdias extends AsyncTask<String, Void, String> {
+public class bgworkerdias2 extends AsyncTask<String, Void, String> {
     String doafter;
     String str_result;
     int connectcode;
     Context context;
 
 
-    public bgworkerdias(Context activity) {
+    public bgworkerdias2(Context activity) {
 
 
 
@@ -162,9 +152,6 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
 
 
         if (result != null) {
-            if(result== "" ){
-                result= "0";
-            }
 
             str_result = result.replace(" ", "");
             connectcode = Integer.parseInt(str_result);

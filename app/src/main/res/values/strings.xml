@@ -76,6 +76,7 @@
     <string name="insidebank">inside the bank, you can create real money</string>
     <string name="insidearch">inside the architect\'s office, you can upgrade your buildings.</string>
     <string name="tutcomplete">you completed the tutorial. have fun!</string>
+    <string name="checkinet">check your internet connection</string>
 
 
 </resources>

@@ -26,7 +26,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginLeft="52dp"
                 android:layout_marginStart="52dp"
-                android:layout_marginTop="42dp" />
+                android:layout_marginTop="42dp"
+                android:autoText="false" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -51,14 +52,13 @@
 
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/Convert"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
                 android:id="@+id/GoldToDias"
                 android:textAllCaps="false"
                 android:layout_alignTop="@+id/diatext"
-                android:layout_toRightOf="@+id/diatext"
-                />
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/goldtodiasbtns" />
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
@@ -81,13 +81,13 @@
                 android:visibility="invisible" />
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="cashout"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
                 android:id="@+id/cashout"
+                android:background="@drawable/diastocashbtns"
                 android:layout_below="@+id/GoldToDias"
-                android:layout_alignRight="@+id/GoldToDias"
-                android:layout_alignEnd="@+id/GoldToDias" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="66dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -95,9 +95,36 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="cash"
                 android:id="@+id/cashoutonwait"
-                android:layout_below="@+id/cashout"
-                android:layout_alignLeft="@+id/diatext"
-                android:layout_alignStart="@+id/diatext" />
+                android:layout_alignBottom="@+id/cashout"
+                android:layout_toRightOf="@+id/imageView6"
+                android:layout_toEndOf="@+id/imageView6" />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/imageView3"
+                android:layout_alignBottom="@+id/currentGoldBalance"
+                android:layout_toLeftOf="@+id/diatext"
+                android:layout_toStartOf="@+id/diatext"
+                android:background="@mipmap/gold" />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/imageView4"
+                android:background="@mipmap/diamond"
+                android:layout_alignBottom="@+id/diatext"
+                android:layout_toLeftOf="@+id/diatext"
+                android:layout_toStartOf="@+id/diatext" />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:id="@+id/imageView6"
+                android:background="@mipmap/dollar"
+                android:layout_alignBottom="@+id/cashoutonwait"
+                android:layout_alignLeft="@+id/imageView4"
+                android:layout_alignStart="@+id/imageView4" />
 
         </RelativeLayout>
 

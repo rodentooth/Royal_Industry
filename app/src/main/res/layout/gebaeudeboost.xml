@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="50dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="choose a building"
+            android:id="@+id/choosebuildingttoboost" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="no upgrades going on"
+            android:id="@+id/platzhalterboost" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/myradiogroup"
+
+            >
+
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/factory_1"
+                android:id="@+id/boostfab1"
+                android:visibility="gone"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/factory_2"
+                android:id="@+id/boostfab2"
+                android:visibility="gone"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/factory_3"
+                android:id="@+id/boostfab3"
+                android:visibility="gone"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/factory_4"
+                android:id="@+id/boostfab4"
+                android:visibility="gone"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bank"
+                android:id="@+id/boostbank"
+                android:visibility="gone"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="skip 30 minutes building time"
+        android:id="@+id/textView4"
+        android:layout_alignBaseline="@+id/closegebaeudeboost"
+        android:layout_alignBottom="@+id/closegebaeudeboost"
+        android:layout_toLeftOf="@+id/closegebaeudeboost"
+        android:layout_toStartOf="@+id/closegebaeudeboost" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x"
+        android:id="@+id/closegebaeudeboost"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="watch ad"
+        android:id="@+id/payboostwithad"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/payboostwithgold"
+        android:text="500 gold"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/payboostwithad"
+        android:layout_alignTop="@+id/payboostwithad"
+        android:scaleType="fitEnd" />
+</RelativeLayout>

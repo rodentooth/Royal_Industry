@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -63,6 +65,8 @@ public class IntroActivity extends AppCompatActivity implements
     int connectcode;
     Context context = this;
 
+    ConnectivityManager connectivity;
+
     Typeface typeface;
 
     String str_result;
@@ -73,8 +77,12 @@ public class IntroActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
+        //inet check
+        connectivity  = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
-       AssetManager am = context.getApplicationContext().getAssets();
+
+
+        AssetManager am = context.getApplicationContext().getAssets();
 
         typeface = Typeface.createFromAsset(am,
                 String.format(Locale.US, "fonts/%2s", "OldGlyphs.ttf"));
@@ -123,16 +131,18 @@ public class IntroActivity extends AppCompatActivity implements
 
     @Override
     public void onStart() {
+
+
         super.onStart();
 
-
+        if  (isConnectingToInternet()){
         signIn();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
                 AlphaAnimation fadeOutAnimation = new AlphaAnimation(0, 1); // start alpha, end alpha
-                fadeOutAnimation.setDuration(700); // time for animation in milliseconds
+                fadeOutAnimation.setDuration(2000); // time for animation in milliseconds
                 fadeOutAnimation.setFillAfter(true); // make the transformation persist
                 fadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -156,6 +166,7 @@ public class IntroActivity extends AppCompatActivity implements
             }
         }, 100);
     }
+    }
 
 
     private void signIn() {
@@ -167,7 +178,61 @@ public class IntroActivity extends AppCompatActivity implements
     public void onConnected(Bundle bundle) {
 
     }
+    // check internet connection
+    public boolean isConnectingToInternet() {
 
+        if (connectivity != null)
+        {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (int i = 0; i < info.length; i++)
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                    {
+
+                        return true;
+
+
+
+                    }
+
+
+        }
+
+
+                AlphaAnimation fadeOutAnimation = new AlphaAnimation(0, 1); // start alpha, end alpha
+                fadeOutAnimation.setDuration(5000); // time for animation in milliseconds
+                fadeOutAnimation.setFillAfter(true); // make the transformation persist
+                fadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    finish();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        splash.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                splash.setAnimation(fadeOutAnimation);
+
+
+
+
+        Toast.makeText(IntroActivity.this, R.string.checkinet, Toast.LENGTH_LONG).show();
+        return false;
+
+
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

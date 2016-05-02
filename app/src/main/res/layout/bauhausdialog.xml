@@ -4,17 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#00000000"
     >
 
 
-
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView7"
+        android:src="@mipmap/regalvoll"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:scaleType="fitXY"
+        android:background="#00ffffff"
+        />
 
     <ScrollView
 
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/closeBauhaus">
+        android:layout_below="@+id/closeBauhaus"
+        android:id="@+id/scrollView"
+        android:background="#00ffffff"
+        >
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,14 +59,16 @@
         android:id="@+id/leveltextfabr1"
         android:layout_gravity="center_horizontal"
         android:textAlignment="center"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+            android:textColor="#ffffff" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="loading..."
             android:id="@+id/upcdfab1"
-            android:layout_column="5" />
+            android:layout_column="5"
+            android:textColor="#ffffff" />
 
     </TableRow>
 
@@ -77,14 +96,16 @@
                 android:id="@+id/leveltextfabr2"
                 android:layout_gravity="center_horizontal"
                 android:textAlignment="center"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textColor="#ffffff" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="loading..."
                 android:id="@+id/upcdfab2"
-                android:layout_column="5" />
+                android:layout_column="5"
+                android:textColor="#ffffff" />
 
         </TableRow>
 
@@ -112,14 +133,16 @@
                 android:id="@+id/leveltextfabr3"
                 android:layout_gravity="center_horizontal"
                 android:textAlignment="center"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textColor="#ffffff" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="loading..."
                 android:id="@+id/upcdfab3"
-                android:layout_column="5" />
+                android:layout_column="5"
+                android:textColor="#ffffff" />
 
         </TableRow>
 
@@ -147,14 +170,16 @@
                 android:id="@+id/leveltextfabr4"
                 android:layout_gravity="center_horizontal"
                 android:textAlignment="center"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textColor="#ffffff" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="loading..."
                 android:id="@+id/upcdfab4"
-                android:layout_column="5" />
+                android:layout_column="5"
+                android:textColor="#ffffff" />
 
         </TableRow>
 
@@ -182,14 +207,16 @@
                 android:id="@+id/leveltextBank"
                 android:layout_gravity="center_horizontal"
                 android:textAlignment="center"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textColor="#ffffff" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="loading..."
                 android:id="@+id/upcdBank"
-                android:layout_column="5" />
+                android:layout_column="5"
+                android:textColor="#ffffff" />
 
         </TableRow>
 
@@ -217,14 +244,16 @@
                 android:id="@+id/leveltextAgentur"
                 android:layout_gravity="center_horizontal"
                 android:textAlignment="center"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textColor="#ffffff" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="loading..."
                 android:id="@+id/upcdAgentur"
-                android:layout_column="5" />
+                android:layout_column="5"
+                android:textColor="#ffffff" />
 
         </TableRow>
 
@@ -240,11 +269,42 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="5dp"
+        android:id="@+id/imageView8"
+        android:background="#000000"
+        android:src="#000000"
+        android:layout_alignTop="@+id/scrollView" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/architect"
         android:id="@+id/textView"
         android:layout_alignBottom="@+id/closeBauhaus"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffffff" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/imageView5"
+        android:background="@mipmap/gold"
+        android:layout_alignBottom="@+id/closeBauhaus"
+        android:layout_toRightOf="@+id/textView"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Gold"
+        android:id="@+id/goldpoolarch"
+        android:layout_alignBottom="@+id/imageView5"
+        android:layout_toRightOf="@+id/imageView5"
+        android:layout_toEndOf="@+id/imageView5"
+        android:textColor="#ffffff" />
+
 </RelativeLayout>

@@ -132,9 +132,13 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         //geld aktualisierung
         final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
         String type = "convert";
+        String dat = "request";
         String gid = google.getString("id", "0");
-        bgworkerdias bgworker1 =new bgworkerdias(BankActivity.this);
+        bgworkerdias bgworker1 =new bgworkerdias(context);
         bgworker1.execute(type, gid,"" , "convert");
+
+        bgworkerdias2 lol = new bgworkerdias2(context);
+        lol.execute(dat, gid, "diacollect");
 
         //notifications
 
@@ -203,7 +207,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         cashoutonwait = (TextView) findViewById(R.id.cashoutonwait);
 
         SharedPreferences cashouttext = getSharedPreferences("cashout", MODE_PRIVATE);
-        cashoutonwait.setText("waiting for payout:"+ String.valueOf(cashouttext.getFloat("cashout", 0)+"$"));
+        cashoutonwait.setText( String.valueOf(cashouttext.getFloat("cashout", 0)+"$"));
 
 
 
@@ -219,12 +223,9 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         //Aktualisiere den Kontostatus
         SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
         String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
-        currentGoldBalance.setText(getString(R.string.Gold) + ": " + Pooltext + "/" + stringGoldmax);
+        currentGoldBalance.setText(": " + Pooltext + "/" + stringGoldmax);
 
-        SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
-        //Diapool text aktualisieren
-        String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
-        diatext.setText((getString(R.string.Diamonds) + ": " + diapooltext));
+
 
 
         if ((prefs1.getInt("POOL", 0)) > 4000) {
@@ -255,6 +256,10 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     ActionBar actionBar = getSupportActionBar();
                     actionBar.hide();
                 }
+                SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+                //Diapool text aktualisieren
+                String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
+                diatext.setText(": " + diapooltext);
 
 
                 //startzeit holen
@@ -522,7 +527,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                                             String stringGoldmax = String.valueOf(BankMax.getInt("maxGoldStorage", 1000));
                                             String Pooltext = String.valueOf(prefs2.getInt("POOL", 0));
-                                            currentGoldBalance.setText(getString(R.string.Gold) + ": " + Pooltext + "/" + stringGoldmax);
+                                            currentGoldBalance.setText(": " + Pooltext + "/" + stringGoldmax);
 
 
                                             //Timer Starten
@@ -1145,7 +1150,7 @@ class bgworker extends AsyncTask<String, Void, String> {
                 //Pooltext aktualisieren
                 SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
                 String Pooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
-                diatext.setText(getString(R.string.Diamonds) + ": " + Pooltext);
+                diatext.setText(": " + Pooltext);
 
 
 
@@ -1229,7 +1234,7 @@ class bgworker extends AsyncTask<String, Void, String> {
 
 
                 //Diapool text aktualisieren
-                diatext.setText((getString(R.string.Diamonds) + ": " + connectcode));
+                diatext.setText((": " + connectcode));
 
                 //databank aktualisieren
                 SharedPreferences.Editor editor1 = getSharedPreferences("DIAMONDS", MODE_PRIVATE).edit();

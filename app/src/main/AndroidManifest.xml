@@ -22,7 +22,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.matesnetwork.Cognalys.VerifyMobile"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
         <receiver android:name=".CognalysVerification" />
 
@@ -73,11 +73,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".multiplayer" />
-        <activity android:name=".Tutorial"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+        <activity android:name=".multiplayer"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
-            ></activity>
+            android:theme="@style/FullscreenTheme"/>
+        <activity
+            android:name=".Tutorial"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".Agency"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>

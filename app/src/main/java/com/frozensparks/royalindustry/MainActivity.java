@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -92,6 +94,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     Button bauhaus;
     Dialog bauhausdialog;
     Button closeBauhaus;
+    TextView goldtextarch;
     //BauhausFabrik1
     Button upgradefab1;
     ProgressBar  progressBarUpgradefab1;
@@ -119,8 +122,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     //werkstatt
     Button werkstatt;
 
+    //agency
+    Button openagency;
 
 
+Typeface typeface;
     //FULLSCREEN
 
 
@@ -150,6 +156,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         FontsOverride.setDefaultFont(this, "DEFAULT_BOLD", "fonts/OldGlyphs.ttf");
         FontsOverride.setDefaultFont(this, "DEFAULT_BOLD_ITALIC", "fonts/OldGlyphs.ttf");
         FontsOverride.setDefaultFont(this, "DEFAULT_ITALIC", "fonts/OldGlyphs.ttf");
+        AssetManager am = context.getApplicationContext().getAssets();
+
+        typeface = Typeface.createFromAsset(am,
+                String.format(Locale.US, "fonts/%2s", "OldGlyphs.ttf"));
+
 
 
         setContentView(R.layout.activity_main);
@@ -172,7 +183,12 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             actionBar.hide();
         }
 
+        //agency
+        openagency = (Button) findViewById(R.id.openagency);
+        openagency.setOnClickListener(this);
 
+
+        //werkstatt
         werkstatt = (Button) findViewById(R.id.werkstatt);
         werkstatt.setOnClickListener(this);
 
@@ -182,6 +198,14 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         Bank.setOnClickListener(this);
         progressBarUpgradeBank = (ProgressBar) findViewById(R.id.progressBarUpgradeBank);
         progressBarUpgradeBank.setVisibility(View.INVISIBLE);
+        SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
+        //bilder
+        if (dataBank.getInt("Level", 1) == 2) {
+            Bank.setBackgroundResource(R.drawable.banklvl2);
+        }
+        if (dataBank.getInt("Level", 1) == 3) {
+            Bank.setBackgroundResource(R.drawable.banklvl3);
+        }
 
 
         //Bauhaus
@@ -294,11 +318,6 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 SharedPreferences.Editor editor2 = getSharedPreferences("firstopen", MODE_PRIVATE).edit();
                 editor2.putBoolean("firstopen", false);
                 editor2.apply();
-
-
-
-
-
 
             }
         }
@@ -463,10 +482,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
                          dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
 
+
                         SharedPreferences.Editor editorBank = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
 
                         if (dataBank.getInt("Level", 1) == 1) {
-
+                            Bank.setBackgroundResource(R.drawable.banklvl2);
 
                             //definition level2
                             editorBank.putInt("maxGoldStorage", 20000);
@@ -475,6 +495,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                             editorBank.putBoolean("isLeveling", false);
                             cdBank = false;
                             progressBarUpgradeBank.setVisibility(View.INVISIBLE);
+                            Bank.setBackgroundResource(R.drawable.banklvl2);
                             editorBank.putInt("Level", dataBank.getInt("Level", 1) + 1);
                             editorBank.apply();
 
@@ -507,6 +528,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                                 editorBank.apply();
                                 editorBank.putBoolean("isLeveling", false);
                                 cdBank = false;
+                                Bank.setBackgroundResource(R.drawable.banklvl3);
+
                                 progressBarUpgradeBank.setVisibility(View.INVISIBLE);
                                 editorBank.putInt("Level", dataBank.getInt("Level", 1) + 1);
                                 editorBank.apply();
@@ -1389,6 +1412,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                         }
                     }
                 }
+
                 h.postDelayed(this, delay);
             }
         }, delay);
@@ -1495,12 +1519,16 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             closeBauhaus = (Button)bauhausdialog.findViewById(R.id.closeBauhaus);
             closeBauhaus.setOnClickListener(this);
 
+            goldtextarch = (TextView) bauhausdialog.findViewById(R.id.goldpoolarch);
+
 
             //Fabrik1
             upgradefab1 = (Button) bauhausdialog.findViewById(R.id.upgradefab1);
             upgradefab1.setOnClickListener(this);
             leveltextfabr1 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr1);
+            leveltextfabr1.setTypeface(typeface);
             upcdfab1 = (TextView) bauhausdialog.findViewById(R.id.upcdfab1);
+            upcdfab1.setTypeface(typeface);
             leveltextfabr1.setText(datafab1.getString("leveltextfab1", "1"));
 
 
@@ -1508,7 +1536,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             upgradefab2 = (Button) bauhausdialog.findViewById(R.id.upgradefab2);
             upgradefab2.setOnClickListener(this);
             leveltextfabr2 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr2);
+            leveltextfabr2.setTypeface(typeface);
             upcdfab2 = (TextView) bauhausdialog.findViewById(R.id.upcdfab2);
+            upcdfab2.setTypeface(typeface);
             leveltextfabr2.setText(datafab2.getString("leveltextfab2", "2"));
             datafab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
             //btn auf upgrade wechseln, wenn gebàude gebaut
@@ -1531,7 +1561,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             upgradefab3 = (Button) bauhausdialog.findViewById(R.id.upgradefab3);
             upgradefab3.setOnClickListener(this);
             leveltextfabr3 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr3);
+            leveltextfabr3.setTypeface(typeface);
             upcdfab3 = (TextView) bauhausdialog.findViewById(R.id.upcdfab3);
+            upcdfab3.setTypeface(typeface);
             leveltextfabr3.setText(datafab3.getString("leveltextfab3", "3"));
             datafab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
             //btn auf upgrade wechseln, wenn gebàude gebaut
@@ -1554,7 +1586,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             upgradefab4 = (Button) bauhausdialog.findViewById(R.id.upgradefab4);
             upgradefab4.setOnClickListener(this);
             leveltextfabr4 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr4);
+            leveltextfabr4.setTypeface(typeface);
             upcdfab4 = (TextView) bauhausdialog.findViewById(R.id.upcdfab4);
+            upcdfab4.setTypeface(typeface);
             leveltextfabr4.setText(datafab4.getString("leveltextfab4", "4"));
             datafab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
             //btn auf upgrade wechseln, wenn gebàude gebaut
@@ -1578,7 +1612,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             upgradeBank = (Button) bauhausdialog.findViewById(R.id.upgradeBank);
             upgradeBank.setOnClickListener(this);
             upcdBank = (TextView) bauhausdialog.findViewById(R.id.upcdBank);
+            upcdBank.setTypeface(typeface);
             leveltextBank = (TextView) bauhausdialog.findViewById(R.id.leveltextBank);
+            leveltextBank.setTypeface(typeface);
             leveltextBank.setText(dataBank.getString("leveltext", "1"));
 
 
@@ -1598,6 +1634,12 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                     //BAnk
                     SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
                     Boolean cdBank = (dataBank.getBoolean("isLeveling", false));
+
+                    //Aktualisiere den Kontostatus
+                    SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
+                    String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
+                    goldtextarch.setText(": " + Pooltext );
+
 
                     SharedPreferences BankupgradeContdown = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE);
                     int startTimeBank = BankupgradeContdown.getInt("startTime", 0); //0 is the default value.
@@ -1748,11 +1790,19 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         }
 
 //SYNC
+
+        //race
 if (id== R.id.werkstatt){
 
     Intent intent = new Intent(this, multiplayer.class);
     startActivity(intent);
 }
+        //agency
+        if (id== R.id.openagency){
+
+            Intent intent = new Intent(this, Agency.class);
+            startActivity(intent);
+        }
 
 
         //BANK
@@ -1783,15 +1833,15 @@ if (id== R.id.werkstatt){
 
                 if (dataBank.getInt("Level", 1) == 1) {
                     //text bank lvl2
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.goldstorage)," 1000",Html.fromHtml(" <font color=#00ff00> + 19000</font>"), "\n\n ", getString(R.string.unlock)," \n \n",  getString(R.string.factories)," ", getString(R.string.level3),",",getString(R.string.factory_2),", ", getString(R.string.agency)," \n \n",getString(R.string.Costs),"100", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.goldstorage)," 1000",Html.fromHtml(" <font color=#00ff00> + 19000</font>"), "\n\n ", getString(R.string.unlock)," \n \n",  getString(R.string.factories)," ", getString(R.string.level3),",",getString(R.string.factory_2),", ", getString(R.string.agency)," \n \n",getString(R.string.Costs),"100", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00:00"));
                 }
                 if (dataBank.getInt("Level", 1) == 2) {
                     //text lvl3
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.goldstorage),"20000",Html.fromHtml(" <font color=#00ff00> + 55000</font>"), "\n\n ",getString(R.string.Costs),"20000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:30"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.goldstorage),"20000",Html.fromHtml(" <font color=#00ff00> + 55000</font>"), "\n\n ",getString(R.string.Costs),"20000", getString(R.string.Gold)," \n \n",getString(R.string.time), "5:00:00"));
                 }
                 if (dataBank.getInt("Level", 1) == 3) {
                     //text lvl4
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.goldstorage),"75000",Html.fromHtml(" <font color=#00ff00> + 75000</font>"), "\n \n",getString(R.string.Costs),"75000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:40"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.goldstorage),"75000",Html.fromHtml(" <font color=#00ff00> + 75000</font>"), "\n \n",getString(R.string.Costs),"75000", getString(R.string.Gold)," \n \n",getString(R.string.time), "2d"));
                 }
 
 
@@ -1816,7 +1866,7 @@ if (id== R.id.werkstatt){
                                     //bedingung erfüllt?
                                     if (!bederfüllt) {
 
-                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+getString(R.string.factory_1)+getString(R.string.zu)+getString(R.string.level2), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.factory_1)+"  "+getString(R.string.zu)+"  "+getString(R.string.level2), Toast.LENGTH_SHORT).show();
 
 
                                     }
@@ -1837,8 +1887,7 @@ if (id== R.id.werkstatt){
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
-                                            //TODO bank lvl 1 secs
-                                            editor3.putInt("countdown", 20);
+                                            editor3.putInt("countdown", 3600);
                                             editor3.apply();
 
                                             SharedPreferences.Editor editor1 = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
@@ -1859,10 +1908,10 @@ if (id== R.id.werkstatt){
                                     //bedingung erfüllt?
                                     if (!bederfüllt) {
 
-                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+getString(R.string.factories)+getString(R.string.zu)+getString(R.string.level6), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.factory_1)+"  "+"+2  " +getString(R.string.zu)+"  "+getString(R.string.level6), Toast.LENGTH_SHORT).show();
                                     }
                                     if (!bed2erfüllt) {
-                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+getString(R.string.factories)+getString(R.string.zu)+getString(R.string.level6), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.factory_1)+"  "+"+2  "+getString(R.string.zu)+"  "+getString(R.string.level6), Toast.LENGTH_SHORT).show();
 
                                     }
                                     if (bederfüllt) {
@@ -1884,8 +1933,7 @@ if (id== R.id.werkstatt){
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
-                                            //TODO bank lvl 2 secs
-                                            editor3.putInt("countdown", 30);
+                                            editor3.putInt("countdown", 18000);
                                             editor3.apply();
 
                                             SharedPreferences.Editor editor1 = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
@@ -1917,8 +1965,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO bank lvl 4 secs
-                                        editor3.putInt("countdown", 40);
+                                        editor3.putInt("countdown", 172800);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
@@ -1941,7 +1988,7 @@ if (id== R.id.werkstatt){
                 )
 
 
-                                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                                .setNegativeButton(getString(R.string.no),  new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
 
                                                 dialog.cancel();
@@ -1977,13 +2024,6 @@ if (id== R.id.werkstatt){
                 Toast.makeText(MainActivity.this, R.string.waitforupgradefinish, Toast.LENGTH_SHORT).show();
 
 
-                //TODO zeit um 10 sec verringern
-                SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
-                int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
-                SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
-                editor3.putInt("startTime", startTimefab1 - 10);
-                editor3.apply();
-
             }
 
             if (!cdfab1) {
@@ -2001,45 +2041,45 @@ if (id== R.id.werkstatt){
 
 
 
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.gold_per_hour)," 180",Html.fromHtml(" <font color=#00ff00> + 180</font>"), "\n\n ",getString(R.string.storage)," 500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n", getString(R.string.unlock)," \n \n",getString(R.string.bank)," ",getString(R.string.level2),"\n\n",getString(R.string.Costs),"50", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.gold_per_hour)," 180",Html.fromHtml(" <font color=#00ff00> + 180</font>"), "\n\n ",getString(R.string.storage)," 500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n", getString(R.string.unlock)," \n \n",getString(R.string.bank)," ",getString(R.string.level2),"\n\n",getString(R.string.Costs),"50", getString(R.string.Gold)," \n \n",getString(R.string.time), "30:00"));
 
                 }
                 if (datafab1.getInt("Level", 1) == 2) {
                     //text lvl3
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.gold_per_hour),"360",Html.fromHtml(" <font color=#00ff00> + 220</font>"), "\n\n ",getString(R.string.storage)," 1000 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:30"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.gold_per_hour),"360",Html.fromHtml(" <font color=#00ff00> + 220</font>"), "\n\n ",getString(R.string.storage)," 1000 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00:00"));
                 }
                 if (datafab1.getInt("Level", 1) == 3) {
                     //text lvl4
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.gold_per_hour),"600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 1500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"1500", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:40"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.gold_per_hour),"600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 1500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"1500", getString(R.string.Gold)," \n \n",getString(R.string.time), "3:00:00"));
                 }
                 if (datafab1.getInt("Level", 1) == 4) {
                     //text lvl5
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level5),": \n\n", getString(R.string.gold_per_hour),"800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 2000 ",Html.fromHtml("<font color=#00ff00> + 3000</font>")," \n \n",getString(R.string.Costs),"5000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:50"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level5),": \n\n", getString(R.string.gold_per_hour),"800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 2000 ",Html.fromHtml("<font color=#00ff00> + 3000</font>")," \n \n",getString(R.string.Costs),"5000", getString(R.string.Gold)," \n \n",getString(R.string.time), "6:00:00"));
                 }
 
                 if (datafab1.getInt("Level", 1) == 5) {
                     //text lvl6
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level6),": \n\n", getString(R.string.gold_per_hour),"1000",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 5000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"20000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level6),": \n\n", getString(R.string.gold_per_hour),"1000",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 5000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"20000", getString(R.string.Gold)," \n \n",getString(R.string.time), "10:00:00"));
                 }
 
                 if (datafab1.getInt("Level", 1) == 6) {
                     //text lvl7
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level7),": \n\n", getString(R.string.gold_per_hour),"1200",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 10000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"35000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:10"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level7),": \n\n", getString(R.string.gold_per_hour),"1200",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 10000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"35000", getString(R.string.Gold)," \n \n",getString(R.string.time), "12:00:00"));
                 }
 
                 if (datafab1.getInt("Level", 1) == 7) {
                     //text lvl8
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level8),": \n\n", getString(R.string.gold_per_hour),"1400",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 15000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"70000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level8),": \n\n", getString(R.string.gold_per_hour),"1400",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 15000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"70000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1d"));
                 }
 
                 if (datafab1.getInt("Level", 1) == 8) {
                     //text lvl9
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level9),": \n\n", getString(R.string.gold_per_hour),"1600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 20000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"110000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:30"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level9),": \n\n", getString(R.string.gold_per_hour),"1600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 20000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"110000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1.5d"));
                 }
 
                 if (datafab1.getInt("Level", 1) == 9) {
                     //text lvl10
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level10),": \n\n", getString(R.string.gold_per_hour),"1800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 25000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"150000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:40"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level10),": \n\n", getString(R.string.gold_per_hour),"1800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 25000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"150000", getString(R.string.Gold)," \n \n",getString(R.string.time), "2d"));
                 }
 
 
@@ -2074,8 +2114,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO 3600 secs
-                                        editor3.putInt("countdown", 20);
+                                        editor3.putInt("countdown", 1800);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
@@ -2093,7 +2132,7 @@ if (id== R.id.werkstatt){
                                     //bedingung erfüllt?
                                     if (!bederfüllt) {
 
-                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+getString(R.string.bank)+getString(R.string.zu)+getString(R.string.level2), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.bank)+"  "+getString(R.string.zu)+"  "+getString(R.string.level2), Toast.LENGTH_SHORT).show();
 
 
                                     }
@@ -2113,8 +2152,7 @@ if (id== R.id.werkstatt){
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
-                                            //TODO lvl 3 secs
-                                            editor3.putInt("countdown", 30);
+                                            editor3.putInt("countdown", 3600);
                                             editor3.apply();
 
                                             SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
@@ -2146,8 +2184,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 4 secs
-                                        editor3.putInt("countdown", 40);
+                                        editor3.putInt("countdown", 10800);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
@@ -2177,8 +2214,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 5 secs
-                                        editor3.putInt("countdown", 50);
+                                        editor3.putInt("countdown", 21600);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
@@ -2208,8 +2244,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 6 secs
-                                        editor3.putInt("countdown", 60);
+                                        editor3.putInt("countdown", 36000);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
@@ -2225,7 +2260,7 @@ if (id== R.id.werkstatt){
 
                                     if (!bederfüllt) {
 
-                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+getString(R.string.bank)+getString(R.string.zu)+getString(R.string.level3), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.bank)+"  "+getString(R.string.zu)+"  "+getString(R.string.level3), Toast.LENGTH_SHORT).show();
 
 
                                     }
@@ -2247,8 +2282,7 @@ if (id== R.id.werkstatt){
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
-                                            //TODO lvl 7 secs
-                                            editor3.putInt("countdown", 70);
+                                            editor3.putInt("countdown", 43200);
                                             editor3.apply();
 
                                             SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
@@ -2278,8 +2312,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 8 secs
-                                        editor3.putInt("countdown", 80);
+                                        editor3.putInt("countdown", 86400);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
@@ -2308,8 +2341,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 9 secs
-                                        editor3.putInt("countdown", 90);
+                                        editor3.putInt("countdown", 129600);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
@@ -2339,8 +2371,7 @@ if (id== R.id.werkstatt){
 
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 10 secs
-                                        editor3.putInt("countdown", 100);
+                                        editor3.putInt("countdown", 172800);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
@@ -2408,48 +2439,48 @@ if (id== R.id.werkstatt){
                 if (datafab2.getInt("Level", 0) == 0) {
 
                     //Text lvl 1
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level1),": \n\n", getString(R.string.gold_per_hour)," 180", "\n\n ",getString(R.string.storage)," 500 "," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level1),": \n\n", getString(R.string.gold_per_hour)," 180", "\n\n ",getString(R.string.storage)," 500 "," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00"));
                 }
                 if (datafab2.getInt("Level", 0) == 1) {
                     //text lvl2
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.gold_per_hour)," 180",Html.fromHtml(" <font color=#00ff00> + 180</font>"), "\n\n ",getString(R.string.storage)," 500 ",Html.fromHtml("<font color=#00ff00> + 500</font>"),"\n\n",getString(R.string.Costs),"50", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.gold_per_hour)," 180",Html.fromHtml(" <font color=#00ff00> + 180</font>"), "\n\n ",getString(R.string.storage)," 500 ",Html.fromHtml("<font color=#00ff00> + 500</font>"),"\n\n",getString(R.string.Costs),"50", getString(R.string.Gold)," \n \n",getString(R.string.time), "30:00"));
                 }
                 if (datafab2.getInt("Level", 0) == 2) {
                     //text lvl3
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.gold_per_hour),"360",Html.fromHtml(" <font color=#00ff00> + 220</font>"), "\n\n ",getString(R.string.storage)," 1000 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:30"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.gold_per_hour),"360",Html.fromHtml(" <font color=#00ff00> + 220</font>"), "\n\n ",getString(R.string.storage)," 1000 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00:00"));
                 }
                 if (datafab2.getInt("Level", 0) == 3) {
                     //text lvl4
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.gold_per_hour),"600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 1500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"1500", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:40"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.gold_per_hour),"600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 1500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"1500", getString(R.string.Gold)," \n \n",getString(R.string.time), "3:00:00"));
                 }
                 if (datafab2.getInt("Level", 0) == 4) {
                     //text lvl5
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level5),": \n\n", getString(R.string.gold_per_hour),"800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 2000 ",Html.fromHtml("<font color=#00ff00> + 3000</font>")," \n \n",getString(R.string.Costs),"5000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:50"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level5),": \n\n", getString(R.string.gold_per_hour),"800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 2000 ",Html.fromHtml("<font color=#00ff00> + 3000</font>")," \n \n",getString(R.string.Costs),"5000", getString(R.string.Gold)," \n \n",getString(R.string.time), "6:00:00"));
                 }
 
                 if (datafab2.getInt("Level", 0) == 5) {
                     //text lvl6
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level6),": \n\n", getString(R.string.gold_per_hour),"1000",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 5000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"20000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level6),": \n\n", getString(R.string.gold_per_hour),"1000",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 5000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"20000", getString(R.string.Gold)," \n \n",getString(R.string.time), "10:00:00"));
                 }
 
                 if (datafab2.getInt("Level", 0) == 6) {
                     //text lvl7
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level7),": \n\n", getString(R.string.gold_per_hour),"1200",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 10000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"35000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:10"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level7),": \n\n", getString(R.string.gold_per_hour),"1200",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 10000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"35000", getString(R.string.Gold)," \n \n",getString(R.string.time), "12:00:00"));
                 }
 
                 if (datafab2.getInt("Level", 0) == 7) {
                     //text lvl8
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level8),": \n\n", getString(R.string.gold_per_hour),"1400",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 15000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"70000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level8),": \n\n", getString(R.string.gold_per_hour),"1400",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 15000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"70000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1d"));
                 }
 
                 if (datafab2.getInt("Level", 0) == 8) {
                     //text lvl9
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level9),": \n\n", getString(R.string.gold_per_hour),"1600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 20000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"110000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:30"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level9),": \n\n", getString(R.string.gold_per_hour),"1600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 20000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"110000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1.5d"));
                 }
 
                 if (datafab2.getInt("Level", 0) == 9) {
                     //text lvl10
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level10),": \n\n", getString(R.string.gold_per_hour),"1800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 25000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"150000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:40"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level10),": \n\n", getString(R.string.gold_per_hour),"1800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 25000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"150000", getString(R.string.Gold)," \n \n",getString(R.string.time), "2d"));
                 }
 
 
@@ -2484,7 +2515,7 @@ if (id== R.id.werkstatt){
                                 if (datafab2.getInt("Level", 0) == 0) {
                                     if (!bederfüllt) {
 
-                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+getString(R.string.bank)+getString(R.string.zu)+getString(R.string.level2), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.bank)+"  "+getString(R.string.zu)+"  "+getString(R.string.level2), Toast.LENGTH_SHORT).show();
 
 
                                     }
@@ -2506,8 +2537,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO 3600 secs
-                                        editor3.putInt("countdown", 20);
+                                        editor3.putInt("countdown", 60);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
@@ -2539,8 +2569,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO 3600 secs
-                                        editor3.putInt("countdown", 20);
+                                        editor3.putInt("countdown", 1800);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
@@ -2571,8 +2600,7 @@ if (id== R.id.werkstatt){
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
-                                            //TODO lvl 3 secs
-                                            editor3.putInt("countdown", 30);
+                                            editor3.putInt("countdown", 3600);
                                             editor3.apply();
 
                                             SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
@@ -2603,8 +2631,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 4 secs
-                                        editor3.putInt("countdown", 40);
+                                        editor3.putInt("countdown", 10800);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
@@ -2634,8 +2661,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 5 secs
-                                        editor3.putInt("countdown", 50);
+                                        editor3.putInt("countdown", 21600);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
@@ -2665,8 +2691,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 6 secs
-                                        editor3.putInt("countdown", 60);
+                                        editor3.putInt("countdown", 36000);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
@@ -2681,7 +2706,7 @@ if (id== R.id.werkstatt){
                                 if (datafab2.getInt("Level", 0) == 6) {
                                     if (!bederfüllt) {
 
-                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+getString(R.string.bank)+getString(R.string.zu)+getString(R.string.level3), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.bank)+"  "+getString(R.string.zu)+"  "+getString(R.string.level3), Toast.LENGTH_SHORT).show();
 
 
                                     }
@@ -2703,8 +2728,7 @@ if (id== R.id.werkstatt){
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
-                                            //TODO lvl 7 secs
-                                            editor3.putInt("countdown", 70);
+                                            editor3.putInt("countdown", 43200);
                                             editor3.apply();
 
                                             SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
@@ -2733,8 +2757,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 8 secs
-                                        editor3.putInt("countdown", 80);
+                                        editor3.putInt("countdown", 86400);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
@@ -2763,8 +2786,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 9 secs
-                                        editor3.putInt("countdown", 90);
+                                        editor3.putInt("countdown", 129000);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
@@ -2794,8 +2816,7 @@ if (id== R.id.werkstatt){
 
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 10 secs
-                                        editor3.putInt("countdown", 100);
+                                        editor3.putInt("countdown", 172800);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
@@ -2864,48 +2885,48 @@ if (id== R.id.werkstatt){
                 if (datafab3.getInt("Level", 0) == 0) {
 
                     //Text lvl 1
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level1),": \n\n", getString(R.string.gold_per_hour)," 180", "\n\n ",getString(R.string.storage)," 500 "," \n \n",getString(R.string.Costs),"1000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level1),": \n\n", getString(R.string.gold_per_hour)," 180", "\n\n ",getString(R.string.storage)," 500 "," \n \n",getString(R.string.Costs),"1000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00"));
                 }
                 if (datafab3.getInt("Level", 0) == 1) {
                     //text lvl2
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.gold_per_hour)," 180",Html.fromHtml(" <font color=#00ff00> + 180</font>"), "\n\n ",getString(R.string.storage)," 500 ",Html.fromHtml("<font color=#00ff00> + 500</font>"),"\n\n",getString(R.string.Costs),"50", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.gold_per_hour)," 180",Html.fromHtml(" <font color=#00ff00> + 180</font>"), "\n\n ",getString(R.string.storage)," 500 ",Html.fromHtml("<font color=#00ff00> + 500</font>"),"\n\n",getString(R.string.Costs),"50", getString(R.string.Gold)," \n \n",getString(R.string.time), "30:00"));
                 }
                 if (datafab3.getInt("Level", 0) == 2) {
                     //text lvl3
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.gold_per_hour),"360",Html.fromHtml(" <font color=#00ff00> + 220</font>"), "\n\n ",getString(R.string.storage)," 1000 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:30"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.gold_per_hour),"360",Html.fromHtml(" <font color=#00ff00> + 220</font>"), "\n\n ",getString(R.string.storage)," 1000 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00:00"));
                 }
                 if (datafab3.getInt("Level", 0) == 3) {
                     //text lvl4
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.gold_per_hour),"600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 1500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"1500", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:40"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.gold_per_hour),"600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 1500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"1500", getString(R.string.Gold)," \n \n",getString(R.string.time), "3:00:00"));
                 }
                 if (datafab3.getInt("Level", 0) == 4) {
                     //text lvl5
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level5),": \n\n", getString(R.string.gold_per_hour),"800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 2000 ",Html.fromHtml("<font color=#00ff00> + 3000</font>")," \n \n",getString(R.string.Costs),"5000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:50"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level5),": \n\n", getString(R.string.gold_per_hour),"800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 2000 ",Html.fromHtml("<font color=#00ff00> + 3000</font>")," \n \n",getString(R.string.Costs),"5000", getString(R.string.Gold)," \n \n",getString(R.string.time), "6:00:00"));
                 }
 
                 if (datafab3.getInt("Level", 0) == 5) {
                     //text lvl6
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level6),": \n\n", getString(R.string.gold_per_hour),"1000",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 5000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"20000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level6),": \n\n", getString(R.string.gold_per_hour),"1000",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 5000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"20000", getString(R.string.Gold)," \n \n",getString(R.string.time), "10:00:00"));
                 }
 
                 if (datafab3.getInt("Level", 0) == 6) {
                     //text lvl7
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level7),": \n\n", getString(R.string.gold_per_hour),"1200",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 10000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"35000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:10"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level7),": \n\n", getString(R.string.gold_per_hour),"1200",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 10000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"35000", getString(R.string.Gold)," \n \n",getString(R.string.time), "12:00:00"));
                 }
 
                 if (datafab3.getInt("Level", 0) == 7) {
                     //text lvl8
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level8),": \n\n", getString(R.string.gold_per_hour),"1400",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 15000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"70000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level8),": \n\n", getString(R.string.gold_per_hour),"1400",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 15000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"70000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1d"));
                 }
 
                 if (datafab3.getInt("Level", 0) == 8) {
                     //text lvl9
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level9),": \n\n", getString(R.string.gold_per_hour),"1600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 20000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"110000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:30"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level9),": \n\n", getString(R.string.gold_per_hour),"1600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 20000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"110000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1.5d"));
                 }
 
                 if (datafab3.getInt("Level", 0) == 9) {
                     //text lvl10
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level10),": \n\n", getString(R.string.gold_per_hour),"1800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 25000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"150000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:40"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level10),": \n\n", getString(R.string.gold_per_hour),"1800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 25000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"150000", getString(R.string.Gold)," \n \n",getString(R.string.time), "2d"));
                 }
 
 
@@ -2938,7 +2959,7 @@ if (id== R.id.werkstatt){
                                 if (datafab3.getInt("Level", 0) == 0) {
                                     if (!bederfüllt) {
 
-                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+getString(R.string.bank)+getString(R.string.zu)+getString(R.string.level3), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.bank)+"  "+getString(R.string.zu)+"  "+getString(R.string.level3), Toast.LENGTH_SHORT).show();
 
 
                                     }
@@ -2960,8 +2981,7 @@ if (id== R.id.werkstatt){
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
-                                            //TODO 3600 secs
-                                            editor3.putInt("countdown", 20);
+                                            editor3.putInt("countdown", 60);
                                             editor3.apply();
 
                                             SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
@@ -2993,8 +3013,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO 3600 secs
-                                        editor3.putInt("countdown", 20);
+                                        editor3.putInt("countdown", 1800);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
@@ -3025,8 +3044,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 3 secs
-                                        editor3.putInt("countdown", 30);
+                                        editor3.putInt("countdown", 3600);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
@@ -3057,8 +3075,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 4 secs
-                                        editor3.putInt("countdown", 40);
+                                        editor3.putInt("countdown", 10800);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
@@ -3088,8 +3105,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 5 secs
-                                        editor3.putInt("countdown", 50);
+                                        editor3.putInt("countdown", 21600);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
@@ -3119,8 +3135,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 6 secs
-                                        editor3.putInt("countdown", 60);
+                                        editor3.putInt("countdown", 36000);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
@@ -3135,7 +3150,7 @@ if (id== R.id.werkstatt){
                                 if (datafab3.getInt("Level", 0) == 6) {
                                     if (!bederfüllt) {
 
-                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+getString(R.string.bank)+getString(R.string.zu)+getString(R.string.level3), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.bank)+"  "+getString(R.string.zu)+"  "+getString(R.string.level3), Toast.LENGTH_SHORT).show();
 
 
                                     }
@@ -3157,8 +3172,7 @@ if (id== R.id.werkstatt){
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
-                                            //TODO lvl 7 secs
-                                            editor3.putInt("countdown", 70);
+                                            editor3.putInt("countdown", 43200);
                                             editor3.apply();
 
                                             SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
@@ -3187,8 +3201,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 8 secs
-                                        editor3.putInt("countdown", 80);
+                                        editor3.putInt("countdown", 86400);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
@@ -3217,8 +3230,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 9 secs
-                                        editor3.putInt("countdown", 90);
+                                        editor3.putInt("countdown", 129600);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
@@ -3248,8 +3260,7 @@ if (id== R.id.werkstatt){
 
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 10 secs
-                                        editor3.putInt("countdown", 100);
+                                        editor3.putInt("countdown", 172800);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
@@ -3319,48 +3330,48 @@ if (id== R.id.werkstatt){
                 if (datafab4.getInt("Level", 0) == 0) {
 
                     //Text lvl 1
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level1),": \n\n", getString(R.string.gold_per_hour)," 180", "\n\n ",getString(R.string.storage)," 500 "," \n \n",getString(R.string.Costs),"10000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level1),": \n\n", getString(R.string.gold_per_hour)," 180", "\n\n ",getString(R.string.storage)," 500 "," \n \n",getString(R.string.Costs),"10000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00"));
                 }
                 if (datafab4.getInt("Level", 0) == 1) {
                     //text lvl2
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.gold_per_hour)," 180",Html.fromHtml(" <font color=#00ff00> + 180</font>"), "\n\n ",getString(R.string.storage)," 500 ",Html.fromHtml("<font color=#00ff00> + 500</font>"),"\n\n",getString(R.string.Costs),"50", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.gold_per_hour)," 180",Html.fromHtml(" <font color=#00ff00> + 180</font>"), "\n\n ",getString(R.string.storage)," 500 ",Html.fromHtml("<font color=#00ff00> + 500</font>"),"\n\n",getString(R.string.Costs),"50", getString(R.string.Gold)," \n \n",getString(R.string.time), "30:00"));
                 }
                 if (datafab4.getInt("Level", 0) == 2) {
                     //text lvl3
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.gold_per_hour),"360",Html.fromHtml(" <font color=#00ff00> + 220</font>"), "\n\n ",getString(R.string.storage)," 1000 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:30"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.gold_per_hour),"360",Html.fromHtml(" <font color=#00ff00> + 220</font>"), "\n\n ",getString(R.string.storage)," 1000 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00:00"));
                 }
                 if (datafab4.getInt("Level", 0) == 3) {
                     //text lvl4
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.gold_per_hour),"600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 1500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"1500", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:40"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.gold_per_hour),"600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 1500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"1500", getString(R.string.Gold)," \n \n",getString(R.string.time), "3:00:00"));
                 }
                 if (datafab4.getInt("Level", 0) == 4) {
                     //text lvl5
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level5),": \n\n", getString(R.string.gold_per_hour),"800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 2000 ",Html.fromHtml("<font color=#00ff00> + 3000</font>")," \n \n",getString(R.string.Costs),"5000", getString(R.string.Gold)," \n \n",getString(R.string.time), "0:50"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level5),": \n\n", getString(R.string.gold_per_hour),"800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 2000 ",Html.fromHtml("<font color=#00ff00> + 3000</font>")," \n \n",getString(R.string.Costs),"5000", getString(R.string.Gold)," \n \n",getString(R.string.time), "6:00:00"));
                 }
 
                 if (datafab4.getInt("Level", 0) == 5) {
                     //text lvl6
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level6),": \n\n", getString(R.string.gold_per_hour),"1000",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 5000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"20000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level6),": \n\n", getString(R.string.gold_per_hour),"1000",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 5000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"20000", getString(R.string.Gold)," \n \n",getString(R.string.time), "10:00:00"));
                 }
 
                 if (datafab4.getInt("Level", 0) == 6) {
                     //text lvl7
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level7),": \n\n", getString(R.string.gold_per_hour),"1200",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 10000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"35000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:10"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level7),": \n\n", getString(R.string.gold_per_hour),"1200",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 10000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"35000", getString(R.string.Gold)," \n \n",getString(R.string.time), "12:00:00"));
                 }
 
                 if (datafab4.getInt("Level", 0) == 7) {
                     //text lvl8
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level8),": \n\n", getString(R.string.gold_per_hour),"1400",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 15000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"70000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:20"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level8),": \n\n", getString(R.string.gold_per_hour),"1400",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 15000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"70000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1d"));
                 }
 
                 if (datafab4.getInt("Level", 0) == 8) {
                     //text lvl9
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level9),": \n\n", getString(R.string.gold_per_hour),"1600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 20000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"110000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:30"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level9),": \n\n", getString(R.string.gold_per_hour),"1600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 20000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"110000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1.5d"));
                 }
 
                 if (datafab4.getInt("Level", 0) == 9) {
                     //text lvl10
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level10),": \n\n", getString(R.string.gold_per_hour),"1800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 25000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"150000", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:40"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level10),": \n\n", getString(R.string.gold_per_hour),"1800",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 25000 ",Html.fromHtml("<font color=#00ff00> + 5000</font>")," \n \n",getString(R.string.Costs),"150000", getString(R.string.Gold)," \n \n",getString(R.string.time), "2d"));
                 }
 
 
@@ -3393,7 +3404,7 @@ if (id== R.id.werkstatt){
                                 if (datafab4.getInt("Level", 0) == 0) {
                                     if (!bederfüllt) {
 
-                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+getString(R.string.bank)+getString(R.string.zu)+getString(R.string.level4), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.bank)+"  "+getString(R.string.zu)+"  "+getString(R.string.level4), Toast.LENGTH_SHORT).show();
 
 
                                     }
@@ -3415,8 +3426,7 @@ if (id== R.id.werkstatt){
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
-                                            //TODO 3600 secs
-                                            editor3.putInt("countdown", 20);
+                                            editor3.putInt("countdown", 60);
                                             editor3.apply();
 
                                             SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
@@ -3448,8 +3458,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO 3600 secs
-                                        editor3.putInt("countdown", 20);
+                                        editor3.putInt("countdown", 1800);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
@@ -3480,8 +3489,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 3 secs
-                                        editor3.putInt("countdown", 30);
+                                        editor3.putInt("countdown", 3600);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
@@ -3512,8 +3520,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 4 secs
-                                        editor3.putInt("countdown", 40);
+                                        editor3.putInt("countdown", 10800);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
@@ -3543,8 +3550,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 5 secs
-                                        editor3.putInt("countdown", 50);
+                                        editor3.putInt("countdown", 21600);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
@@ -3574,8 +3580,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 6 secs
-                                        editor3.putInt("countdown", 60);
+                                        editor3.putInt("countdown", 36000);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
@@ -3588,13 +3593,7 @@ if (id== R.id.werkstatt){
                                 }
 
                                 if (datafab4.getInt("Level", 0) == 6) {
-                                    if (!bederfüllt) {
 
-                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+getString(R.string.bank)+getString(R.string.zu)+getString(R.string.level3), Toast.LENGTH_SHORT).show();
-
-
-                                    }
-                                    if (bederfüllt) {
 
                                         //LEVEL7
                                         SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
@@ -3612,8 +3611,7 @@ if (id== R.id.werkstatt){
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
-                                            //TODO lvl 7 secs
-                                            editor3.putInt("countdown", 70);
+                                            editor3.putInt("countdown", 43200);
                                             editor3.apply();
 
                                             SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
@@ -3622,7 +3620,7 @@ if (id== R.id.werkstatt){
 
                                         }
 
-                                    }
+
                                 }
                                 if (datafab4.getInt("Level", 0) == 7) {
 
@@ -3642,8 +3640,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 8 secs
-                                        editor3.putInt("countdown", 80);
+                                        editor3.putInt("countdown", 86400);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
@@ -3672,8 +3669,7 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 9 secs
-                                        editor3.putInt("countdown", 90);
+                                        editor3.putInt("countdown", 129600);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
@@ -3703,8 +3699,7 @@ if (id== R.id.werkstatt){
 
 
                                         //Countdownzeit definieren
-                                        //TODO lvl 10 secs
-                                        editor3.putInt("countdown", 100);
+                                        editor3.putInt("countdown", 172800);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
@@ -3808,18 +3803,18 @@ if (id== R.id.werkstatt){
                         goldprogress1;
                 //maximum storage to string
 
-                String maxgo = "" +
+                String maxgo = strI + "/" + "" +
                         datafab1.getInt("maxfabrik1", 500);
 
-                countfab1.setText(strI + "/" + maxgo);
+                countfab1.setText(maxgo);
 
                 double goldphfab160= datafab1.getFloat("goldphfab1", (float) 0.05)*60*60;
 
                 int goldphfab1int = (int)goldphfab160;
 
-                String goph = "" +
+                String goph = getString(R.string.gold_per_hour)+ "" +
                         goldphfab1int;
-                GperH.setText(getString(R.string.gold_per_hour)+ goph);
+                GperH.setText(goph);
 
 
                 h.postDelayed(this, delay);
@@ -3944,18 +3939,18 @@ if (id== R.id.werkstatt){
                 String strI = "" +
                         goldprogress1;
                 //maximum storage to string
-                String maxgo = "" +
+                String maxgo = strI + "/" + "" +
                         datafab2.getInt("maxfabrik2", 500);
 
-                countfab2.setText(strI + "/" + maxgo);
+                countfab2.setText(maxgo);
 
                 double goldphfab160= datafab2.getFloat("goldphfab2", (float) 0.05)*60*60;
 
                 int goldphfab1int = (int)goldphfab160;
 
-                String goph = "" +
+                String goph = getString(R.string.gold_per_hour)+ "" +
                         goldphfab1int;
-                GperH2.setText(getString(R.string.gold_per_hour)+ goph);
+                GperH2.setText(goph);
 
 
                 h.postDelayed(this, delay);
@@ -4080,18 +4075,18 @@ if (id== R.id.werkstatt){
                 String strI = "" +
                         goldprogress1;
                 //maximum storage to string
-                String maxgo = "" +
+                String maxgo = strI + "/" + "" +
                         datafab3.getInt("maxfabrik3", 500);
 
-                countfab3.setText(strI + "/" + maxgo);
+                countfab3.setText(maxgo);
 
                 double goldphfab160= datafab3.getFloat("goldphfab3", (float) 0.05)*60*60;
 
                 int goldphfab1int = (int)goldphfab160;
 
-                String goph = "" +
+                String goph =getString(R.string.gold_per_hour) + "" +
                         goldphfab1int;
-                GperH3.setText(getString(R.string.gold_per_hour)+ goph);
+                GperH3.setText(goph);
 
 
                 h.postDelayed(this, delay);
@@ -4215,18 +4210,18 @@ if (id== R.id.werkstatt){
                 String strI = "" +
                         goldprogress1;
                 //maximum storage to string
-                String maxgo = "" +
+                String maxgo = strI + "/" + "" +
                         datafab4.getInt("maxfabrik4", 500);
 
-                countfab4.setText(strI + "/" + maxgo);
+                countfab4.setText(maxgo);
 
                 double goldphfab160= datafab4.getFloat("goldphfab4", (float) 0.05)*60*60;
 
                 int goldphfab1int = (int)goldphfab160;
 
-                String goph = "" +
+                String goph = getString(R.string.gold_per_hour)+ "" +
                         goldphfab1int;
-                GperH4.setText(getString(R.string.gold_per_hour)+ goph);
+                GperH4.setText(goph);
 
 
                 h.postDelayed(this, delay);

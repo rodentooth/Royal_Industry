@@ -31,6 +31,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -58,11 +60,9 @@ public class IntroActivity extends AppCompatActivity implements
     private ProgressDialog mProgressDialog;
     private TextView mStatusTextView;
     TextView splash;
-    String personName;
-    String personEmail;
     String personId;
-    Uri personPhoto;
     int connectcode;
+    String idToken;
     Context context = this;
 
     ConnectivityManager connectivity;
@@ -109,6 +109,7 @@ public class IntroActivity extends AppCompatActivity implements
         splash.setVisibility(View.INVISIBLE);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.server_client_id))
                 .requestEmail()
                 .build();
         // [START build_client]
@@ -116,6 +117,7 @@ public class IntroActivity extends AppCompatActivity implements
         // options specified by gso.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         // [END build_client]
@@ -259,26 +261,13 @@ public class IntroActivity extends AppCompatActivity implements
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            personName = acct.getDisplayName();
-            personEmail = acct.getEmail();
             personId = acct.getId();
-            personPhoto = acct.getPhotoUrl();
-            String pph = "0";
+            idToken = acct.getIdToken();
             String type = "logreg";
-            if (personPhoto != null) {
-                pph = personPhoto.toString();
-            }
-            if (personName == null) {
-                personName = "0";
-            }
-            if (personEmail == null) {
-                personEmail = "0";
-            }
-
 
             bgworkerintro bgworkerintro = new bgworkerintro(IntroActivity.this);
             try {
-                str_result = bgworkerintro.execute(type, personId, personEmail, personName, pph).get();
+                str_result = bgworkerintro.execute(type, idToken, personId).get();
 
 
                 String dat = "request";
@@ -291,13 +280,23 @@ public class IntroActivity extends AppCompatActivity implements
                 e.printStackTrace();
             }
 
+       if(!str_result.toLowerCase().contains("-")) {
 
-            int connectcode = Integer.parseInt(str_result);
-
+              connectcode = Integer.parseInt(str_result);
+            }
 
             if (connectcode == 0) {
 
                 Toast.makeText(this, "server error", Toast.LENGTH_SHORT).show();
+            }
+            if (connectcode == 10) {
+
+                Toast.makeText(IntroActivity.this, "make sure you log in with a valid google acocunt", Toast.LENGTH_SHORT).show();
+
+                signOut();
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
             }
             if (connectcode == 11) {
 
@@ -377,10 +376,20 @@ public class IntroActivity extends AppCompatActivity implements
 
         } else {
             // Signed out, show unauthenticated UI.
-            signIn();
+            signOut();
         }
     }
 
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        signIn();
+
+                    }
+                });
+    }
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -413,10 +422,9 @@ public class IntroActivity extends AppCompatActivity implements
 
             if (type.equals("logreg")) {
                 try {
-                    String googleID = params[1];
-                    String email = params[2];
-                    String name = params[3];
-                    String photourl = params[4];
+                    String googleID = params[2];
+                    String idtoken = params[1];
+
 
 
                     URL url = new URL(login_url);
@@ -427,9 +435,7 @@ public class IntroActivity extends AppCompatActivity implements
                     OutputStream outputStream = httpurlconn.getOutputStream();
                     BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
                     String post_data = URLEncoder.encode("googleID", "UTF-8") + "=" + URLEncoder.encode(googleID, "UTF-8") + "&"
-                            + URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8") + "&"
-                            + URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode(name, "UTF-8") + "&"
-                            + URLEncoder.encode("photourl", "UTF-8") + "=" + URLEncoder.encode(photourl, "UTF-8");
+                            + URLEncoder.encode("idtoken", "UTF-8") + "=" + URLEncoder.encode(idtoken, "UTF-8");
                     bufferedWriter.write(post_data);
                     bufferedWriter.flush();
                     bufferedWriter.close();

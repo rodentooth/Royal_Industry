@@ -29,13 +29,13 @@
                     android:layout_alignParentEnd="true" />
 
     <Button
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:text="agency"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:id="@+id/openagency"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/SammelnFabrik1"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignTop="@+id/progressBarUpgradeAgency"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/agencylvl1" />
 
     <Button
                     android:layout_width="wrap_content"
@@ -171,6 +171,16 @@
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/progressBarUpgradefab1"
         android:layout_alignStart="@+id/progressBarUpgradefab1" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBarUpgradeAgency"
+        android:layout_alignTop="@+id/Bank"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:indeterminate="false" />
 
 
 </RelativeLayout>

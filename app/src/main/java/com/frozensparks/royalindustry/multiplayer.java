@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//import com.frozensparks.carRace;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -138,10 +140,10 @@ public class multiplayer extends AppCompatActivity implements
 
         if (!mInSignInFlow) {
             // auto sign in
-            mGoogleApiClient.connect();
+        //    mGoogleApiClient.connect();
         }
         if (redonodo) {
-            redo();
+         //   redo();
         }
     }
 public void redo(){

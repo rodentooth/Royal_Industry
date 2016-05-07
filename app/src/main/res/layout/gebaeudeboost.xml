@@ -91,19 +91,29 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="watch ad"
+        android:text="ad"
         android:id="@+id/payboostwithad"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toRightOf="@+id/paymethod"
+        android:layout_toEndOf="@+id/paymethod" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/payboostwithgold"
         android:text="500 gold"
+        android:scaleType="fitEnd"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/payboostwithad"
-        android:layout_alignTop="@+id/payboostwithad"
-        android:scaleType="fitEnd" />
+        android:layout_toEndOf="@+id/payboostwithad" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="pay with:"
+        android:id="@+id/paymethod"
+        android:textSize="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

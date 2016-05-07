@@ -153,8 +153,10 @@ public class bgworkerdias2 extends AsyncTask<String, Void, String> {
 
         if (result != null) {
 
-            str_result = result.replace(" ", "");
-            connectcode = Integer.parseInt(str_result);
+                str_result = result.replace(" ", "");
+                if (str_result != "") {
+                connectcode = Integer.parseInt(str_result);
+            }
         }
 
 

@@ -82,7 +82,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".Agency"
+        <activity android:name=".AgencyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme"></activity>

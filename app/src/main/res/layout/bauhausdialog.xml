@@ -60,7 +60,8 @@
         android:layout_gravity="center_horizontal"
         android:textAlignment="center"
         android:textSize="20dp"
-            android:textColor="#ffffff" />
+            android:textColor="#ffffff"
+            android:clickable="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -97,7 +98,8 @@
                 android:layout_gravity="center_horizontal"
                 android:textAlignment="center"
                 android:textSize="20dp"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:clickable="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -134,7 +136,8 @@
                 android:layout_gravity="center_horizontal"
                 android:textAlignment="center"
                 android:textSize="20dp"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:clickable="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -171,7 +174,8 @@
                 android:layout_gravity="center_horizontal"
                 android:textAlignment="center"
                 android:textSize="20dp"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:clickable="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -208,7 +212,8 @@
                 android:layout_gravity="center_horizontal"
                 android:textAlignment="center"
                 android:textSize="20dp"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:clickable="true" />
 
             <TextView
                 android:layout_width="wrap_content"

@@ -115,6 +115,10 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     Button upgradeBank;
     TextView leveltextBank;
     TextView upcdBank;
+    //Bauhaus Agentur
+    Button upgradeAgency;
+    TextView leveltextAgency;
+    TextView upcdAgency;
 
     String uporbld;
 
@@ -123,7 +127,9 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     Button werkstatt;
 
     //agency
-    Button openagency;
+    Button Agency;
+    SharedPreferences dataAgency;
+    ProgressBar progressBarUpgradeAgency;
 
 
 Typeface typeface;
@@ -184,8 +190,20 @@ Typeface typeface;
         }
 
         //agency
-        openagency = (Button) findViewById(R.id.openagency);
-        openagency.setOnClickListener(this);
+        Agency = (Button) findViewById(R.id.openagency);
+        Agency.setOnClickListener(this);
+        progressBarUpgradeAgency = (ProgressBar) findViewById(R.id.progressBarUpgradeAgency);
+        progressBarUpgradeAgency.setVisibility(View.INVISIBLE);
+        final SharedPreferences dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
+        if (dataAgency.getInt("Level", 0) == 0) {
+
+            Agency.setVisibility(View.INVISIBLE);
+        }
+        if (dataAgency.getInt("Level", 0) == 1) {
+
+            Agency.setVisibility(View.VISIBLE);
+        }
+
 
 
         //werkstatt
@@ -241,7 +259,7 @@ Typeface typeface;
         progressBarUpgradefab3 = (ProgressBar) findViewById(R.id.progressBarUpgradefab3);
         progressBarUpgradefab3.setVisibility(View.INVISIBLE);
 
-        //Fabrik2
+        //Fabrik4
         Fabrik4 = (Button) findViewById(R.id.Fabrik4);
         Fabrik4.setOnClickListener(this);
         SammelnFabrik4 = (Button) findViewById(R.id.SammelnFabrik4);
@@ -266,7 +284,7 @@ Typeface typeface;
             if ((datafab1.getInt("Level", 1) == 1)) {
                 //erste startzeit speichern
                 SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
-                editor.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - 979);
+                editor.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - 1500);
                 editor.apply();
 
                 //Fabrik 1 auf lvl 1 setzen
@@ -276,6 +294,12 @@ Typeface typeface;
                 editorfab1.putFloat("goldphfab1", (float) 0.05);
                 editorfab1.putString("leveltextfab1", getString(R.string.factory_1)+" " + getString(R.string.level1));
                 editorfab1.apply();
+
+
+                //Agency auf lvl 0
+                SharedPreferences.Editor editorAgency = getSharedPreferences("dataAgency", MODE_PRIVATE).edit();
+                editorAgency.putString("leveltext", getString(R.string.agency)+" " );
+                editorAgency.apply();
 
 
                 //Bank auf lvl 1
@@ -325,6 +349,7 @@ Typeface typeface;
 
 
         //Aktualisator
+
 
         h.postDelayed(new Runnable(){
             public void run(){
@@ -400,9 +425,9 @@ Typeface typeface;
                 }
 
                 //Gold check Fabrik3
-                SharedPreferences prefsfab3 = getSharedPreferences("speichervonstartzeit3", MODE_PRIVATE);
+                SharedPreferences prefsfab3 = getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE);
                 SharedPreferences prefs1fab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
-                int startTimefab3 = prefsfab3.getInt("startTime", 0); //0 is the default value.
+                int startTimefab3 = prefsfab3.getInt("startTime", ((int) System.currentTimeMillis() / 1000)); //0 is the default value.
 
                 int endTimefab3 = ((int) System.currentTimeMillis()/1000);
                 //aktualisierungszeit ausrechnen
@@ -411,6 +436,13 @@ Typeface typeface;
                 double goldtempfab3 = (secondsElapsedfab3 * prefs1fab3.getFloat("goldphfab3",(float) 0.05));
                 long goldfab3 = (long) goldtempfab3;
                 //checken obs soweit ist
+                if (startTimefab3 == 0){
+
+                    SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE).edit();
+                    editor1.putInt("startTime", ((int) System.currentTimeMillis() / 1000));
+                    editor1.apply();
+
+                }
                 if (goldfab3<= prefs1fab3.getInt("minfabrik3", 1 )) {
                     SammelnFabrik3.setVisibility(View.GONE);
                 }
@@ -427,10 +459,15 @@ Typeface typeface;
 
 
                 //Gold check Fabrik4
-                SharedPreferences prefsfab4 = getSharedPreferences("speichervonstartzeit4", MODE_PRIVATE);
+                SharedPreferences prefsfab4 = getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE);
                 SharedPreferences prefs1fab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
-                int startTimefab4 = prefsfab4.getInt("startTime", 0); //0 is the default value.
+                int startTimefab4 = prefsfab4.getInt("startTime", ((int) System.currentTimeMillis() / 1000)); //0 is the default value.
+                if (startTimefab4==0){
+                    SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE).edit();
+                    editor1.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+                    editor1.apply();
 
+                }
                 int endTimefab4 = ((int) System.currentTimeMillis()/1000);
                 //aktualisierungszeit ausrechnen
                 int secondsElapsedfab4 = endTimefab4 - startTimefab4;
@@ -452,11 +489,80 @@ Typeface typeface;
                 }
 
 
+                if (dataAgency.getInt("Level", 0) == 0) {
+
+                    Agency.setVisibility(View.INVISIBLE);
+                }
+
 
 
 
                     //upgrades
 
+
+
+                //Agency
+                SharedPreferences dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
+                Boolean cdAgency = (dataAgency.getBoolean("isLeveling", false));
+                if (cdAgency) {
+
+                    progressBarUpgradeAgency.setVisibility(View.VISIBLE);
+                    //startzeit holen
+                    SharedPreferences AgencyupgradeContdown = getSharedPreferences("startTimeUpgradeAgency", MODE_PRIVATE);
+                    int startTimeAgency = AgencyupgradeContdown.getInt("startTime", 0); //0 is the default value.
+                    //endzeit als jetzt definieren
+                    int endTimeAgency = ((int) System.currentTimeMillis() / 1000);
+                    int elapsedSecondsAgency = endTimeAgency - startTimeAgency;
+
+                    //progressbar updaten
+                    progressBarUpgradeAgency.setMax(AgencyupgradeContdown.getInt("countdown", 0));
+                    progressBarUpgradeAgency.setProgress(elapsedSecondsAgency);
+
+
+                    if (elapsedSecondsAgency > AgencyupgradeContdown.getInt("countdown", 0)) {
+
+
+
+
+                        SharedPreferences.Editor editorAgency = getSharedPreferences("dataAgency", MODE_PRIVATE).edit();
+                        dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
+
+                        if (dataAgency.getInt("Level", 0) == 0) {
+                            Agency.setVisibility(View.VISIBLE);
+
+                            //definition level1
+                            editorAgency.putString("leveltext", getString(R.string.agency) + " " + getString(R.string.level1));
+                            editorAgency.putBoolean("isLeveling", false);
+                            cdAgency = false;
+                            progressBarUpgradeAgency.setVisibility(View.INVISIBLE);
+                            Agency.setBackgroundResource(R.drawable.agencylvl1);
+                            editorAgency.putInt("Level", dataAgency.getInt("Level", 0) + 1);
+                            editorAgency.apply();
+
+
+                        }
+
+/*
+                        if (dataAgency.getInt("Level", 1) == 2) {
+                            Agency.setBackgroundResource(R.drawable.Agencylvl2);
+
+                            //definition level2
+                            editorAgency.putString("leveltext", getString(R.string.agency) + " " + getString(R.string.level2));
+                            editorAgency.apply();
+                            editorAgency.putBoolean("isLeveling", false);
+                            cdAgency = false;
+                            progressBarUpgradeAgency.setVisibility(View.INVISIBLE);
+                            Agency.setBackgroundResource(R.drawable.Agencylvl2);
+                            editorAgency.putInt("Level", dataAgency.getInt("Level", 1) + 1);
+                            editorAgency.apply();
+
+
+                        }
+*/
+
+                    }
+
+                }
 
                 //Bank
                 SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
@@ -501,7 +607,7 @@ Typeface typeface;
 
                             //gebäude auf Bank level 2 freischalten:
 
-                            //Fabrik 1 level3
+                            //Fabrik 1 level4
 
                             SharedPreferences.Editor Levelbedingungfab1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
                             Levelbedingungfab1.putBoolean("bedingungenerfüllt", true);
@@ -515,6 +621,9 @@ Typeface typeface;
 
                             //Agentur
 
+                            SharedPreferences.Editor lvlbedagency = getSharedPreferences("dataAgency", MODE_PRIVATE).edit();
+                            lvlbedagency.putBoolean("bedingungenerfüllt", true);
+                            lvlbedagency.apply();
 
                         }
 
@@ -551,6 +660,7 @@ Typeface typeface;
                                 Levelbedingungfab2.apply();
 
                                 //Agentur lvl2
+
                             }
                         }
 
@@ -1046,7 +1156,7 @@ Typeface typeface;
                             Fabrik3.setVisibility(View.VISIBLE);
                             //Startzeit als jetzt definieren
                             SharedPreferences.Editor editor3 = getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE).edit();
-                            editor3.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
+                            editor3.putInt("startTime", (((int) System.currentTimeMillis()) / 1000)-20);
                             editor3.apply();
 
                         }
@@ -1253,7 +1363,7 @@ Typeface typeface;
 
                             //Startzeit als jetzt definieren
                             SharedPreferences.Editor editor4 = getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE).edit();
-                            editor4.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
+                            editor4.putInt("startTime", (((int) System.currentTimeMillis()) / 1000)-20);
                             editor4.apply();
 
                         }
@@ -1435,10 +1545,8 @@ Typeface typeface;
     public void onClick(View v) {
 
 
-
         //FAbrik 1
         datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
-
 
 
         int id = v.getId();
@@ -1493,18 +1601,18 @@ Typeface typeface;
         }
 
 
-
-
         //Bank
         SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
         if (id == R.id.Bank) {
-          Intent start = new Intent(MainActivity.this, BankActivity.class);
+            Intent start = new Intent(MainActivity.this, BankActivity.class);
             MainActivity.this.startActivity(start);
 
             finish();
         }
         //Bauhaus
         if (id == R.id.bauhaus) {
+            SharedPreferences dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
+
 
 
             View bauhausdia = View.inflate(this, R.layout.bauhausdialog, null);
@@ -1516,7 +1624,7 @@ Typeface typeface;
             lp.copyFrom(bauhausdialog.getWindow().getAttributes());
             lp.width = WindowManager.LayoutParams.MATCH_PARENT;
 
-            closeBauhaus = (Button)bauhausdialog.findViewById(R.id.closeBauhaus);
+            closeBauhaus = (Button) bauhausdialog.findViewById(R.id.closeBauhaus);
             closeBauhaus.setOnClickListener(this);
 
             goldtextarch = (TextView) bauhausdialog.findViewById(R.id.goldpoolarch);
@@ -1526,6 +1634,7 @@ Typeface typeface;
             upgradefab1 = (Button) bauhausdialog.findViewById(R.id.upgradefab1);
             upgradefab1.setOnClickListener(this);
             leveltextfabr1 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr1);
+            leveltextfabr1.setOnClickListener(this);
             leveltextfabr1.setTypeface(typeface);
             upcdfab1 = (TextView) bauhausdialog.findViewById(R.id.upcdfab1);
             upcdfab1.setTypeface(typeface);
@@ -1537,21 +1646,22 @@ Typeface typeface;
             upgradefab2.setOnClickListener(this);
             leveltextfabr2 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr2);
             leveltextfabr2.setTypeface(typeface);
+            leveltextfabr2.setOnClickListener(this);
             upcdfab2 = (TextView) bauhausdialog.findViewById(R.id.upcdfab2);
             upcdfab2.setTypeface(typeface);
             leveltextfabr2.setText(datafab2.getString("leveltextfab2", "2"));
             datafab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
             //btn auf upgrade wechseln, wenn gebàude gebaut
-            if (datafab2.getInt("Level", 0) >= 1){
+            if (datafab2.getInt("Level", 0) >= 1) {
 
-                    upgradefab2.setBackgroundResource(R.drawable.levelupbtns);
+                upgradefab2.setBackgroundResource(R.drawable.levelupbtns);
 
-               }
+            }
             if (datafab2.getInt("Level", 0) < 1) {
                 if (datafab2.getBoolean("bedingungenerfüllt", false)) {
                     upgradefab2.setBackgroundResource(R.drawable.buildbtns);
                 }
-                if (!datafab2.getBoolean("bedingungenerfüllt", false)){
+                if (!datafab2.getBoolean("bedingungenerfüllt", false)) {
 
                     upgradefab2.setBackgroundResource(R.mipmap.nobuildbtn);
                 }
@@ -1562,12 +1672,13 @@ Typeface typeface;
             upgradefab3.setOnClickListener(this);
             leveltextfabr3 = (TextView) bauhausdialog.findViewById(R.id.leveltextfabr3);
             leveltextfabr3.setTypeface(typeface);
+            leveltextfabr3.setOnClickListener(this);
             upcdfab3 = (TextView) bauhausdialog.findViewById(R.id.upcdfab3);
             upcdfab3.setTypeface(typeface);
             leveltextfabr3.setText(datafab3.getString("leveltextfab3", "3"));
             datafab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
             //btn auf upgrade wechseln, wenn gebàude gebaut
-            if (datafab3.getInt("Level", 0) >= 1){
+            if (datafab3.getInt("Level", 0) >= 1) {
 
                 upgradefab3.setBackgroundResource(R.drawable.levelupbtns);
 
@@ -1576,7 +1687,7 @@ Typeface typeface;
                 if (datafab3.getBoolean("bedingungenerfüllt", false)) {
                     upgradefab3.setBackgroundResource(R.drawable.buildbtns);
                 }
-                if (!datafab3.getBoolean("bedingungenerfüllt", false)){
+                if (!datafab3.getBoolean("bedingungenerfüllt", false)) {
 
                     upgradefab3.setBackgroundResource(R.mipmap.nobuildbtn);
                 }
@@ -1589,10 +1700,11 @@ Typeface typeface;
             leveltextfabr4.setTypeface(typeface);
             upcdfab4 = (TextView) bauhausdialog.findViewById(R.id.upcdfab4);
             upcdfab4.setTypeface(typeface);
+            leveltextfabr4.setOnClickListener(this);
             leveltextfabr4.setText(datafab4.getString("leveltextfab4", "4"));
             datafab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
             //btn auf upgrade wechseln, wenn gebàude gebaut
-            if (datafab4.getInt("Level", 0) >= 1){
+            if (datafab4.getInt("Level", 0) >= 1) {
 
                 upgradefab4.setBackgroundResource(R.drawable.levelupbtns);
 
@@ -1601,7 +1713,7 @@ Typeface typeface;
                 if (datafab4.getBoolean("bedingungenerfüllt", false)) {
                     upgradefab4.setBackgroundResource(R.drawable.buildbtns);
                 }
-                if (!datafab4.getBoolean("bedingungenerfüllt", false)){
+                if (!datafab4.getBoolean("bedingungenerfüllt", false)) {
 
                     upgradefab4.setBackgroundResource(R.mipmap.nobuildbtn);
                 }
@@ -1615,9 +1727,36 @@ Typeface typeface;
             upcdBank.setTypeface(typeface);
             leveltextBank = (TextView) bauhausdialog.findViewById(R.id.leveltextBank);
             leveltextBank.setTypeface(typeface);
+            leveltextBank.setOnClickListener(this);
+
             leveltextBank.setText(dataBank.getString("leveltext", "1"));
 
+            //Agency
+            upgradeAgency = (Button) bauhausdialog.findViewById(R.id.upgradeAgentur);
+            upgradeAgency.setOnClickListener(this);
+            upcdAgency = (TextView) bauhausdialog.findViewById(R.id.upcdAgentur);
+            upcdAgency.setTypeface(typeface);
+            leveltextAgency = (TextView) bauhausdialog.findViewById(R.id.leveltextAgentur);
+            leveltextAgency.setTypeface(typeface);
+            leveltextAgency.setOnClickListener(this);
 
+            leveltextAgency.setText(dataAgency.getString("leveltext", "Agency"));
+
+            //btn auf upgrade wechseln, wenn gebàude gebaut
+            if (dataAgency.getInt("Level", 0) >= 1) {
+
+                upgradeAgency.setBackgroundResource(R.drawable.levelupbtns);
+
+            }
+            if (dataAgency.getInt("Level", 0) < 1) {
+                if (dataAgency.getBoolean("bedingungenerfüllt", false)) {
+                    upgradeAgency.setBackgroundResource(R.drawable.buildbtns);
+                }
+                if (!dataAgency.getBoolean("bedingungenerfüllt", false)) {
+
+                    upgradeAgency.setBackgroundResource(R.mipmap.nobuildbtn);
+                }
+            }
 
 
             bauhausdialog.show();
@@ -1626,20 +1765,19 @@ Typeface typeface;
 
             //Aktualisator bauhaus
 
-            h.postDelayed(new Runnable(){
-                public void run(){
+            h.postDelayed(new Runnable() {
+                public void run() {
                     //jede sec upgradecountdown aktualisieren
 
-
-                    //BAnk
-                    SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
-                    Boolean cdBank = (dataBank.getBoolean("isLeveling", false));
 
                     //Aktualisiere den Kontostatus
                     SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
                     String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
-                    goldtextarch.setText(": " + Pooltext );
+                    goldtextarch.setText(": " + Pooltext);
 
+                    //BAnk
+                    SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
+                    Boolean cdBank = (dataBank.getBoolean("isLeveling", false));
 
                     SharedPreferences BankupgradeContdown = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE);
                     int startTimeBank = BankupgradeContdown.getInt("startTime", 0); //0 is the default value.
@@ -1650,13 +1788,13 @@ Typeface typeface;
                     int restTimeBank = countdownBank - elapsedSecondsBank;
                     String dhmsBank;
                     //wenn nicht am leveln, counter ausblenden
-                    if (!cdBank){
+                    if (!cdBank) {
                         upcdBank.setText("");
                     }
                     if (cdBank) {
 
                         if (restTimeBank >= 0) {
-                            dhmsBank = String.format(Locale.US,"%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimeBank), TimeUnit.SECONDS.toHours(restTimeBank),
+                            dhmsBank = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimeBank), TimeUnit.SECONDS.toHours(restTimeBank),
                                     TimeUnit.SECONDS.toMinutes(restTimeBank) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimeBank)),
                                     TimeUnit.SECONDS.toSeconds(restTimeBank) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimeBank)));
                             upcdBank.setText(dhmsBank);
@@ -1666,26 +1804,55 @@ Typeface typeface;
                         }
                     }
 
+                    //Agency
+                    SharedPreferences dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
+                    Boolean cdAgency = (dataAgency.getBoolean("isLeveling", false));
+
+                    SharedPreferences AgencyupgradeContdown = getSharedPreferences("startTimeUpgradeAgency", MODE_PRIVATE);
+                    int startTimeAgency = AgencyupgradeContdown.getInt("startTime", 0); //0 is the default value.
+                    int countdownAgency = AgencyupgradeContdown.getInt("countdown", 0); //0 is the default value.
+                    //endzeit als jetzt definieren
+                    int endTimeAgency = ((int) System.currentTimeMillis() / 1000);
+                    int elapsedSecondsAgency = endTimeAgency - startTimeAgency;
+                    int restTimeAgency = countdownAgency - elapsedSecondsAgency;
+                    String dhmsAgency;
+                    //wenn nicht am leveln, counter ausblenden
+                    if (!cdAgency) {
+                        upcdAgency.setText("");
+                    }
+                    if (cdAgency) {
+
+                        if (restTimeAgency >= 0) {
+                            dhmsAgency = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimeAgency), TimeUnit.SECONDS.toHours(restTimeAgency),
+                                    TimeUnit.SECONDS.toMinutes(restTimeAgency) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimeAgency)),
+                                    TimeUnit.SECONDS.toSeconds(restTimeAgency) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimeAgency)));
+                            upcdAgency.setText(dhmsAgency);
+                        }
+                        if (restTimeAgency < 0) {
+                            upcdAgency.setText("00:00:00:00");
+                        }
+                    }
+
 
                     //Fabrik1
                     Boolean cdfab1 = (datafab1.getBoolean("isLeveling", false));
 
-                        SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
-                        int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
-                        int countdownfab1 = Fab1upgradeContdown.getInt("countdown", 0); //0 is the default value.
-                        //endzeit als jetzt definieren
-                        int endTimefab1 = ((int) System.currentTimeMillis() / 1000);
-                        int elapsedSecondsfab1 = endTimefab1 - startTimefab1;
-                        int restTimefab1 = countdownfab1 - elapsedSecondsfab1;
-                        String dhmsfab1;
+                    SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
+                    int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
+                    int countdownfab1 = Fab1upgradeContdown.getInt("countdown", 0); //0 is the default value.
+                    //endzeit als jetzt definieren
+                    int endTimefab1 = ((int) System.currentTimeMillis() / 1000);
+                    int elapsedSecondsfab1 = endTimefab1 - startTimefab1;
+                    int restTimefab1 = countdownfab1 - elapsedSecondsfab1;
+                    String dhmsfab1;
                     //wenn nicht am leveln, counter ausblenden
-                    if (!cdfab1){
+                    if (!cdfab1) {
                         upcdfab1.setText("");
                     }
                     if (cdfab1) {
 
                         if (restTimefab1 >= 0) {
-                            dhmsfab1 = String.format(Locale.US,"%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab1), TimeUnit.SECONDS.toHours(restTimefab1),
+                            dhmsfab1 = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab1), TimeUnit.SECONDS.toHours(restTimefab1),
                                     TimeUnit.SECONDS.toMinutes(restTimefab1) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab1)),
                                     TimeUnit.SECONDS.toSeconds(restTimefab1) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab1)));
                             upcdfab1.setText(dhmsfab1);
@@ -1706,13 +1873,13 @@ Typeface typeface;
                     int restTimefab2 = countdownfab2 - elapsedSecondsfab2;
                     String dhmsfab2;
                     //wenn nicht am leveln, counter ausblenden
-                    if (!cdfab2){
+                    if (!cdfab2) {
                         upcdfab2.setText("");
                     }
                     if (cdfab2) {
 
                         if (restTimefab2 >= 0) {
-                            dhmsfab2 = String.format(Locale.US,"%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab2), TimeUnit.SECONDS.toHours(restTimefab2),
+                            dhmsfab2 = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab2), TimeUnit.SECONDS.toHours(restTimefab2),
                                     TimeUnit.SECONDS.toMinutes(restTimefab2) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab2)),
                                     TimeUnit.SECONDS.toSeconds(restTimefab2) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab2)));
                             upcdfab2.setText(dhmsfab2);
@@ -1733,13 +1900,13 @@ Typeface typeface;
                     int restTimefab3 = countdownfab3 - elapsedSecondsfab3;
                     String dhmsfab3;
                     //wenn nicht am leveln, counter ausblenden
-                    if (!cdfab3){
+                    if (!cdfab3) {
                         upcdfab3.setText("");
                     }
                     if (cdfab3) {
 
                         if (restTimefab3 >= 0) {
-                            dhmsfab3 = String.format(Locale.US,"%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab3), TimeUnit.SECONDS.toHours(restTimefab3),
+                            dhmsfab3 = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab3), TimeUnit.SECONDS.toHours(restTimefab3),
                                     TimeUnit.SECONDS.toMinutes(restTimefab3) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab3)),
                                     TimeUnit.SECONDS.toSeconds(restTimefab3) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab3)));
                             upcdfab3.setText(dhmsfab3);
@@ -1761,13 +1928,13 @@ Typeface typeface;
                     int restTimefab4 = countdownfab4 - elapsedSecondsfab4;
                     String dhmsfab4;
                     //wenn nicht am leveln, counter ausblenden
-                    if (!cdfab4){
+                    if (!cdfab4) {
                         upcdfab4.setText("");
                     }
                     if (cdfab4) {
 
                         if (restTimefab4 >= 0) {
-                            dhmsfab4 = String.format(Locale.US,"%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab4), TimeUnit.SECONDS.toHours(restTimefab4),
+                            dhmsfab4 = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab4), TimeUnit.SECONDS.toHours(restTimefab4),
                                     TimeUnit.SECONDS.toMinutes(restTimefab4) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab4)),
                                     TimeUnit.SECONDS.toSeconds(restTimefab4) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab4)));
                             upcdfab4.setText(dhmsfab4);
@@ -1792,21 +1959,144 @@ Typeface typeface;
 //SYNC
 
         //race
-if (id== R.id.werkstatt){
+        if (id == R.id.werkstatt) {
 
-    Intent intent = new Intent(this, multiplayer.class);
-    startActivity(intent);
-}
+            Intent intent = new Intent(this, multiplayer.class);
+            startActivity(intent);
+        }
         //agency
-        if (id== R.id.openagency){
+        if (id == R.id.openagency) {
 
-            Intent intent = new Intent(this, Agency.class);
+            Intent intent = new Intent(this, AgencyActivity.class);
             startActivity(intent);
         }
 
 
+        //Agency
+        if (id == R.id.upgradeAgentur | id == R.id.leveltextAgentur) {
+
+            dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
+            Boolean cdAgency = dataAgency.getBoolean("isLeveling", false);
+
+            //wenn ein upgrade am laufen ist, toast machen
+            if (cdAgency) {
+
+                Toast.makeText(MainActivity.this, R.string.waitforupgradefinish, Toast.LENGTH_SHORT).show();
+
+
+            }
+
+            //sonst, upgradedialog
+            if (!cdAgency) {
+
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                        context);
+
+                // set title
+                alertDialogBuilder.setTitle(getString(R.string.agency));
+
+                // set dialog message
+
+                if (dataAgency.getInt("Level", 0) == 0) {
+                    //text Agency lvl1
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level1), ": \n\n", getString(R.string.agencybenefits) ,"\n\n", getString(R.string.Costs), "200", getString(R.string.Gold), " \n \n", getString(R.string.time), "5:00:00"));
+                }
+
+
+
+                alertDialogBuilder.setCancelable(false);
+                alertDialogBuilder.setPositiveButton(getString(R.string.upgrade), new DialogInterface.OnClickListener() {
+
+
+                            public void onClick(DialogInterface dialog, int id) {
+
+
+                                //Upgrade
+                                SharedPreferences dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
+                                SharedPreferences prefs = getSharedPreferences("POOL", MODE_PRIVATE);
+
+
+                                //Level 1
+                                if (dataAgency.getInt("Level", 0) == 0) {
+
+                                    Boolean bederfüllt = dataAgency.getBoolean("bedingungenerfüllt", false);
+
+
+
+                                        //bedingung erfüllt?
+                                        if (!bederfüllt) {
+
+                                            Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.bank)+"  "+getString(R.string.zu)+"  "+getString(R.string.level2), Toast.LENGTH_SHORT).show();
+
+
+                                        }
+                                        if (bederfüllt) {
+
+
+                                            SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+
+                                            if ((prefs.getInt("POOL", 0)) < 100) {
+                                                Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
+
+                                            }
+                                            if ((prefs.getInt("POOL", 0)) >= 100) {
+                                                //bezahlen
+                                                editor2.putInt("POOL", (prefs.getInt("POOL", 0) - 100));
+                                                editor2.apply();
+
+                                                //Countdown Starten
+                                                SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeAgency", MODE_PRIVATE).edit();
+                                                editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
+
+                                                //Countdownzeit definieren
+                                                //// TODO: 3600
+                                                editor3.putInt("countdown", 36);
+                                                editor3.apply();
+
+                                                SharedPreferences.Editor editor1 = getSharedPreferences("dataAgency", MODE_PRIVATE).edit();
+                                                editor1.putBoolean("isLeveling", true);
+                                                editor1.putBoolean("bedingungenerfüllt", false);
+                                                editor1.apply();
+
+
+                                            }
+                                        }
+
+                                }
+                            }
+                                }
+
+                                )
+
+
+                                .setNegativeButton(getString(R.string.no),  new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+
+                                                dialog.cancel();
+                                            }
+                                        }
+
+                                );
+
+                                // create alert dialog
+                                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                                // show it
+                                alertDialog.show();
+
+
+
+
+
+                            }
+        }
+
+
+
+
         //BANK
-        if (id == R.id.upgradeBank) {
+        if (id == R.id.upgradeBank |id == R.id.leveltextBank) {
 
             dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
             Boolean cdbank = dataBank.getBoolean("isLeveling", false);
@@ -1833,7 +2123,7 @@ if (id== R.id.werkstatt){
 
                 if (dataBank.getInt("Level", 1) == 1) {
                     //text bank lvl2
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.goldstorage)," 1000",Html.fromHtml(" <font color=#00ff00> + 19000</font>"), "\n\n ", getString(R.string.unlock)," \n \n",  getString(R.string.factories)," ", getString(R.string.level3),",",getString(R.string.factory_2),", ", getString(R.string.agency)," \n \n",getString(R.string.Costs),"100", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00:00"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.goldstorage)," 1000",Html.fromHtml(" <font color=#00ff00> + 19000</font>"), "\n\n ", getString(R.string.unlock)," \n \n",  getString(R.string.factories)," ", getString(R.string.level4),",",getString(R.string.factory_2),", ", getString(R.string.agency)," \n \n",getString(R.string.Costs),"100", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00:00"));
                 }
                 if (dataBank.getInt("Level", 1) == 2) {
                     //text lvl3
@@ -1887,7 +2177,8 @@ if (id== R.id.werkstatt){
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
-                                            editor3.putInt("countdown", 3600);
+                                            //TODO 3600
+                                            editor3.putInt("countdown", 36);
                                             editor3.apply();
 
                                             SharedPreferences.Editor editor1 = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
@@ -2011,7 +2302,7 @@ if (id== R.id.werkstatt){
 
 
         //FAbrik1
-        if (id == R.id.upgradefab1) {
+        if (id == R.id.upgradefab1|id == R.id.leveltextfabr1) {
 
 
             //ist ein upgrade am laufen?
@@ -2041,16 +2332,16 @@ if (id== R.id.werkstatt){
 
 
 
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.gold_per_hour)," 180",Html.fromHtml(" <font color=#00ff00> + 180</font>"), "\n\n ",getString(R.string.storage)," 500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n", getString(R.string.unlock)," \n \n",getString(R.string.bank)," ",getString(R.string.level2),"\n\n",getString(R.string.Costs),"50", getString(R.string.Gold)," \n \n",getString(R.string.time), "30:00"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level2),": \n\n", getString(R.string.gold_per_hour)," 180",Html.fromHtml(" <font color=#00ff00> + 180</font>"), "\n\n ",getString(R.string.storage)," 500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n", getString(R.string.unlock)," \n \n",getString(R.string.bank)," ",getString(R.string.level2),"\n\n",getString(R.string.Costs),"50", getString(R.string.Gold)," \n \n",getString(R.string.time), "2:00"));
 
                 }
                 if (datafab1.getInt("Level", 1) == 2) {
                     //text lvl3
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.gold_per_hour),"360",Html.fromHtml(" <font color=#00ff00> + 220</font>"), "\n\n ",getString(R.string.storage)," 1000 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00:00"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level3),": \n\n", getString(R.string.gold_per_hour),"360",Html.fromHtml(" <font color=#00ff00> + 220</font>"), "\n\n ",getString(R.string.storage)," 1000 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"500", getString(R.string.Gold)," \n \n",getString(R.string.time), "10:00"));
                 }
                 if (datafab1.getInt("Level", 1) == 3) {
                     //text lvl4
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.gold_per_hour),"600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 1500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"1500", getString(R.string.Gold)," \n \n",getString(R.string.time), "3:00:00"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level4),": \n\n", getString(R.string.gold_per_hour),"600",Html.fromHtml(" <font color=#00ff00> + 200</font>"), "\n\n ",getString(R.string.storage)," 1500 ",Html.fromHtml("<font color=#00ff00> + 500</font>")," \n \n",getString(R.string.Costs),"1500", getString(R.string.Gold)," \n \n",getString(R.string.time), "1:00:00"));
                 }
                 if (datafab1.getInt("Level", 1) == 4) {
                     //text lvl5
@@ -2114,7 +2405,8 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        editor3.putInt("countdown", 1800);
+                                        //TODO 120
+                                        editor3.putInt("countdown", 10);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
@@ -2130,13 +2422,7 @@ if (id== R.id.werkstatt){
 
                                 if (datafab1.getInt("Level", 1) == 2) {
                                     //bedingung erfüllt?
-                                    if (!bederfüllt) {
 
-                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.bank)+"  "+getString(R.string.zu)+"  "+getString(R.string.level2), Toast.LENGTH_SHORT).show();
-
-
-                                    }
-                                    if (bederfüllt) {
                                         SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
                                         if ((prefs.getInt("POOL", 0)) <= 500) {
                                             Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
@@ -2152,20 +2438,27 @@ if (id== R.id.werkstatt){
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
-                                            editor3.putInt("countdown", 3600);
+                                            editor3.putInt("countdown", 600);
                                             editor3.apply();
 
                                             SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
                                             editor1.putBoolean("isLeveling", true);
                                             //bedingung ist nicht mehr erfüllt für die kommenden lvl
-                                            editor1.putBoolean("bedingungenerfüllt", false);
                                             editor1.apply();
 
                                         }
-                                    }
+
 
                                 }
+
                                 if (datafab1.getInt("Level", 1) == 3) {
+                                    if (!bederfüllt) {
+
+                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.bank)+"  "+getString(R.string.zu)+"  "+getString(R.string.level2), Toast.LENGTH_SHORT).show();
+
+
+                                    }
+                                    if (bederfüllt) {
 
                                     //LEVEL4
                                     SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
@@ -2184,15 +2477,16 @@ if (id== R.id.werkstatt){
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
-                                        editor3.putInt("countdown", 10800);
+                                        editor3.putInt("countdown", 3600);
                                         editor3.apply();
 
                                         SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
                                         editor1.putBoolean("isLeveling", true);
+                                        editor1.putBoolean("bedingungenerfüllt", false);
                                         editor1.apply();
 
                                     }
-
+                                }
 
                                 }
 
@@ -2411,7 +2705,7 @@ if (id== R.id.werkstatt){
 
         }
         //FAbrik2
-        if (id == R.id.upgradefab2) {
+        if (id == R.id.upgradefab2|id == R.id.leveltextfabr2) {
 
 
             //ist ein upgrade am laufen?
@@ -2704,13 +2998,7 @@ if (id== R.id.werkstatt){
                                 }
 
                                 if (datafab2.getInt("Level", 0) == 6) {
-                                    if (!bederfüllt) {
 
-                                        Toast.makeText(MainActivity.this, getString(R.string.upgrade)+"  "+getString(R.string.bank)+"  "+getString(R.string.zu)+"  "+getString(R.string.level3), Toast.LENGTH_SHORT).show();
-
-
-                                    }
-                                    if (bederfüllt) {
 
                                         //LEVEL7
                                         SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
@@ -2737,7 +3025,7 @@ if (id== R.id.werkstatt){
 
                                         }
 
-                                    }
+
                                 }
                                 if (datafab2.getInt("Level", 0) == 7) {
 
@@ -2857,7 +3145,7 @@ if (id== R.id.werkstatt){
         }
 
         //FAbrik3
-        if (id == R.id.upgradefab3) {
+        if (id == R.id.upgradefab3|id == R.id.leveltextfabr3) {
 
 
             //ist ein upgrade am laufen?
@@ -3302,7 +3590,7 @@ if (id== R.id.werkstatt){
 
 
         //FAbrik 4
-        if (id == R.id.upgradefab4) {
+        if (id == R.id.upgradefab4|id == R.id.leveltextfabr4) {
 
 
             //ist ein upgrade am laufen?

@@ -200,7 +200,7 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
                 editor2.putFloat("cashout", rtrdrp);
                 editor2.commit();
                 SharedPreferences cashouttext = context.getSharedPreferences("cashout", context.MODE_PRIVATE);
-                BankActivity.cashoutonwait.setText("waiting for payout:" + String.valueOf(cashouttext.getFloat("cashout", 0) + "$"));
+                BankActivity.cashoutonwait.setText(String.valueOf(cashouttext.getFloat("cashout", 0) + "$"));
 
             }
 

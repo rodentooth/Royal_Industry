@@ -35,7 +35,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.matesnetwork.Cognalys.VerifyMobile;
+
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -127,7 +127,10 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             actionBar.hide();
         }
 
+
         setContentView(R.layout.activity_bank);
+
+
 
         //geld aktualisierung
         final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
@@ -144,7 +147,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
          mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.mipmap.ic_launcher)
                         .setPriority(2)
                         .setContentTitle("ROYAL INDUSTRY")
                         .setContentText("Your diamonds are ready!")
@@ -172,7 +175,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 // mId allows you to update the notification later on.
 
 
-                //ad
+        //ad
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         //ad laden
@@ -364,14 +367,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         if (id == R.id.GoldToDias) {
 
 
-            SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
-
-            final bgworker bgworker = new bgworker(context);
-
-            String type = "verify";
-            String gid = google.getString("id", "0");
-
-            bgworker.execute(type, gid, "0", "0", "diascreator");
+            diaconverter();
 
         }
 
@@ -664,7 +660,6 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                                         bgworker bgworker =new bgworker(BankActivity.this);
                                         bgworker.execute(type, gid,dias , "convert");
 
-                                        Toast.makeText(BankActivity.this, dias, Toast.LENGTH_SHORT).show();
 
                                         //dialog beenden
                                         dialogconvertdias.dismiss();
@@ -678,23 +673,6 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-        @Override
-        protected void onActivityResult ( int arg0, int arg1, Intent arg2){
-// TODO Auto-generated method stub
-            super.onActivityResult(arg0, arg1, arg2);
-
-            if (arg0 == VerifyMobile.REQUEST_CODE) {
-                String message = arg2.getStringExtra("message");
-                int result = arg2.getIntExtra("result", 0);
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-
-                String restring = Integer.toString(result);
-
-                Toast.makeText(BankActivity.this, restring, Toast.LENGTH_SHORT).show();
-            }
-
-        }
 
     public void diaconverter(){
         View converter = View.inflate(this, R.layout.converter, null);
@@ -765,84 +743,6 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         dialogconvertdias.show();
     }
 
-    public void serververification(){
-
-
-        View verification = View.inflate(this, R.layout.verification, null);
-         veridia = new Dialog(BankActivity.this);
-        veridia.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        veridia.setContentView(verification);
-
-        coucod = (EditText) veridia.findViewById(R.id.coucod);
-        phnr = (EditText) veridia.findViewById(R.id.phnr);
-        coucod.setText(VerifyMobile
-                .getCountryCode(getApplicationContext()));
-
-        verify = (Button) veridia.findViewById(R.id.verify);
-        verify.setOnClickListener(this);
-
-
-
-        veridia.show();
-
-    }
-
-public void numberverification(){
-    TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-    final String imei = telephonyManager.getDeviceId();
-
-
-    final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
-
-    final String notcleared = coucod.getText().toString() + phnr.getText().toString();
-
-
-
-
-    final String m_Text = "+"+ notcleared.replaceAll("[-+.^:,;#/()'*N!¨_ ]","");
-    AlertDialog.Builder nrcheck = new AlertDialog.Builder(context);
-    nrcheck.setMessage("is \n" + m_Text + "\n\ncorrect?");
-
-
-    nrcheck.setPositiveButton("yes", new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    Intent in = new Intent(BankActivity.this, VerifyMobile.class);
-                    in.putExtra("app_id", "759bda3b29d44fada046640");
-                    in.putExtra("access_token", "4358c6d8507f116bfa46c3a25b83bea5763254e2");
-                    in.putExtra("mobile", m_Text);
-
-                    startActivityForResult(in, VerifyMobile.REQUEST_CODE);
-
-                    new Handler().postDelayed(new Runnable(){
-                        @Override
-                        public void run() {
-                /* Create an Intent that will start the Menu-Activity. */
-                            String type = "verify";
-                            String gid = google.getString("id", "0");
-                            bgworker bgworker =new bgworker(BankActivity.this);
-                            bgworker.execute(type, gid, imei, m_Text, "numberverify");
-                        }
-                    }, 10000);
-
-
-                }
-            });
-
-    nrcheck.show();
-
-
-
-
-
-
-
-
-}
-
-
 
         @Override
         public void onStart () {
@@ -907,7 +807,6 @@ class bgworker extends AsyncTask<String, Void, String> {
 
         String type = params[0];
         String dia_url = "http://frozensparks.com/diamonds.php";
-        String veri_url =  "http://frozensparks.com/verify.php";
         String collect_url =  "http://frozensparks.com/collect.php";
         String convert_url =  "http://frozensparks.com/cashout.php";
 
@@ -1054,57 +953,9 @@ class bgworker extends AsyncTask<String, Void, String> {
 
         }
 
-        if(type.equals("verify")){
-            try {
-                doafter = params[4];
-                String googleID = params[1];
-                String deviceID = params[2];
-                String number = params[3];
-
-
-                URL url = new URL(veri_url);
-                HttpURLConnection httpurlconn = (HttpURLConnection) url.openConnection();
-                httpurlconn.setRequestMethod("POST");
-                httpurlconn.setDoOutput(true);
-                httpurlconn.setDoInput(true);
-                OutputStream outputStream = httpurlconn.getOutputStream();
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                String post_data = URLEncoder.encode("googleID", "UTF-8")+"="+URLEncoder.encode(googleID, "UTF-8")+"&"
-                        +URLEncoder.encode("deviceID", "UTF-8")+"="+URLEncoder.encode(deviceID, "UTF-8")+"&"
-                        +URLEncoder.encode("number", "UTF-8")+"="+URLEncoder.encode(number, "UTF-8");
-                bufferedWriter.write(post_data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
-                outputStream.close();
-
-                InputStream inputStream =httpurlconn.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
-                String result="";
-                String line="";
-
-                while((line=bufferedReader.readLine())!=null){
-                    result +=line;
-
-
-                }
-                bufferedReader.close();
-                inputStream.close();
-                httpurlconn.disconnect();
-
-                return result;
 
 
 
-
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-        }
 
 
 
@@ -1135,7 +986,7 @@ class bgworker extends AsyncTask<String, Void, String> {
         if(doafter =="convert") {
 
 
-            if (connectcode >= 1) {
+            if (connectcode >= 0) {
 
                 SharedPreferences prefs1 = getSharedPreferences("thatmanycash", MODE_PRIVATE);
                 SharedPreferences prefs2 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
@@ -1169,7 +1020,7 @@ class bgworker extends AsyncTask<String, Void, String> {
                 editor2.commit();
                 SharedPreferences cashouttext = getSharedPreferences("cashout", MODE_PRIVATE);
 
-                cashoutonwait.setText("waiting for payout:" + String.valueOf(cashouttext.getFloat("cashout", 0) + "$"));
+                cashoutonwait.setText( String.valueOf(cashouttext.getFloat("cashout", 0) + "$"));
 
                 if(mInterstitialAd.isLoaded()){
                     mInterstitialAd.show();
@@ -1180,12 +1031,15 @@ class bgworker extends AsyncTask<String, Void, String> {
                         @Override
 
                         public void onAdLoaded() {
-                            Toast.makeText(BankActivity.this, "loaded", Toast.LENGTH_SHORT).show();
 
                         }
                         @Override
                         public void onAdFailedToLoad(int errorCode) {
-                            Toast.makeText(BankActivity.this, "you have to be connected to the internet", Toast.LENGTH_SHORT).show();
+                            AdRequest adRequest = new AdRequest.Builder()
+                                    .addTestDevice("16201-16201")
+                                    .build();
+
+                            mInterstitialAd.loadAd(adRequest);
                         }
                         @Override
                         public void onAdClosed() {
@@ -1220,7 +1074,7 @@ class bgworker extends AsyncTask<String, Void, String> {
             }
 
             if (connectcode == -2) {
-                Toast.makeText(BankActivity.this, "no verify", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BankActivity.this, "damn son y u play dis?", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -1249,18 +1103,22 @@ class bgworker extends AsyncTask<String, Void, String> {
                         @Override
 
                         public void onAdLoaded() {
-                            Toast.makeText(BankActivity.this, "loaded", Toast.LENGTH_SHORT).show();
 
                         }
                         @Override
                         public void onAdFailedToLoad(int errorCode) {
-                            Toast.makeText(BankActivity.this, "you have to be connected to the internet", Toast.LENGTH_SHORT).show();
-                        }
+                            AdRequest adRequest = new AdRequest.Builder()
+                                    .addTestDevice("16201-16201")
+                                    .build();
+
+                            mInterstitialAd.loadAd(adRequest);                        }
                         @Override
                         public void onAdClosed() {
                             //thanks
                             Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
-                            dialogconvertdias.dismiss();
+                            if(dialogconvertdias.isShowing()) {
+                                dialogconvertdias.dismiss();
+                            }
                             AdRequest adRequest = new AdRequest.Builder()
                                     .addTestDevice("16201-16201")
                                     .build();
@@ -1296,15 +1154,12 @@ class bgworker extends AsyncTask<String, Void, String> {
                 //
                 Toast.makeText(BankActivity.this, "no user found. restart the app", Toast.LENGTH_SHORT).show();
             }
-            if (connectcode == 110) {
-                //
-                Toast.makeText(BankActivity.this, "not verified. but why?", Toast.LENGTH_SHORT).show();
-            }
-            if (connectcode == 11101) {
+
+            if (connectcode == 101) {
                 //hacker ban
                 Toast.makeText(BankActivity.this, "you are banned", Toast.LENGTH_SHORT).show();
             }
-            if (connectcode == 11111) {
+            if (connectcode == 1111) {
                 //übertrag ok
                 Toast.makeText(BankActivity.this, "Timer started", Toast.LENGTH_SHORT).show();
             }
@@ -1321,70 +1176,15 @@ if(doafter =="diascreator") {
     if (connectcode == 1010) {
         //check number on verification server
 
-        serververification();
+
 
     }
     if (connectcode == 100) {
 
         //create new verification
-        serververification();
+
     }
 }
-        if(doafter =="verifyonserver") {
-            if (connectcode == 11) {
-                diaconverter();
-
-            }
-            if (connectcode == 100) {
-                Toast.makeText(BankActivity.this, "cant  verify number twice", Toast.LENGTH_SHORT).show();
-
-                //create new verification
-                serververification();
-            }
-            if (connectcode == 1010) {
-                Toast.makeText(BankActivity.this, "Verify your number", Toast.LENGTH_SHORT).show();
-
-                //create new verification
-                numberverification();
-            }
-            if (connectcode == 10111) {
-                Toast.makeText(BankActivity.this, "verification sucess", Toast.LENGTH_SHORT).show();
-
-                diaconverter();
-
-            }
-            if (connectcode == 10110) {
-                Toast.makeText(BankActivity.this, "verification no sucess. server error", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-
-
-        if(doafter =="numberverify") {
-            if (connectcode == 11) {
-                diaconverter();
-
-            }
-            if (connectcode == 100) {
-                Toast.makeText(BankActivity.this, "cant  verify number twice", Toast.LENGTH_SHORT).show();
-
-                //create new verification
-                serververification();
-            }
-            if (connectcode == 1010) {
-
-
-            }
-            if (connectcode == 10111) {
-                Toast.makeText(BankActivity.this, "verification sucess", Toast.LENGTH_SHORT).show();
-
-                diaconverter();
-
-            }
-            if (connectcode == 10110) {
-                Toast.makeText(BankActivity.this, "verification no sucess. server error", Toast.LENGTH_SHORT).show();
-            }
-        }
 
 
     }

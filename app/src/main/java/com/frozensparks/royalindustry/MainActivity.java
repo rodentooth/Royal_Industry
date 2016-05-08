@@ -1794,7 +1794,8 @@ Typeface typeface;
                     if (cdBank) {
 
                         if (restTimeBank >= 0) {
-                            dhmsBank = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimeBank), TimeUnit.SECONDS.toHours(restTimeBank),
+                            dhmsBank = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimeBank),
+                                    TimeUnit.SECONDS.toHours(restTimeBank) - TimeUnit.DAYS.toHours(TimeUnit.SECONDS.toDays(restTimeBank)),
                                     TimeUnit.SECONDS.toMinutes(restTimeBank) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimeBank)),
                                     TimeUnit.SECONDS.toSeconds(restTimeBank) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimeBank)));
                             upcdBank.setText(dhmsBank);
@@ -1823,7 +1824,8 @@ Typeface typeface;
                     if (cdAgency) {
 
                         if (restTimeAgency >= 0) {
-                            dhmsAgency = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimeAgency), TimeUnit.SECONDS.toHours(restTimeAgency),
+                            dhmsAgency = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimeAgency),
+                                    TimeUnit.SECONDS.toHours(restTimeAgency) - TimeUnit.DAYS.toHours(TimeUnit.SECONDS.toDays(restTimeAgency)),
                                     TimeUnit.SECONDS.toMinutes(restTimeAgency) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimeAgency)),
                                     TimeUnit.SECONDS.toSeconds(restTimeAgency) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimeAgency)));
                             upcdAgency.setText(dhmsAgency);
@@ -1852,7 +1854,8 @@ Typeface typeface;
                     if (cdfab1) {
 
                         if (restTimefab1 >= 0) {
-                            dhmsfab1 = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab1), TimeUnit.SECONDS.toHours(restTimefab1),
+                            dhmsfab1 = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab1),
+                                    TimeUnit.SECONDS.toHours(restTimefab1)- TimeUnit.DAYS.toHours(TimeUnit.SECONDS.toDays(restTimefab1)),
                                     TimeUnit.SECONDS.toMinutes(restTimefab1) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab1)),
                                     TimeUnit.SECONDS.toSeconds(restTimefab1) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab1)));
                             upcdfab1.setText(dhmsfab1);
@@ -1879,7 +1882,8 @@ Typeface typeface;
                     if (cdfab2) {
 
                         if (restTimefab2 >= 0) {
-                            dhmsfab2 = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab2), TimeUnit.SECONDS.toHours(restTimefab2),
+                            dhmsfab2 = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab2),
+                                    TimeUnit.SECONDS.toHours(restTimefab2)- TimeUnit.DAYS.toHours(TimeUnit.SECONDS.toDays(restTimefab2)),
                                     TimeUnit.SECONDS.toMinutes(restTimefab2) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab2)),
                                     TimeUnit.SECONDS.toSeconds(restTimefab2) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab2)));
                             upcdfab2.setText(dhmsfab2);
@@ -1906,7 +1910,8 @@ Typeface typeface;
                     if (cdfab3) {
 
                         if (restTimefab3 >= 0) {
-                            dhmsfab3 = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab3), TimeUnit.SECONDS.toHours(restTimefab3),
+                            dhmsfab3 = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab3),
+                                    TimeUnit.SECONDS.toHours(restTimefab3)- TimeUnit.DAYS.toHours(TimeUnit.SECONDS.toDays(restTimefab3)),
                                     TimeUnit.SECONDS.toMinutes(restTimefab3) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab3)),
                                     TimeUnit.SECONDS.toSeconds(restTimefab3) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab3)));
                             upcdfab3.setText(dhmsfab3);
@@ -1934,7 +1939,8 @@ Typeface typeface;
                     if (cdfab4) {
 
                         if (restTimefab4 >= 0) {
-                            dhmsfab4 = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab4), TimeUnit.SECONDS.toHours(restTimefab4),
+                            dhmsfab4 = String.format(Locale.US, "%02d:%02d:%02d:%02d", TimeUnit.SECONDS.toDays(restTimefab4),
+                                    TimeUnit.SECONDS.toHours(restTimefab4) - TimeUnit.DAYS.toHours(TimeUnit.SECONDS.toDays(restTimefab4)),
                                     TimeUnit.SECONDS.toMinutes(restTimefab4) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restTimefab4)),
                                     TimeUnit.SECONDS.toSeconds(restTimefab4) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restTimefab4)));
                             upcdfab4.setText(dhmsfab4);

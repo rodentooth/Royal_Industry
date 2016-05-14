@@ -1,6 +1,9 @@
 package com.frozensparks.royalindustry;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -9,6 +12,7 @@ import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -26,7 +30,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class AgencyActivity extends AppCompatActivity implements View.OnClickListener {
-
+    Context context = this;
     Button buildboost;
     Dialog gebaeudeboost;
     Button closegebaeudeboost;
@@ -40,7 +44,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
 
     //TODO boost auf 1800 ändern
-    int boost = 12000;
+    int boost = 120000;
 
 
     Button doublegold;
@@ -80,6 +84,10 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
         buildboost = (Button) findViewById(R.id.buildboost);
         assert buildboost != null;
         buildboost.setOnClickListener(this);
+
+        doublegold = (Button) findViewById(R.id.doublegold);
+        assert doublegold != null;
+        doublegold.setOnClickListener(this);
 
         goldagency = (TextView) findViewById(R.id.goldagency);
 
@@ -145,6 +153,66 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         int id = v.getId();
+
+        if (id == R.id.doublegold) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    this);
+
+            // set title
+            alertDialogBuilder.setTitle(R.string.doublegold);
+
+            // set dialog message
+
+
+            alertDialogBuilder.setMessage(R.string.doublegoldtext);
+
+
+            alertDialogBuilder.setCancelable(false);
+            alertDialogBuilder.setPositiveButton("buy", new DialogInterface.OnClickListener() {
+
+
+                public void onClick(DialogInterface dialog, int id) {
+                    //geld aktualisierung
+                    final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
+                    String type = "diasweg";
+                    String dias = "2";
+                    String gid = google.getString("id", "0");
+                    bgworkerdias bgworker1 =new bgworkerdias(context);
+                    bgworker1.execute(type, gid,dias , "diasweg");
+
+
+
+
+
+                }
+                    }
+
+            )
+
+
+                    .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    dialog.cancel();
+                                }
+                            }
+
+                    );
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+
+
+
+        }
+
+
+
+
+
 
         if (id == R.id.buildboost) {
 

@@ -79,6 +79,8 @@
     <string name="tutcomplete">you completed the tutorial. have fun!</string>
     <string name="checkinet">check your internet connection</string>
     <string name="agencybenefits">inside agency, you can purchase several nice stuff</string>
+    <string name="doublegold">double gold</string>
+    <string name="doublegoldtext">double your gold for the next collect\n\ncosts: 2 diamonds</string>
 
 
 </resources>

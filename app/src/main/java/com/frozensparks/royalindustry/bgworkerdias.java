@@ -54,8 +54,55 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
         String type = params[0];
         String collect_url = "http://frozensparks.com/collect.php";
         String convert_url = "http://frozensparks.com/cashout.php";
+        String diasweg_url = "http://frozensparks.com/diasweg.php";
 
 
+        if (type.equals("diasweg")) {
+            try {
+                doafter = params[3];
+                String googleID = params[1];
+                String diamonds = params[2];
+
+
+                URL url = new URL(diasweg_url);
+                HttpURLConnection httpurlconn = (HttpURLConnection) url.openConnection();
+                httpurlconn.setRequestMethod("POST");
+                httpurlconn.setDoOutput(true);
+                httpurlconn.setDoInput(true);
+                OutputStream outputStream = httpurlconn.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("googleID", "UTF-8") + "=" + URLEncoder.encode(googleID, "UTF-8") + "&"
+                        + URLEncoder.encode("diamonds", "UTF-8") + "=" + URLEncoder.encode(diamonds, "UTF-8");
+
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+
+                InputStream inputStream = httpurlconn.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                String result = "";
+                String line = "";
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+
+
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpurlconn.disconnect();
+
+                return result;
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
         if (type.equals("convert")) {
             try {
                 doafter = params[3];
@@ -179,6 +226,27 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
                 SharedPreferences.Editor editor1 = context.getSharedPreferences("DIAMONDS", context.MODE_PRIVATE).edit();
                 editor1.putInt("DIAMONDS", connectcode);
                 editor1.commit();
+
+
+            }
+
+
+        }
+        if (doafter == "diasweg") {
+            if (connectcode >= 1) {
+                //
+
+                //databank aktualisieren
+                SharedPreferences.Editor editor1 = context.getSharedPreferences("DIAMONDS", context.MODE_PRIVATE).edit();
+                editor1.putInt("DIAMONDS", connectcode);
+                editor1.commit();
+
+                SharedPreferences.Editor editor2 = context.getSharedPreferences("doublecoll", context.MODE_PRIVATE).edit();
+                editor2.putBoolean("doublecoll", true);
+                editor2.commit();
+                Toast.makeText(context, "buy success", Toast.LENGTH_SHORT).show();
+
+
 
 
             }

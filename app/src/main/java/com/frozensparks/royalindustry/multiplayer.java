@@ -103,15 +103,7 @@ public class multiplayer extends AppCompatActivity implements
 
     }
 
-    public void quitUnityActivity() {
-        Log.v("Unity", "Unity Activity Exited!");
-        this.mUnityPlayer.quit();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        this.finish();
-        UnityPlayer.currentActivity.finish();
 
-    }
 
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());

@@ -65,8 +65,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:id="@+id/get5000gold"
-        android:background="@drawable/b5000gold"
+        android:id="@+id/diastogold"
+        android:background="@drawable/diastogoldbtns"
         android:layout_alignRight="@+id/imageView10"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -88,14 +88,14 @@
         android:layout_marginRight="10dp" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="X"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:id="@+id/closeAgency"
         android:textAllCaps="false"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/closebtns" />
 
     <ImageView
         android:layout_width="30dp"
@@ -115,5 +115,24 @@
         android:layout_alignBottom="@+id/imageView11"
         android:layout_toRightOf="@+id/imageView11"
         android:layout_toEndOf="@+id/imageView11" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/imageView12"
+        android:background="@mipmap/diamond"
+        android:layout_toRightOf="@+id/goldagency"
+        android:layout_toEndOf="@+id/goldagency"
+        android:layout_alignTop="@+id/imageView11" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Diamonds"
+        android:id="@+id/diapoolagency"
+        android:textColor="#ffffff"
+        android:layout_alignBottom="@+id/imageView12"
+        android:layout_toRightOf="@+id/imageView12"
+        android:layout_toEndOf="@+id/imageView12" />
 
 </RelativeLayout>

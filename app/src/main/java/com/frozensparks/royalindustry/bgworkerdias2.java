@@ -30,9 +30,6 @@ public class bgworkerdias2 extends AsyncTask<String, Void, String> {
     public bgworkerdias2(Context activity) {
 
 
-
-
-        Dialog dialog = new Dialog(activity);
         context = activity;
 
     }
@@ -71,7 +68,7 @@ public class bgworkerdias2 extends AsyncTask<String, Void, String> {
                 InputStream inputStream = httpurlconn.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
                 String result = "";
-                String line = "";
+                String line;
 
                 while ((line = bufferedReader.readLine()) != null) {
                     result += line;
@@ -84,8 +81,6 @@ public class bgworkerdias2 extends AsyncTask<String, Void, String> {
 
                 return result;
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -114,7 +109,7 @@ public class bgworkerdias2 extends AsyncTask<String, Void, String> {
                 InputStream inputStream = httpurlconn.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
                 String result = "";
-                String line = "";
+                String line;
 
                 while ((line = bufferedReader.readLine()) != null) {
                     result += line;
@@ -128,8 +123,6 @@ public class bgworkerdias2 extends AsyncTask<String, Void, String> {
                 return result;
 
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -165,7 +158,7 @@ public class bgworkerdias2 extends AsyncTask<String, Void, String> {
                 //
 
                 //databank aktualisieren
-                SharedPreferences.Editor editor1 = context.getSharedPreferences("DIAMONDS", context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor1 = context.getSharedPreferences("DIAMONDS", Context.MODE_PRIVATE).edit();
                 editor1.putInt("DIAMONDS", connectcode);
                 editor1.commit();
 
@@ -185,10 +178,10 @@ public class bgworkerdias2 extends AsyncTask<String, Void, String> {
                 String rpstr = Float.toString(rtrdrp);
 
 
-                SharedPreferences.Editor editor2 = context.getSharedPreferences("cashout", context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor2 = context.getSharedPreferences("cashout", Context.MODE_PRIVATE).edit();
                 editor2.putFloat("cashout", rtrdrp);
-                editor2.commit();
-                SharedPreferences cashouttext = context.getSharedPreferences("cashout", context.MODE_PRIVATE);
+                editor2.apply();
+                SharedPreferences cashouttext = context.getSharedPreferences("cashout", Context.MODE_PRIVATE);
                 BankActivity.cashoutonwait.setText("waiting for payout:" + String.valueOf(cashouttext.getFloat("cashout", 0) + "$"));
 
             }

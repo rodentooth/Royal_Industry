@@ -1116,8 +1116,10 @@ class bgworker extends AsyncTask<String, Void, String> {
                         public void onAdClosed() {
                             //thanks
                             Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
-                            if(dialogconvertdias.isShowing()) {
-                                dialogconvertdias.dismiss();
+                            if (dialogconvertdias!= null) {
+                                if (dialogconvertdias.isShowing()) {
+                                    dialogconvertdias.dismiss();
+                                }
                             }
                             AdRequest adRequest = new AdRequest.Builder()
                                     .addTestDevice("16201-16201")

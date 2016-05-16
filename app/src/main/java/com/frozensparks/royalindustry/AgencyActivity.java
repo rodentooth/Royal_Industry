@@ -8,20 +8,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.billingUtils.util.IabHelper;
+import com.billingUtils.util.IabResult;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -41,26 +44,47 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
     int timerad;
     int restzeit;
     boolean ad;
+    String dias;
 
+
+
+    ImageView das;
 
     //TODO boost auf 1800 ändern
     int boost = 120000;
 
 
     Button doublegold;
-    Button get5000gold;
+    Button diastogold;
     Button closeAgency;
     TextView goldagency;
+    TextView diapoolagency;
+
+    Dialog dialogconvertdias;
+    SeekBar seekbar;
+    TextView howmanygoldtodias;
+    TextView diasCost;
+    Button confirmcashout;
 
     Handler h = new Handler();
 
     InterstitialAd mInterstitialAd;
 
 
+    static final String TAG = "BillingService";
+    // The helper object
+    IabHelper mHelper;
+
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agency);
+        String base64EncodedPublicKey = getString(R.string.pubkey);
 
         //Fullscreen
         if (Build.VERSION.SDK_INT < 16) { //ye olde method
@@ -74,8 +98,20 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
             // Remember that you should never show the action bar if the
             // status bar is hidden, so hide that too if necessary.
             ActionBar actionBar = getSupportActionBar();
+            assert actionBar != null;
             actionBar.hide();
         }
+
+        mHelper = new IabHelper(this, base64EncodedPublicKey);
+        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+            public void onIabSetupFinished(IabResult result) {
+                if (!result.isSuccess()) {
+                    // Oh noes, there was a problem.
+                    Log.d(TAG, "Problem setting up In-app Billing: " + result);
+                }
+                // Hooray, IAB is fully set up!
+            }
+        });
 
         closeAgency = (Button) findViewById(R.id.closeAgency);
         assert closeAgency != null;
@@ -85,11 +121,17 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
         assert buildboost != null;
         buildboost.setOnClickListener(this);
 
+
+        diastogold = (Button) findViewById(R.id.diastogold);
+        diastogold.setOnClickListener(this);
+
+
         doublegold = (Button) findViewById(R.id.doublegold);
         assert doublegold != null;
         doublegold.setOnClickListener(this);
 
         goldagency = (TextView) findViewById(R.id.goldagency);
+        diapoolagency = (TextView) findViewById(R.id.diapoolagency);
 
 
         //ad
@@ -109,6 +151,11 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
                 SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
                 String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
                 goldagency.setText(": " + Pooltext );
+
+                SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+                //Diapool text aktualisieren
+                String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
+                diapoolagency.setText(": " + diapooltext );
 
                 SharedPreferences deziit =getSharedPreferences("blockzeit", MODE_PRIVATE);
                 int endtime = (int) (System.currentTimeMillis()/1000) ;
@@ -154,64 +201,254 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         int id = v.getId();
 
-        if (id == R.id.doublegold) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                    this);
+        if(id == R.id.diastogold){
 
-            // set title
-            alertDialogBuilder.setTitle(R.string.doublegold);
-
-            // set dialog message
+            SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+            //Diapool text aktualisieren
+            int dias = (prefs3.getInt("DIAMONDS", 0));
 
 
-            alertDialogBuilder.setMessage(R.string.doublegoldtext);
+            View converter = View.inflate(this, R.layout.cashoutconverter, null);
+            dialogconvertdias = new Dialog(AgencyActivity.this);
+            dialogconvertdias.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialogconvertdias.setContentView(converter);
 
 
-            alertDialogBuilder.setCancelable(false);
-            alertDialogBuilder.setPositiveButton("buy", new DialogInterface.OnClickListener() {
+            seekbar = (SeekBar) dialogconvertdias.findViewById(R.id.seekBarcash);
+            howmanygoldtodias = (TextView) dialogconvertdias.findViewById(R.id.howmanydiastocash);
+            diasCost = (TextView) dialogconvertdias.findViewById(R.id.cashoutcosts);
+
+            confirmcashout = (Button) dialogconvertdias.findViewById(R.id.confirmcashout);
+            confirmcashout.setOnClickListener(this);
+
+            if ( dias < 10) {
+                seekbar.setMax(dias);
+            }
+            if (dias >= 10){
+                seekbar.setMax(10);
+
+            }
+
+            int progressvalue = 0;
+            howmanygoldtodias.setText(getString(R.string.Create) + " " + progressvalue*250 +getString(R.string.Gold) );
+            diasCost.setText(getString(R.string.Costs) + " " + progressvalue  + getString(R.string.Diamonds));
 
 
-                public void onClick(DialogInterface dialog, int id) {
-                    //geld aktualisierung
-                    final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
-                    String type = "diasweg";
-                    String dias = "2";
-                    String gid = google.getString("id", "0");
-                    bgworkerdias bgworker1 =new bgworkerdias(context);
-                    bgworker1.execute(type, gid,dias , "diasweg");
+            seekbar.setOnSeekBarChangeListener(
+
+                    new SeekBar.OnSeekBarChangeListener() {
 
 
+                        int progressvalue;
+
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                            progressvalue = progress;
+                            howmanygoldtodias.setText(getString(R.string.Create) + " " + progressvalue*250 +getString(R.string.Gold) );
+                            diasCost.setText(getString(R.string.Costs) + " " + progressvalue  + getString(R.string.Diamonds));
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+                            howmanygoldtodias.setText(getString(R.string.Create) + " " + progressvalue*250 +getString(R.string.Gold) );
+                            diasCost.setText(getString(R.string.Costs) + " " + progressvalue  + getString(R.string.Diamonds));
+                        }
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+
+                            howmanygoldtodias.setText(getString(R.string.Create) + " " + progressvalue*250 +getString(R.string.Gold) );
+                            diasCost.setText(getString(R.string.Costs) + " " + progressvalue  + getString(R.string.Diamonds));
+
+                            //den progressvalue (wieviele dias) speichern
+                            SharedPreferences.Editor editor1 = getSharedPreferences("thatmanydiastogold", MODE_PRIVATE).edit();
+                            editor1.putInt("thatmanydiastogold", progressvalue);
+                            editor1.apply();
 
 
-
-                }
+                        }
                     }
 
-            )
+            );
+            dialogconvertdias.show();
 
 
-                    .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-
-                                    dialog.cancel();
-                                }
-                            }
-
-                    );
-
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-
-            // show it
-            alertDialog.show();
 
 
 
         }
+        if (id == R.id.confirmcashout) {
+
+            SharedPreferences datad = getSharedPreferences("blockzeit", MODE_PRIVATE);
+            ad =  datad.getBoolean("ad", true);
+
+            if(!ad) {
+
+                String timeleft = String.format(Locale.US, "%02d:%02d",
+                        TimeUnit.SECONDS.toMinutes(restzeit) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(restzeit)),
+                        TimeUnit.SECONDS.toSeconds(restzeit) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(restzeit)));
 
 
+                Toast.makeText(AgencyActivity.this, "please wait " + timeleft + " before doing this", Toast.LENGTH_SHORT).show();
+            }
 
 
+            if(ad) {
+                SharedPreferences.Editor deziit1 = getSharedPreferences("blockzeit", MODE_PRIVATE).edit();
+                deziit1.putBoolean("ad", false);
+                deziit1.apply();
+
+
+                //holen von wieviele diamanten erstellen
+                SharedPreferences prefs1 = getSharedPreferences("thatmanydiastogold", MODE_PRIVATE);
+
+                int diaweg = (prefs1.getInt("thatmanydiastogold", 0));
+
+
+                //Holen von Pool
+                SharedPreferences prefs2 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+
+
+                //checken obs genug gold für den convert hat
+                if (diaweg >= prefs2.getInt("DIAMONDS", 0)) {
+
+                    Toast.makeText(AgencyActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
+
+
+                }
+
+                if (diaweg <= prefs2.getInt("DIAMONDS", 0)) {
+
+
+                    //es hat dias linken
+
+                    dias = Integer.toString(diaweg);
+
+
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+
+
+                        mInterstitialAd.setAdListener(new AdListener() {
+
+                            @Override
+
+                            public void onAdLoaded() {
+
+                            }
+
+                            @Override
+                            public void onAdFailedToLoad(int errorCode) {
+                                AdRequest adRequest = new AdRequest.Builder()
+                                        .addTestDevice("16201-16201")
+                                        .build();
+
+                                mInterstitialAd.loadAd(adRequest);
+                            }
+
+                            @Override
+                            public void onAdClosed() {
+                                //thanks
+                                Toast.makeText(AgencyActivity.this, "thank you", Toast.LENGTH_SHORT).show();
+                                dialogconvertdias.dismiss();
+                                AdRequest adRequest = new AdRequest.Builder()
+                                        .addTestDevice("16201-16201")
+                                        .build();
+
+                                //geld aktualisierung
+                                final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
+                                String type = "diasweg";
+                                String gid = google.getString("id", "0");
+                                bgworkerdias bgworker1 = new bgworkerdias(context);
+                                bgworker1.execute(type, gid, dias, "diastogold");
+
+
+                                mInterstitialAd.loadAd(adRequest);
+                            }
+                        });
+
+                    } else {
+                        Toast.makeText(AgencyActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
+                        AdRequest adRequest = new AdRequest.Builder()
+                                .addTestDevice("16201-16201")
+                                .build();
+
+                        mInterstitialAd.loadAd(adRequest);
+
+                    }
+
+
+                    //dialog beenden
+                    dialogconvertdias.dismiss();
+
+                }
+            }
+
+        }
+
+
+            if (id == R.id.doublegold) {
+            SharedPreferences doubler = getSharedPreferences("doublecoll", MODE_PRIVATE);
+            Boolean doblegold = doubler.getBoolean("doublecoll", false);
+
+            if (doblegold) {
+                Toast.makeText(AgencyActivity.this, R.string.doublerbought, Toast.LENGTH_SHORT).show();
+
+
+            } else {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                        this);
+
+                // set title
+                alertDialogBuilder.setTitle(R.string.doublegold);
+
+                // set dialog message
+
+
+                alertDialogBuilder.setMessage(R.string.doublegoldtext);
+
+
+                alertDialogBuilder.setCancelable(false);
+                alertDialogBuilder.setPositiveButton("buy", new DialogInterface.OnClickListener() {
+
+
+                            public void onClick(DialogInterface dialog, int id) {
+                                //geld aktualisierung
+                                final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
+                                String type = "diasweg";
+                                String dias = "2";
+                                String gid = google.getString("id", "0");
+                                bgworkerdias bgworker1 = new bgworkerdias(context);
+                                bgworker1.execute(type, gid, dias, "diasweg");
+
+
+                            }
+                        }
+
+                )
+
+
+                        .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        dialog.cancel();
+                                    }
+                                }
+
+                        );
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
+
+
+            }
+
+
+        }
 
 
         if (id == R.id.buildboost) {
@@ -443,6 +680,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
             SharedPreferences prefs = getSharedPreferences("POOL", MODE_PRIVATE);
             SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
 
+
             if ((prefs.getInt("POOL", 0)) < 500) {
                 Toast.makeText(AgencyActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -536,4 +774,22 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
         }
     }
+    // We're being destroyed. It's important to dispose of the helper here!
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        // very important:
+      /*  if (mBroadcastReceiver != null) {
+         unregisterReceiver(mBroadcastReceiver);
+       }*/
+
+        // very important:
+        Log.d(TAG, "Destroying helper.");
+        if (mHelper != null) {
+            mHelper.disposeWhenFinished();
+            mHelper = null;
+        }
+    }
+
 }

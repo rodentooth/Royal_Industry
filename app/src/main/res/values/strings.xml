@@ -81,6 +81,9 @@
     <string name="agencybenefits">inside agency, you can purchase several nice stuff</string>
     <string name="doublegold">double gold</string>
     <string name="doublegoldtext">double your gold for the next collect\n\ncosts: 2 diamonds</string>
+    <string name="doublerbought">you have already bought one!</string>
+    <string name="pubkey">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoNjbHpeLPvZRDSqTiHDyr+IzP0SRMAwPmPPF0a4I+peov04SxzWKMhOJwM0lWlMq2GHBqlD6ZgwmI/7MpdVtWAz5zJrUeA91C0YE3/2zOpj2V15amZmmefrUt3N2rawkBFdGMcb9pnBh44J9tyXdQsLl+NMRdYAsMldLeTT5p8i+nkxkxwOgYl8Ndbt3UUwUsTLgnvvnW9ZBWOAbi8UJreTD+JdzF6ik/dLrnV+/FeVsJz0TsemV1eg4aa+CXJJ8uPdneOuesTJkQ9xmA2N44IuUuMcVz8vEsw6kiqgprIVa+tYgN6xXeSK+io1tISJi7pi2QBj1HR+ng2KbtN3liQIDAQAB</string>
+    <string name="doublegoldcollect">double gold collected:</string>
 
 
 </resources>

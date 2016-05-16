@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.unity3d.player.UnityPlayer;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -164,13 +166,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-
+/*
         SharedPreferences coins = getSharedPreferences("coins", MODE_PRIVATE);
         int i = coins.getInt("coins", 0);
 
         Toast.makeText(MainActivity.this, String.valueOf(i), Toast.LENGTH_SHORT).show();
 
-
+*/
 
         //Fullscreen
         if (Build.VERSION.SDK_INT < 16) { //ye olde method
@@ -1529,6 +1531,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    public void quitUnityActivity() {
+
+        Log.v("Unity", "Unity Activity Exited!");
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
+        UnityPlayer.currentActivity.finish();
+
+    }
+
     @Override
     public void onClick(View v) {
 
@@ -1626,6 +1638,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             upcdfab1 = (TextView) bauhausdialog.findViewById(R.id.upcdfab1);
             upcdfab1.setTypeface(typeface);
             leveltextfabr1.setText(datafab1.getString("leveltextfab1", "1"));
+            if (datafab1.getInt("Level", 1) == 10) {
+                upgradefab1.setBackgroundResource(R.mipmap.nolevelupbtn);
+            }
 
 
             //Fabrik2
@@ -1642,8 +1657,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (datafab2.getInt("Level", 0) >= 1) {
 
                 upgradefab2.setBackgroundResource(R.drawable.levelupbtns);
+                if (datafab2.getInt("Level", 0) == 10) {
+                    upgradefab2.setBackgroundResource(R.mipmap.nolevelupbtn);
+                }
+                }
 
-            }
+
             if (datafab2.getInt("Level", 0) < 1) {
                 if (datafab2.getBoolean("bedingungenerfüllt", false)) {
                     upgradefab2.setBackgroundResource(R.drawable.buildbtns);
@@ -1668,6 +1687,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (datafab3.getInt("Level", 0) >= 1) {
 
                 upgradefab3.setBackgroundResource(R.drawable.levelupbtns);
+                if (datafab3.getInt("Level", 0) == 10) {
+                    upgradefab3.setBackgroundResource(R.mipmap.nolevelupbtn);
+                }
 
             }
             if (datafab3.getInt("Level", 0) < 1) {
@@ -1694,6 +1716,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (datafab4.getInt("Level", 0) >= 1) {
 
                 upgradefab4.setBackgroundResource(R.drawable.levelupbtns);
+                if (datafab4.getInt("Level", 0) == 10) {
+                    upgradefab4.setBackgroundResource(R.mipmap.nolevelupbtn);
+                }
 
             }
             if (datafab4.getInt("Level", 0) < 1) {
@@ -1715,8 +1740,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             leveltextBank = (TextView) bauhausdialog.findViewById(R.id.leveltextBank);
             leveltextBank.setTypeface(typeface);
             leveltextBank.setOnClickListener(this);
-
             leveltextBank.setText(dataBank.getString("leveltext", "1"));
+            if (dataBank.getInt("Level", 1) == 4) {
+                upgradeBank.setBackgroundResource(R.mipmap.nolevelupbtn);
+            }
 
             //Agency
             upgradeAgency = (Button) bauhausdialog.findViewById(R.id.upgradeAgentur);
@@ -1726,15 +1753,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             leveltextAgency = (TextView) bauhausdialog.findViewById(R.id.leveltextAgentur);
             leveltextAgency.setTypeface(typeface);
             leveltextAgency.setOnClickListener(this);
+            if (dataAgency.getInt("Level", 0) == 1) {
+                upgradeAgency.setBackgroundResource(R.mipmap.nolevelupbtn);
+            }
+
 
             leveltextAgency.setText(dataAgency.getString("leveltext", "Agency"));
 
             //btn auf upgrade wechseln, wenn gebàude gebaut
-            if (dataAgency.getInt("Level", 0) >= 1) {
+          /*  if (dataAgency.getInt("Level", 0) >= 1) {
 
                 upgradeAgency.setBackgroundResource(R.drawable.levelupbtns);
 
-            }
+            }*/
             if (dataAgency.getInt("Level", 0) < 1) {
                 if (dataAgency.getBoolean("bedingungenerfüllt", false)) {
                     upgradeAgency.setBackgroundResource(R.drawable.buildbtns);
@@ -4125,7 +4156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
                 dedubler.putBoolean("doublecoll", false);
                 dedubler.apply();
-                Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint*2), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint*2), Toast.LENGTH_SHORT).show();
                 ;
 
 
@@ -4272,7 +4303,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
                 dedubler.putBoolean("doublecoll", false);
                 dedubler.apply();
-                Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint*2), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint*2), Toast.LENGTH_SHORT).show();
 
 
             }
@@ -4419,7 +4450,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
                 dedubler.putBoolean("doublecoll", false);
                 dedubler.apply();
-                Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint*2), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint*2), Toast.LENGTH_SHORT).show();
 
 
             }
@@ -4565,7 +4596,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
                 dedubler.putBoolean("doublecoll", false);
                 dedubler.apply();
-                Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint*2), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint*2), Toast.LENGTH_SHORT).show();
 
 
             }

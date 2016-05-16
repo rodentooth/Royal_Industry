@@ -266,13 +266,13 @@
     </ScrollView>
 
     <Button
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:text="x"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:id="@+id/closeBauhaus"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/closebtns" />
 
     <ImageView
         android:layout_width="fill_parent"

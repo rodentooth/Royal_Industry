@@ -2,6 +2,11 @@
 package com.frozensparks.royalindustry;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.widget.Toast;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -10,24 +15,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Random;
-
-import android.app.Dialog;
-import android.content.AsyncTaskLoader;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 
 public class bgworkerdias extends AsyncTask<String, Void, String> {
@@ -40,9 +29,6 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
     public bgworkerdias(Context activity) {
 
 
-
-
-        Dialog dialog = new Dialog(activity);
         context = activity;
 
     }
@@ -82,7 +68,7 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
                 InputStream inputStream = httpurlconn.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
                 String result = "";
-                String line = "";
+                String line;
 
                 while ((line = bufferedReader.readLine()) != null) {
                     result += line;
@@ -95,8 +81,6 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
 
                 return result;
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -128,7 +112,7 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
                 InputStream inputStream = httpurlconn.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
                 String result = "";
-                String line = "";
+                String line;
 
                 while ((line = bufferedReader.readLine()) != null) {
                     result += line;
@@ -141,8 +125,6 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
 
                 return result;
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -171,7 +153,7 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
                 InputStream inputStream = httpurlconn.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
                 String result = "";
-                String line = "";
+                String line;
 
                 while ((line = bufferedReader.readLine()) != null) {
                     result += line;
@@ -185,8 +167,6 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
                 return result;
 
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -209,8 +189,8 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
 
 
         if (result != null) {
-            if(result== "" ){
-                result= "0";
+            if (result == "") {
+                result = "0";
             }
 
             str_result = result.replace(" ", "");
@@ -223,9 +203,9 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
                 //
 
                 //databank aktualisieren
-                SharedPreferences.Editor editor1 = context.getSharedPreferences("DIAMONDS", context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor1 = context.getSharedPreferences("DIAMONDS", Context.MODE_PRIVATE).edit();
                 editor1.putInt("DIAMONDS", connectcode);
-                editor1.commit();
+                editor1.apply();
 
 
             }
@@ -233,51 +213,67 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
 
         }
         if (doafter == "diasweg") {
-            if (connectcode >= 1) {
+
                 //
 
                 //databank aktualisieren
-                SharedPreferences.Editor editor1 = context.getSharedPreferences("DIAMONDS", context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor1 = context.getSharedPreferences("DIAMONDS", Context.MODE_PRIVATE).edit();
                 editor1.putInt("DIAMONDS", connectcode);
-                editor1.commit();
+                editor1.apply();
 
-                SharedPreferences.Editor editor2 = context.getSharedPreferences("doublecoll", context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor2 = context.getSharedPreferences("doublecoll", Context.MODE_PRIVATE).edit();
                 editor2.putBoolean("doublecoll", true);
-                editor2.commit();
-                Toast.makeText(context, "buy success", Toast.LENGTH_SHORT).show();
+                editor2.apply();
+                Toast.makeText(context, "buy successful", Toast.LENGTH_SHORT).show();
+
+
+
+        }
+        if (doafter == "diastogold") {
+
+                    //databank aktualisieren
+                    SharedPreferences.Editor editor1 = context.getSharedPreferences("DIAMONDS", Context.MODE_PRIVATE).edit();
+                    editor1.putInt("DIAMONDS", connectcode);
+                    editor1.apply();
+
+                    Toast.makeText(context, "convert successful", Toast.LENGTH_SHORT).show();
+
+                   SharedPreferences prefs = context.getSharedPreferences("POOL", Context.MODE_PRIVATE);
+                   int goldpool = prefs.getInt("POOL", 0);
+                    SharedPreferences prefs1 = context.getSharedPreferences("thatmanydiastogold", Context.MODE_PRIVATE);
+
+                    int diaweg = (prefs1.getInt("thatmanydiastogold", 0) );
+                    SharedPreferences.Editor editor2 = context.getSharedPreferences("POOL", Context.MODE_PRIVATE).edit();
+                    editor2.putInt("POOL", (goldpool + diaweg*250));
+                    editor2.apply();
+
 
 
 
 
             }
+            if (doafter == "convert") {
 
 
-        }
-        if (doafter == "convert") {
+                if (connectcode >= 1) {
+
+                    // cashout aktualisieren
+                    float rappen = (float) (connectcode);
+                    float rtrdrp = rappen / 100;
 
 
-            if (connectcode >= 1) {
+                    SharedPreferences.Editor editor2 = context.getSharedPreferences("cashout", Context.MODE_PRIVATE).edit();
+                    editor2.putFloat("cashout", rtrdrp);
+                    editor2.apply();
+                    SharedPreferences cashouttext = context.getSharedPreferences("cashout", Context.MODE_PRIVATE);
+                    BankActivity.cashoutonwait.setText(String.valueOf(cashouttext.getFloat("cashout", 0) + "$"));
 
-                // cashout aktualisieren
-                float rappen = (float)(connectcode);
-                float rtrdrp = rappen/100;
-                String rpstr = Float.toString(rtrdrp);
+                }
 
 
-                SharedPreferences.Editor editor2 = context.getSharedPreferences("cashout", context.MODE_PRIVATE).edit();
-                editor2.putFloat("cashout", rtrdrp);
-                editor2.commit();
-                SharedPreferences cashouttext = context.getSharedPreferences("cashout", context.MODE_PRIVATE);
-                BankActivity.cashoutonwait.setText(String.valueOf(cashouttext.getFloat("cashout", 0) + "$"));
 
             }
 
-            // else{
-            //    Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
-
-            // }
-
-        }
 
 
     }

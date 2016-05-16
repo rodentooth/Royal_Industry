@@ -38,14 +38,14 @@
         android:background="@drawable/agencylvl1" />
 
     <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$"
-                    android:id="@+id/SammelnFabrik1"
+                    android:layout_width="37dp"
+                    android:layout_height="50dp"
+        android:id="@+id/SammelnFabrik1"
                     android:textAllCaps="false"
                     android:layout_above="@+id/Fabrik1"
                     android:layout_alignRight="@+id/Fabrik1"
-                    android:layout_alignEnd="@+id/Fabrik1" />
+                    android:layout_alignEnd="@+id/Fabrik1"
+        android:background="@drawable/sammelbtns" />
                  <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="100dp"
@@ -68,14 +68,14 @@
         android:layout_toRightOf="@+id/Bank"
         android:layout_toEndOf="@+id/Bank" />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="$"
+        android:layout_width="37dp"
+        android:layout_height="50dp"
         android:id="@+id/SammelnFabrik2"
         android:textAllCaps="false"
         android:layout_above="@+id/Fabrik2"
         android:layout_alignRight="@+id/progressBarUpgradefab2"
-        android:layout_alignEnd="@+id/progressBarUpgradefab2" />
+        android:layout_alignEnd="@+id/progressBarUpgradefab2"
+        android:background="@drawable/sammelbtns" />
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="100dp"
@@ -96,14 +96,14 @@
         android:layout_toLeftOf="@+id/Bank"
         android:layout_toStartOf="@+id/Bank" />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="$"
+        android:layout_width="37dp"
+        android:layout_height="50dp"
         android:id="@+id/SammelnFabrik3"
         android:textAllCaps="false"
         android:layout_above="@+id/Fabrik3"
         android:layout_alignRight="@+id/progressBarUpgradefab3"
-        android:layout_alignEnd="@+id/progressBarUpgradefab3" />
+        android:layout_alignEnd="@+id/progressBarUpgradefab3"
+        android:background="@drawable/sammelbtns" />
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="100dp"
@@ -124,14 +124,14 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="$"
+        android:layout_width="37dp"
+        android:layout_height="50dp"
         android:id="@+id/SammelnFabrik4"
         android:textAllCaps="false"
         android:layout_above="@+id/Fabrik4"
         android:layout_alignRight="@+id/progressBarUpgradefab4"
-        android:layout_alignEnd="@+id/progressBarUpgradefab4" />
+        android:layout_alignEnd="@+id/progressBarUpgradefab4"
+        android:background="@drawable/sammelbtns" />
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="100dp"
@@ -164,13 +164,13 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="werkstatt"
+        android:layout_width="170dp"
+        android:layout_height="60dp"
         android:id="@+id/werkstatt"
+        android:background="@drawable/hangarbtn"
         android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/progressBarUpgradefab1"
-        android:layout_alignStart="@+id/progressBarUpgradefab1" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@mipmap/bankbg"
     android:id="@+id/fullscreen_content"
     tools:context="com.frozensparks.royalindustry.BankActivity">
 
@@ -15,19 +15,47 @@
             tools:ignore="UselessParent">
 
 
+            <ImageView
+                android:layout_width="360dp"
+                android:layout_height="50dp"
+                android:id="@+id/imageView16"
+                android:background="@mipmap/regal"
+                android:layout_alignTop="@+id/imageView15"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="60dp" />
+
+            <ImageView
+                android:layout_width="360dp"
+                android:layout_height="50dp"
+                android:id="@+id/imageView14"
+                android:background="@mipmap/regal"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="50dp" />
+
+            <ImageView
+                android:layout_width="360dp"
+                android:layout_height="50dp"
+                android:id="@+id/imageView15"
+                android:background="@mipmap/regal"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/imageView14"
+                android:layout_marginTop="60dp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/Gold"
                 android:id="@+id/currentGoldBalance"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="52dp"
-                android:layout_marginStart="52dp"
-                android:layout_marginTop="42dp"
-                android:autoText="false" />
+                android:autoText="false"
+                android:textColor="#ffffff"
+                android:layout_alignBottom="@+id/imageView3"
+                android:layout_toRightOf="@+id/imageView3"
+                android:layout_toEndOf="@+id/imageView3" />
 
             <Button
                 android:layout_width="50dp"
@@ -45,10 +73,11 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="dias"
                 android:id="@+id/diatext"
-                android:layout_below="@+id/currentGoldBalance"
+                android:textColor="#ffffff"
+                android:layout_alignBottom="@+id/imageView4"
                 android:layout_alignLeft="@+id/currentGoldBalance"
                 android:layout_alignStart="@+id/currentGoldBalance"
-                android:layout_marginTop="29dp" />
+                />
 
 
             <Button
@@ -56,38 +85,46 @@
                 android:layout_height="40dp"
                 android:id="@+id/GoldToDias"
                 android:textAllCaps="false"
-                android:layout_alignTop="@+id/diatext"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/goldtodiasbtns" />
+                android:background="@drawable/goldtodiasbtns"
+                android:layout_alignTop="@+id/imageView15"
+                android:layout_alignRight="@+id/imageView15"
+                android:layout_alignEnd="@+id/imageView15"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp" />
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/diaconvertingtimeprogress"
-                android:layout_alignBottom="@+id/GoldToDias"
-                android:layout_toRightOf="@+id/GoldToDias"
-                android:layout_toEndOf="@+id/GoldToDias"
-                android:indeterminate="false" />
+                android:indeterminate="false"
+                android:layout_alignTop="@+id/diatext"
+                android:layout_alignRight="@+id/GoldToDias"
+                android:layout_alignEnd="@+id/GoldToDias" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/diatimer"
-                android:layout_alignBottom="@+id/GoldToDias"
+                android:text="loading..."
+                android:visibility="invisible"
+                android:layout_alignTop="@+id/diaconvertingtimeprogress"
                 android:layout_toLeftOf="@+id/diaconvertingtimeprogress"
                 android:layout_toStartOf="@+id/diaconvertingtimeprogress"
-                android:text="loading..."
-                android:visibility="invisible" />
+                android:layout_marginRight="9dp"
+                android:layout_marginEnd="9dp"
+                android:textColor="#ffffff" />
 
             <Button
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 android:id="@+id/cashout"
                 android:background="@drawable/diastocashbtns"
-                android:layout_below="@+id/GoldToDias"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="66dp" />
+                android:layout_alignTop="@+id/imageView16"
+                android:layout_alignRight="@+id/imageView16"
+                android:layout_alignEnd="@+id/imageView16"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -95,7 +132,8 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="cash"
                 android:id="@+id/cashoutonwait"
-                android:layout_alignBottom="@+id/cashout"
+                android:textColor="#ffffff"
+                android:layout_alignBottom="@+id/imageView6"
                 android:layout_toRightOf="@+id/imageView6"
                 android:layout_toEndOf="@+id/imageView6" />
 
@@ -103,28 +141,42 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:id="@+id/imageView3"
-                android:layout_alignBottom="@+id/currentGoldBalance"
-                android:layout_toLeftOf="@+id/diatext"
-                android:layout_toStartOf="@+id/diatext"
-                android:background="@mipmap/gold" />
+                android:background="@mipmap/gold"
+                android:layout_alignTop="@+id/imageView14"
+                android:layout_alignLeft="@+id/imageView4"
+                android:layout_alignStart="@+id/imageView4"
+                android:layout_marginTop="5dp" />
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:id="@+id/imageView4"
                 android:background="@mipmap/diamond"
-                android:layout_alignBottom="@+id/diatext"
-                android:layout_toLeftOf="@+id/diatext"
-                android:layout_toStartOf="@+id/diatext" />
+                android:layout_alignTop="@+id/imageView15"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp" />
 
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="30dp"
                 android:id="@+id/imageView6"
                 android:background="@mipmap/dollar"
-                android:layout_alignBottom="@+id/cashoutonwait"
-                android:layout_alignLeft="@+id/imageView4"
-                android:layout_alignStart="@+id/imageView4" />
+                android:layout_alignTop="@+id/imageView16"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp" />
+
+            <Button
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/faqButton"
+                android:background="@drawable/faqbtns"
+                android:layout_alignTop="@+id/cashoutonwait"
+                android:layout_toRightOf="@+id/cashoutonwait"
+                android:layout_marginLeft="10dp" />
 
         </RelativeLayout>
 

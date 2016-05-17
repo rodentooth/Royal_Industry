@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -95,6 +96,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
     String DASRESULTAT;
 
     Dialog veridia;
+    Button faqButton;
 
     TextView diatimer;
     Button confirmcashout;
@@ -124,6 +126,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             // Remember that you should never show the action bar if the
             // status bar is hidden, so hide that too if necessary.
             ActionBar actionBar = getSupportActionBar();
+            assert actionBar != null;
             actionBar.hide();
         }
 
@@ -190,9 +193,14 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         assert closeBank != null;
         closeBank.setOnClickListener(this);
 
+
         Button cashout = (Button) findViewById(R.id.cashout);
         assert cashout != null;
         cashout.setOnClickListener(this);
+
+        Button faqButton = (Button) findViewById(R.id.faqButton);
+        assert faqButton != null;
+        faqButton.setOnClickListener(this);
 
 
         GoldToDias = (Button) findViewById(R.id.GoldToDias);
@@ -364,7 +372,12 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
         }
         final EditText input;
-        if (id == R.id.GoldToDias) {
+        if (id == R.id.faqButton) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.frozensparks.com/royalindustryfaq.html"));
+            startActivity(browserIntent);
+
+        }
+            if (id == R.id.GoldToDias) {
 
 
             diaconverter();

@@ -81,6 +81,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".hangartut"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme" />
 
         <activity android:name=".AgencyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

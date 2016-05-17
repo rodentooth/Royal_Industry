@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fullscreen_content"
-    android:background="#ffffff"
+    android:background="@mipmap/fabdialog"
     >
 
 
@@ -14,15 +14,23 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         />
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/closeBauhaus"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/closebtns" />
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="200dp"
+        android:layout_width="190dp"
         android:layout_height="wrap_content"
         android:id="@+id/progressBarFabrik2"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:background="#0800ff"
+        android:progressDrawable="@drawable/progressbarstyle1"
         android:indeterminate="false" />
 
 
@@ -34,7 +42,7 @@
         android:id="@+id/countfab2"
         android:layout_alignBottom="@+id/imageView"
         android:layout_centerHorizontal="true"
-        />
+        android:layout_marginBottom="5dp" />
 
     <TextView
         android:layout_width="wrap_content"

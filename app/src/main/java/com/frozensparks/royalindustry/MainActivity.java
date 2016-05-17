@@ -40,6 +40,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    //fabrikdialoge
+    Dialog dialog;
 
     //Fabrik1
     Button Fabrik1;
@@ -400,6 +402,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     assert actionBar != null;
                     actionBar.hide();
                 }
+
+
+
+
+
+
 
 
                 //jede sekunde gold checken
@@ -1977,8 +1985,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (id == R.id.closeBauhaus) {
 
-            bauhausdialog.dismiss();
-        }
+            if(bauhausdialog!=null){
+if(bauhausdialog.isShowing()) {
+    bauhausdialog.dismiss();
+}
+}
+            if(dialog!=null){
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+
+            }
+            //tutorial
+
+            SharedPreferences hangar = getSharedPreferences("firstope", MODE_PRIVATE);
+            Boolean hangtut = hangar.getBoolean("showHangarTutorial", false);
+            if (hangtut) {
+
+                Intent intent = new Intent(this, hangartut.class);
+                startActivity(intent);
+
+                SharedPreferences.Editor firstopen1 = getSharedPreferences("firstope", MODE_PRIVATE).edit();
+                firstopen1.putBoolean("showHangarTutorial", false);
+                firstopen1.apply();
+            }
+
+
+    }
 
 //SYNC
 
@@ -2423,6 +2456,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
+
+                                        SharedPreferences.Editor firstopen1 = getSharedPreferences("firstope", MODE_PRIVATE).edit();
+                                        firstopen1.putBoolean("showHangarTutorial", true);
+                                        firstopen1.apply();
                                     }
 
 
@@ -4032,9 +4069,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Fabrik1
     public void dialogFabr1() {
 
-        final Dialog dialog = new Dialog(context);
+        dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.fabrik1);
+
+        closeBauhaus = (Button) dialog.findViewById(R.id.closeBauhaus);
+        closeBauhaus.setOnClickListener(this);
 
 
         datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
@@ -4181,10 +4221,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Fabrik2
     public void dialogFabr2() {
 
-        final Dialog dialog = new Dialog(context);
+        dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.fabrik2);
-
+        closeBauhaus = (Button) dialog.findViewById(R.id.closeBauhaus);
+        closeBauhaus.setOnClickListener(this);
 
         datafab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
 
@@ -4328,10 +4369,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Fabrik3
     public void dialogFabr3() {
 
-        final Dialog dialog = new Dialog(context);
+        dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.fabrik3);
-
+        closeBauhaus = (Button) dialog.findViewById(R.id.closeBauhaus);
+        closeBauhaus.setOnClickListener(this);
 
         datafab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
 
@@ -4474,10 +4516,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Fabrik4
     public void dialogFabr4() {
 
-        final Dialog dialog = new Dialog(context);
+        dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.fabrik4);
-
+        closeBauhaus = (Button) dialog.findViewById(R.id.closeBauhaus);
+        closeBauhaus.setOnClickListener(this);
 
         datafab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
 

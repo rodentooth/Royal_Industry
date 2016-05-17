@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/hintergrundmaingame"
+    android:background="@mipmap/meadow"
     tools:context="com.frozensparks.royalindustry.MainActivity"
     android:id="@+id/fullscreen_content">
 
@@ -16,24 +16,26 @@
         <Button
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:text="@string/factory_1"
             android:id="@+id/tutfab"
             android:textAllCaps="false"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:background="@drawable/fablvl1"
+             />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="$"
+            android:layout_width="37dp"
+        android:layout_height="50dp"
             android:id="@+id/samtutfab"
             android:textAllCaps="false"
             android:layout_above="@+id/tutfab"
             android:layout_alignRight="@+id/tutfab"
             android:layout_alignEnd="@+id/tutfab"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:background="@drawable/sammelbtns"
+            />
 
 
         <TextView
@@ -70,13 +72,13 @@
             android:visibility="invisible" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="75dp"
             android:background="@drawable/pfeilbtns"
             android:id="@+id/cont"
             android:layout_alignParentTop="true"
-            android:layout_alignLeft="@+id/samtutfab"
-            android:layout_alignStart="@+id/samtutfab" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <TextView
             android:layout_width="wrap_content"

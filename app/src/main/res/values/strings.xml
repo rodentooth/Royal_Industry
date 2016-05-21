@@ -85,6 +85,7 @@
     <string name="pubkey">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoNjbHpeLPvZRDSqTiHDyr+IzP0SRMAwPmPPF0a4I+peov04SxzWKMhOJwM0lWlMq2GHBqlD6ZgwmI/7MpdVtWAz5zJrUeA91C0YE3/2zOpj2V15amZmmefrUt3N2rawkBFdGMcb9pnBh44J9tyXdQsLl+NMRdYAsMldLeTT5p8i+nkxkxwOgYl8Ndbt3UUwUsTLgnvvnW9ZBWOAbi8UJreTD+JdzF6ik/dLrnV+/FeVsJz0TsemV1eg4aa+CXJJ8uPdneOuesTJkQ9xmA2N44IuUuMcVz8vEsw6kiqgprIVa+tYgN6xXeSK+io1tISJi7pi2QBj1HR+ng2KbtN3liQIDAQAB</string>
     <string name="doublegoldcollect">double gold collected:</string>
     <string name="hangartutext">while waiting\n\n you can play a minigame\n\n to earn some extra gold</string>
+    <string name="title_activity_test">Test</string>
 
 
 </resources>

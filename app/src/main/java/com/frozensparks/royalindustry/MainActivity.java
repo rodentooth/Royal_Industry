@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client2;
+    private GoogleApiClient client;
     //FULLSCREEN
 
 
@@ -243,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //Fabrik1
+
         Fabrik1 = (Button) findViewById(R.id.Fabrik1);
         assert Fabrik1 != null;
         Fabrik1.setOnClickListener(this);
@@ -253,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assert progressBarUpgradefab1 != null;
         progressBarUpgradefab1.setVisibility(View.INVISIBLE);
 
+
         //Fabrik2
         Fabrik2 = (Button) findViewById(R.id.Fabrik2);
         assert Fabrik2 != null;
@@ -261,9 +263,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assert SammelnFabrik2 != null;
         SammelnFabrik2.setOnClickListener(this);
         progressBarUpgradefab2 = (ProgressBar) findViewById(R.id.progressBarUpgradefab2);
-        if (progressBarUpgradefab2 != null) {
+        if (progressBarUpgradefab2 != null){
             progressBarUpgradefab2.setVisibility(View.INVISIBLE);
-        }
+    }
 
         //Fabrik3
         Fabrik3 = (Button) findViewById(R.id.Fabrik3);
@@ -276,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assert progressBarUpgradefab3 != null;
         progressBarUpgradefab3.setVisibility(View.INVISIBLE);
 
+
         //Fabrik4
         Fabrik4 = (Button) findViewById(R.id.Fabrik4);
         assert Fabrik4 != null;
@@ -286,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBarUpgradefab4 = (ProgressBar) findViewById(R.id.progressBarUpgradefab4);
         assert progressBarUpgradefab4 != null;
         progressBarUpgradefab4.setVisibility(View.INVISIBLE);
+
 
 
         //counter für fabriken. Hat die fabrik schonmal produziert?
@@ -368,21 +372,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         datafab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
         datafab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
         datafab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
+            if (datafab1.getInt("Level", 1) == 2) {
+                Fabrik1.setBackgroundResource(R.drawable.fablvl2);
+            }
         if (datafab2.getInt("Level", 0) == 0) {
             Fabrik2.setVisibility(View.INVISIBLE);
             SammelnFabrik2.setVisibility(View.INVISIBLE);
 
         }
+            if (datafab2.getInt("Level", 1) == 2) {
+                Fabrik2.setBackgroundResource(R.drawable.fablvl2);
+            }
         if (datafab3.getInt("Level", 0) == 0) {
             Fabrik3.setVisibility(View.INVISIBLE);
             SammelnFabrik3.setVisibility(View.INVISIBLE);
 
         }
+            if (datafab3.getInt("Level", 1) == 2) {
+                Fabrik3.setBackgroundResource(R.drawable.fablvl2);
+            }
         if (datafab4.getInt("Level", 0) == 0) {
             Fabrik4.setVisibility(View.INVISIBLE);
             SammelnFabrik4.setVisibility(View.INVISIBLE);
 
         }
+            if (datafab4.getInt("Level", 1) == 2) {
+                Fabrik4.setBackgroundResource(R.drawable.fablvl2);
+            }
         h.postDelayed(new Runnable() {
             public void run() {
 
@@ -433,6 +449,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (gold >= prefs1.getInt("minfabrik1", 1)) {
                     SammelnFabrik1.setVisibility(View.VISIBLE);
                 }
+                if (datafab1.getInt("Level", 1) == 2) {
+                    Fabrik1.setBackgroundResource(R.drawable.fablvl2);
+                }
 
                 //Gold check Fabrik2
                 SharedPreferences prefsfab2 = getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE);
@@ -459,6 +478,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Fabrik2.setVisibility(View.VISIBLE);
                 }
 
+                if (datafab2.getInt("Level", 1) == 2) {
+                    Fabrik2.setBackgroundResource(R.drawable.fablvl2);
+                }
                 //Gold check Fabrik3
                 SharedPreferences prefsfab3 = getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE);
                 SharedPreferences prefs1fab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
@@ -485,6 +507,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (datafab3.getInt("Level", 0) >= 1) {
                     Fabrik3.setVisibility(View.VISIBLE);
                 }
+                if (datafab3.getInt("Level", 1) == 2) {
+                    Fabrik3.setBackgroundResource(R.drawable.fablvl2);
+                }
 
 
                 //Gold check Fabrik4
@@ -510,6 +535,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 if (datafab4.getInt("Level", 0) >= 1) {
                     Fabrik4.setVisibility(View.VISIBLE);
+                }
+                if (datafab4.getInt("Level", 1) == 2) {
+                    Fabrik4.setBackgroundResource(R.drawable.fablvl2);
                 }
 
 
@@ -1530,7 +1558,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       ATTENTION: This was auto-generated to implement the App Indexing API.
       See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-        client2 = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        client= new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -1539,15 +1567,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void quitUnityActivity() {
-
-        Log.v("Unity", "Unity Activity Exited!");
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        this.finish();
-        UnityPlayer.currentActivity.finish();
-
-    }
 
     @Override
     public void onClick(View v) {
@@ -4172,45 +4191,112 @@ if(bauhausdialog.isShowing()) {
         SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
         int intBankmax = BankMax.getInt("maxGoldStorage", 1000);
         SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
-        if (intBankmax < (prefs1.getInt("POOL", 0))) {
+        if (intBankmax <= (prefs1.getInt("POOL", 0))) {
 
             Toast.makeText(MainActivity.this, getString(R.string.Bankisfull), Toast.LENGTH_SHORT).show();
         }
 
 
-        if (intBankmax >= (prefs1.getInt("POOL", 0))) {
-            //Timer Zurücksetzen
-            SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
-            editor1.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
-            editor1.apply();
+        if (intBankmax > (prefs1.getInt("POOL", 0))) {
+
 
             SharedPreferences doubler = getSharedPreferences("doublecoll", MODE_PRIVATE);
             Boolean doblegold = doubler.getBoolean("doublecoll", false);
 
-            if(doblegold){
+
+
+
+
+            if(!doblegold) {
+                //rücklauf falls das max erfüllt wurde(nicht vorhanden
+
+                int vorhandenesgold = (goldint + prefs1.getInt("POOL", 0));
+                if (vorhandenesgold > intBankmax) {
+                    int uberlauf = vorhandenesgold - intBankmax;
+                    int collect = goldint - uberlauf;
+
+
+                    float zeitabzugtemp = (uberlauf / datafab1.getFloat("goldphfab1", (float) 0.05));
+
+                    int zeitabzug = (int) zeitabzugtemp;
+
+                    //Timer Zurücksetzen
+                    SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - zeitabzug);
+                    editor1.apply();
+
+                    //Das Gold zum pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    editor2.putInt("POOL",intBankmax);
+                    editor2.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (collect), Toast.LENGTH_SHORT).show();
+                }
+                //kein überlauf
+                if (vorhandenesgold <= intBankmax) {
+                    //Timer Zurücksetzen
+                    SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
+                    editor1.apply();
+
+                    //Das Gold zum pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    editor2.putInt("POOL", goldint + (prefs1.getInt("POOL", 0)));
+                    editor2.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+        if(doblegold) {
+            //rücklauf falls das max erfüllt wurde(nicht vorhanden
+
+            int vorhandenesgold = (goldint*2 + prefs1.getInt("POOL", 0));
+            if (vorhandenesgold > intBankmax) {
+                int uberlauf = vorhandenesgold - intBankmax;
+                int collect = goldint*2 - uberlauf;
+
+
+                float zeitabzugtemp = (uberlauf / datafab1.getFloat("goldphfab1", (float) 0.05));
+
+                int zeitabzug = (int) zeitabzugtemp;
+
+                //Timer Zurücksetzen
+                SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
+                editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - zeitabzug);
+                editor1.apply();
+
+                //gold dem pool hinzufügen
                 SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
 
-                editor2.putInt("POOL", (goldint*2) + (prefs1.getInt("POOL", 0)));
+                editor2.putInt("POOL",intBankmax);
                 editor2.apply();
 
                 SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
                 dedubler.putBoolean("doublecoll", false);
                 dedubler.apply();
-                Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint*2), Toast.LENGTH_SHORT).show();
-                ;
-
+                Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + collect, Toast.LENGTH_SHORT).show();
 
             }
-            if(!doblegold) {
-                //Das Gold zum pool hinzufügen
+                //kein überlauf
+            if (vorhandenesgold <= intBankmax) {
+
+                //gold dem pool hinzufügen
                 SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
-                //TODO 10000 löschen
-                editor2.putInt("POOL", 100000 + goldint + (prefs1.getInt("POOL", 0)));
-                editor2.apply();
-                Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
 
+                editor2.putInt("POOL", (goldint * 2) + (prefs1.getInt("POOL", 0)));
+                editor2.apply();
+
+                SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                dedubler.putBoolean("doublecoll", false);
+                dedubler.apply();
+                Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint * 2), Toast.LENGTH_SHORT).show();
+                //Timer Zurücksetzen
+                SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
+                editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) );
+                editor1.apply();
             }
-                //rücklauf falls das max erfüllt wurde(nicht vorhanden
+        }
+
 
 
         }
@@ -4321,45 +4407,107 @@ if(bauhausdialog.isShowing()) {
         SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
         int intBankmax = BankMax.getInt("maxGoldStorage", 1000);
         SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
-        if (intBankmax < (prefs1.getInt("POOL", 0))) {
+        if (intBankmax <= (prefs1.getInt("POOL", 0))) {
 
             Toast.makeText(MainActivity.this, getString(R.string.Bankisfull), Toast.LENGTH_SHORT).show();
         }
 
 
-        if (intBankmax >= (prefs1.getInt("POOL", 0))) {
+        if (intBankmax > (prefs1.getInt("POOL", 0))) {
             //Timer Zurücksetzen
             SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE).edit();
-            editor1.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
-            editor1.apply();
+
 
             SharedPreferences doubler = getSharedPreferences("doublecoll", MODE_PRIVATE);
             Boolean doblegold = doubler.getBoolean("doublecoll", false);
 
-            if(doblegold){
-                SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
-                editor2.putInt("POOL",(goldint*2) + (prefs1.getInt("POOL", 0)));
-                editor2.apply();
 
-                SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
-                dedubler.putBoolean("doublecoll", false);
-                dedubler.apply();
-                Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint*2), Toast.LENGTH_SHORT).show();
-
-
-            }
             if(!doblegold) {
+                //rücklauf falls das max erfüllt wurde(nicht vorhanden
 
-                //Das Gold zum pool hinzufügen
-                SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                int vorhandenesgold = (goldint + prefs1.getInt("POOL", 0));
+                if (vorhandenesgold > intBankmax) {
+                    int uberlauf = vorhandenesgold - intBankmax;
+                    int collect = goldint - uberlauf;
 
-                editor2.putInt("POOL", goldint + (prefs1.getInt("POOL", 0)));
-                editor2.apply();
-                Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
+
+                    float zeitabzugtemp = (uberlauf / datafab2.getFloat("goldphfab2", (float) 0.05));
+
+                    int zeitabzug = (int) zeitabzugtemp;
+
+                    //Timer Zurücksetzen
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - zeitabzug);
+                    editor1.apply();
+
+                    //Das Gold zum pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    editor2.putInt("POOL",intBankmax);
+                    editor2.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (collect), Toast.LENGTH_SHORT).show();
+                }
+                //kein überlauf
+                if (vorhandenesgold <= intBankmax) {
+                    //Timer Zurücksetzen
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
+                    editor1.apply();
+
+
+                    //Das Gold zum pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    editor2.putInt("POOL",goldint + (prefs1.getInt("POOL", 0)));
+                    editor2.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
+
+                }
 
             }
-            //rücklauf falls das max erfüllt wurde(nicht vorhanden
+            if(doblegold) {
+                //rücklauf
 
+                int vorhandenesgold = (goldint*2 + prefs1.getInt("POOL", 0));
+                if (vorhandenesgold > intBankmax) {
+                    int uberlauf = vorhandenesgold - intBankmax;
+                    int collect = goldint*2 - uberlauf;
+
+
+                    float zeitabzugtemp = (uberlauf / datafab2.getFloat("goldphfab2", (float) 0.05));
+
+                    int zeitabzug = (int) zeitabzugtemp;
+
+                    //Timer Zurücksetzen
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - zeitabzug);
+                    editor1.apply();
+
+                    //gold dem pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+
+                    editor2.putInt("POOL",intBankmax);
+                    editor2.apply();
+
+                    SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                    dedubler.putBoolean("doublecoll", false);
+                    dedubler.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + collect, Toast.LENGTH_SHORT).show();
+
+                }
+                //kein überlauf
+                if (vorhandenesgold <= intBankmax) {
+
+                    //gold dem pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+
+                    editor2.putInt("POOL", (goldint * 2) + (prefs1.getInt("POOL", 0)));
+                    editor2.apply();
+
+                    SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                    dedubler.putBoolean("doublecoll", false);
+                    dedubler.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint * 2), Toast.LENGTH_SHORT).show();
+                    //Timer Zurücksetzen
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) );
+                    editor1.apply();
+                }
+            }
 
         }
 
@@ -4469,46 +4617,107 @@ if(bauhausdialog.isShowing()) {
         SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
         int intBankmax = BankMax.getInt("maxGoldStorage", 1000);
         SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
-        if (intBankmax < (prefs1.getInt("POOL", 0))) {
+        if (intBankmax <= (prefs1.getInt("POOL", 0))) {
 
             Toast.makeText(MainActivity.this, getString(R.string.Bankisfull), Toast.LENGTH_SHORT).show();
         }
 
 
-        if (intBankmax >= (prefs1.getInt("POOL", 0))) {
+        if (intBankmax > (prefs1.getInt("POOL", 0))) {
             //Timer Zurücksetzen
             SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE).edit();
-            editor1.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
-            editor1.apply();
 
             SharedPreferences doubler = getSharedPreferences("doublecoll", MODE_PRIVATE);
             Boolean doblegold = doubler.getBoolean("doublecoll", false);
 
-            if(doblegold){
-                SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
-                editor2.putInt("POOL",(goldint*2) + (prefs1.getInt("POOL", 0)));
-                editor2.apply();
-
-                SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
-                dedubler.putBoolean("doublecoll", false);
-                dedubler.apply();
-                Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint*2), Toast.LENGTH_SHORT).show();
 
 
-            }
             if(!doblegold) {
+                //rücklauf falls das max erfüllt wurde(nicht vorhanden
 
-                //Das Gold zum pool hinzufügen
-                SharedPreferences.Editor editor3 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                int vorhandenesgold = (goldint + prefs1.getInt("POOL", 0));
+                if (vorhandenesgold > intBankmax) {
+                    int uberlauf = vorhandenesgold - intBankmax;
+                    int collect = goldint - uberlauf;
 
-                editor3.putInt("POOL", goldint + (prefs1.getInt("POOL", 0)));
-                editor3.apply();
-                Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
+
+                    float zeitabzugtemp = (uberlauf / datafab3.getFloat("goldphfab3", (float) 0.05));
+
+                    int zeitabzug = (int) zeitabzugtemp;
+
+                    //Timer Zurücksetzen
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - zeitabzug);
+                    editor1.apply();
+
+                    //Das Gold zum pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    editor2.putInt("POOL",intBankmax);
+                    editor2.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (collect), Toast.LENGTH_SHORT).show();
+                }
+                //kein überlauf
+                if (vorhandenesgold <= intBankmax) {
+                    //Timer Zurücksetzen
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
+                    editor1.apply();
+
+
+                    //Das Gold zum pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    editor2.putInt("POOL",goldint + (prefs1.getInt("POOL", 0)));
+                    editor2.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
+
+                }
 
             }
-            //rücklauf falls das max erfüllt wurde(nicht vorhanden
+            if(doblegold) {
+                //rücklauf
+
+                int vorhandenesgold = (goldint*2 + prefs1.getInt("POOL", 0));
+                if (vorhandenesgold > intBankmax) {
+                    int uberlauf = vorhandenesgold - intBankmax;
+                    int collect = goldint*2 - uberlauf;
 
 
+                    float zeitabzugtemp = (uberlauf / datafab3.getFloat("goldphfab3", (float) 0.05));
+
+                    int zeitabzug = (int) zeitabzugtemp;
+
+                    //Timer Zurücksetzen
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - zeitabzug);
+                    editor1.apply();
+
+                    //gold dem pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+
+                    editor2.putInt("POOL",intBankmax);
+                    editor2.apply();
+
+                    SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                    dedubler.putBoolean("doublecoll", false);
+                    dedubler.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + collect, Toast.LENGTH_SHORT).show();
+
+                }
+                //kein überlauf
+                if (vorhandenesgold <= intBankmax) {
+
+                    //gold dem pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+
+                    editor2.putInt("POOL", (goldint * 2) + (prefs1.getInt("POOL", 0)));
+                    editor2.apply();
+
+                    SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                    dedubler.putBoolean("doublecoll", false);
+                    dedubler.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint * 2), Toast.LENGTH_SHORT).show();
+                    //Timer Zurücksetzen
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) );
+                    editor1.apply();
+                }
+            }
         }
 
     }
@@ -4616,46 +4825,106 @@ if(bauhausdialog.isShowing()) {
         SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
         int intBankmax = BankMax.getInt("maxGoldStorage", 1000);
         SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
-        if (intBankmax < (prefs1.getInt("POOL", 0))) {
+        if (intBankmax <= (prefs1.getInt("POOL", 0))) {
 
             Toast.makeText(MainActivity.this, getString(R.string.Bankisfull), Toast.LENGTH_SHORT).show();
         }
 
 
-        if (intBankmax >= (prefs1.getInt("POOL", 0))) {
+        if (intBankmax > (prefs1.getInt("POOL", 0))) {
             //Timer Zurücksetzen
             SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE).edit();
-            editor1.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
-            editor1.apply();
 
             SharedPreferences doubler = getSharedPreferences("doublecoll", MODE_PRIVATE);
             Boolean doblegold = doubler.getBoolean("doublecoll", false);
 
-            if(doblegold){
-                SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
-                editor2.putInt("POOL",(goldint*2) + (prefs1.getInt("POOL", 0)));
-                editor2.apply();
 
-                SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
-                dedubler.putBoolean("doublecoll", false);
-                dedubler.apply();
-                Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint*2), Toast.LENGTH_SHORT).show();
-
-
-            }
             if(!doblegold) {
+                //rücklauf falls das max erfüllt wurde(nicht vorhanden
+
+                int vorhandenesgold = (goldint + prefs1.getInt("POOL", 0));
+                if (vorhandenesgold > intBankmax) {
+                    int uberlauf = vorhandenesgold - intBankmax;
+                    int collect = goldint - uberlauf;
 
 
-                //Das Gold zum pool hinzufügen
-                SharedPreferences.Editor editor4 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    float zeitabzugtemp = (uberlauf / datafab4.getFloat("goldphfab4", (float) 0.05));
 
-                editor4.putInt("POOL", goldint + (prefs1.getInt("POOL", 0)));
-                editor4.apply();
-                Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint*2), Toast.LENGTH_SHORT).show();
+                    int zeitabzug = (int) zeitabzugtemp;
+
+                    //Timer Zurücksetzen
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - zeitabzug);
+                    editor1.apply();
+
+                    //Das Gold zum pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    editor2.putInt("POOL",intBankmax);
+                    editor2.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (collect), Toast.LENGTH_SHORT).show();
+                }
+                //kein überlauf
+                if (vorhandenesgold <= intBankmax) {
+                    //Timer Zurücksetzen
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
+                    editor1.apply();
+
+
+                    //Das Gold zum pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    editor2.putInt("POOL",goldint + (prefs1.getInt("POOL", 0)));
+                    editor2.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
+
+                }
 
             }
-            //rücklauf falls das max erfüllt wurde(nicht vorhanden
+            if(doblegold) {
+                //rücklauf
 
+                int vorhandenesgold = (goldint*2 + prefs1.getInt("POOL", 0));
+                if (vorhandenesgold > intBankmax) {
+                    int uberlauf = vorhandenesgold - intBankmax;
+                    int collect = goldint*2 - uberlauf;
+
+
+                    float zeitabzugtemp = (uberlauf / datafab4.getFloat("goldphfab4", (float) 0.05));
+
+                    int zeitabzug = (int) zeitabzugtemp;
+
+                    //Timer Zurücksetzen
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - zeitabzug);
+                    editor1.apply();
+
+                    //gold dem pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+
+                    editor2.putInt("POOL",intBankmax);
+                    editor2.apply();
+
+                    SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                    dedubler.putBoolean("doublecoll", false);
+                    dedubler.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + collect, Toast.LENGTH_SHORT).show();
+
+                }
+                //kein überlauf
+                if (vorhandenesgold <= intBankmax) {
+
+                    //gold dem pool hinzufügen
+                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+
+                    editor2.putInt("POOL", (goldint * 2) + (prefs1.getInt("POOL", 0)));
+                    editor2.apply();
+
+                    SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                    dedubler.putBoolean("doublecoll", false);
+                    dedubler.apply();
+                    Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint * 2), Toast.LENGTH_SHORT).show();
+                    //Timer Zurücksetzen
+                    editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) );
+                    editor1.apply();
+                }
+            }
 
         }
 
@@ -4667,7 +4936,7 @@ if(bauhausdialog.isShowing()) {
         super.onStart();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client2.connect();
+        client.connect();
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -4681,7 +4950,7 @@ if(bauhausdialog.isShowing()) {
                 // TODO: Make sure this auto-generated app URL is correct.
                 Uri.parse("android-app://com.frozensparks.royalindustry/http/host/path")
         );
-        AppIndex.AppIndexApi.start(client2, viewAction);
+        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
     @Override
@@ -4699,12 +4968,12 @@ if(bauhausdialog.isShowing()) {
                 // TODO: Make sure this auto-generated app URL is correct.
                 Uri.parse("android-app://com.frozensparks.royalindustry/http/host/path")
         );
-        AppIndex.AppIndexApi.end(client2, viewAction);
+        AppIndex.AppIndexApi.end(client, viewAction);
 
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client2.disconnect();
+        client.disconnect();
     }
 
 

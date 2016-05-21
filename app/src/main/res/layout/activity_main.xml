@@ -47,7 +47,7 @@
                     android:layout_alignRight="@+id/Fabrik1"
                     android:layout_alignEnd="@+id/Fabrik1"
         android:background="@drawable/sammelbtns"
-        />
+        android:layout_marginRight="30dp" />
                  <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="100dp"
@@ -77,7 +77,8 @@
         android:layout_above="@+id/Fabrik2"
         android:layout_alignRight="@+id/progressBarUpgradefab2"
         android:layout_alignEnd="@+id/progressBarUpgradefab2"
-        android:background="@drawable/sammelbtns" />
+        android:background="@drawable/sammelbtns"
+        android:layout_marginRight="30dp" />
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="100dp"
@@ -106,7 +107,8 @@
         android:layout_above="@+id/Fabrik3"
         android:layout_alignRight="@+id/progressBarUpgradefab3"
         android:layout_alignEnd="@+id/progressBarUpgradefab3"
-        android:background="@drawable/sammelbtns" />
+        android:background="@drawable/sammelbtns"
+        android:layout_marginRight="30dp" />
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="100dp"
@@ -134,7 +136,8 @@
         android:layout_above="@+id/Fabrik4"
         android:layout_alignRight="@+id/progressBarUpgradefab4"
         android:layout_alignEnd="@+id/progressBarUpgradefab4"
-        android:background="@drawable/sammelbtns" />
+        android:background="@drawable/sammelbtns"
+        android:layout_marginRight="30dp" />
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="100dp"

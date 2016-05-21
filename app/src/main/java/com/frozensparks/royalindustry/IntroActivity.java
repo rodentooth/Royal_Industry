@@ -279,7 +279,7 @@ public class IntroActivity extends AppCompatActivity implements
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-
+if(str_result!=null)
        if(!str_result.toLowerCase().contains("-")) {
 
               connectcode = Integer.parseInt(str_result);

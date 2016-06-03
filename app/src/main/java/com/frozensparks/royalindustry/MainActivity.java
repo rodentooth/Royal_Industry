@@ -2036,6 +2036,12 @@ if(bauhausdialog.isShowing()) {
 
         //race
         if (id == R.id.werkstatt) {
+            //Dias sync
+            final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
+            String dat = "request";
+            String gid =google.getString("id", "0");;
+            bgworkerdias lol = new bgworkerdias(context);
+            lol.execute(dat, gid, "diacollect");
 
             Intent intent = new Intent(this, multiplayer.class);
             startActivity(intent);
@@ -2109,6 +2115,7 @@ if(bauhausdialog.isShowing()) {
 
 
                                         SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+
 
                                         if ((prefs.getInt("POOL", 0)) < 100) {
                                             Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();

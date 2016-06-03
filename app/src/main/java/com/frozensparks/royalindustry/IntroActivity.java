@@ -183,57 +183,47 @@ public class IntroActivity extends AppCompatActivity implements
     // check internet connection
     public boolean isConnectingToInternet() {
 
-        if (connectivity != null)
-        {
-            NetworkInfo[] info = connectivity.getAllNetworkInfo();
-            if (info != null)
-                for (int i = 0; i < info.length; i++)
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
-                    {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null) {
+            // connected to the internet
+            return true;
 
-                        return true;
-
+        } else {
+            // not connected to the internet
 
 
+            AlphaAnimation fadeOutAnimation = new AlphaAnimation(0, 1); // start alpha, end alpha
+            fadeOutAnimation.setDuration(5000); // time for animation in milliseconds
+            fadeOutAnimation.setFillAfter(true); // make the transformation persist
+            fadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+                    finish();
+                }
 
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    splash.setVisibility(View.VISIBLE);
+                }
+            });
+
+            splash.setAnimation(fadeOutAnimation);
+
+
+            Toast.makeText(IntroActivity.this, R.string.checkinet, Toast.LENGTH_LONG).show();
+            return false;
 
         }
-
-
-                AlphaAnimation fadeOutAnimation = new AlphaAnimation(0, 1); // start alpha, end alpha
-                fadeOutAnimation.setDuration(5000); // time for animation in milliseconds
-                fadeOutAnimation.setFillAfter(true); // make the transformation persist
-                fadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    finish();
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        splash.setVisibility(View.VISIBLE);
-                    }
-                });
-
-                splash.setAnimation(fadeOutAnimation);
-
-
-
-
-        Toast.makeText(IntroActivity.this, R.string.checkinet, Toast.LENGTH_LONG).show();
-        return false;
-
-
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

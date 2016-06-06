@@ -3,6 +3,7 @@ package com.frozensparks.royalindustry;
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.os.Debug;
 import android.util.Log;
 import android.widget.Toast;
@@ -33,23 +34,23 @@ static Context uncon;
     }
 
     public static void addcoin(Context c){
-        MyPreferences prefs = MyPreferences.getInstance(c,"POOL");
-        prefs.putInt("POOL", (prefs.getInt("POOL", 0) +5));
-        prefs.apply();
+        SharedPreferences prefs = new ObscuredSharedPreferences(c,c.getSharedPreferences("POOL",MODE_PRIVATE));
+        prefs.edit().putInt("POOL", (prefs.getInt("POOL", 0) +5)).apply();
+
 
 
     }
     public static void mpDiascheck(int data, Context c){
 
         String dat = "request";
-        final MyPreferences google = MyPreferences.getInstance(c,"google");
+        final SharedPreferences google = new ObscuredSharedPreferences(c,c.getSharedPreferences("google",MODE_PRIVATE));
         String gid = google.getString("id", "0");
         bgworkerdias lol = new bgworkerdias(c);
         lol.execute(dat, gid, "diacollect");
 
 
         if (data==34){
-            MyPreferences diasckeck  = MyPreferences.getInstance(c,"DIAMONDS");
+            SharedPreferences diasckeck  = new ObscuredSharedPreferences(c,c.getSharedPreferences("DIAMONDS",MODE_PRIVATE));
 
            int diascheckgint = diasckeck.getInt("DIAMONDS", 0);
             if (diascheckgint<2){
@@ -73,7 +74,7 @@ static Context uncon;
 
         //OpponentID in server eintragen
 
-        final MyPreferences google = MyPreferences.getInstance(c,"google");
+        final SharedPreferences google = new ObscuredSharedPreferences(c,c.getSharedPreferences("google",MODE_PRIVATE));
         String type = "inputOpponentplayerID";
         String gid = google.getString("id", "0");
         bgworkerdias bgworker1 =new bgworkerdias(c);
@@ -86,7 +87,7 @@ static Context uncon;
     public static void winorloose(int winloose, String myID,String oppid, Context c){
 
 
-        final MyPreferences google = MyPreferences.getInstance(c,"google");
+        final SharedPreferences google = new ObscuredSharedPreferences(c,c.getSharedPreferences("google",MODE_PRIVATE));
     String type = "looserorwinner";
     String gid = google.getString("id", "0");
     bgworkerdias bgworker1 = new bgworkerdias(c);

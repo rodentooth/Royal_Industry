@@ -3,6 +3,7 @@ package com.frozensparks.royalindustry;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -298,9 +299,8 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
                 //
 
                 //databank aktualisieren
-                MyPreferences editor1 = MyPreferences.getInstance(context,"DIAMONDS");
-                editor1.putInt("DIAMONDS", connectcode);
-                editor1.apply();
+                SharedPreferences editor1 = new ObscuredSharedPreferences(context,context.getSharedPreferences("DIAMONDS",Context.MODE_PRIVATE));
+                editor1.edit().putInt("DIAMONDS", connectcode).apply();
 
 
             }
@@ -312,13 +312,11 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
                 //
 
                 //databank aktualisieren
-                MyPreferences editor1 = MyPreferences.getInstance(context,"DIAMONDS");
-                editor1.putInt("DIAMONDS", connectcode);
-                editor1.apply();
+                SharedPreferences editor1 = new ObscuredSharedPreferences(context,context.getSharedPreferences("DIAMONDS",Context.MODE_PRIVATE));
+                editor1.edit().putInt("DIAMONDS", connectcode).apply();
 
-                MyPreferences editor2 = MyPreferences.getInstance(context,"doublecoll");
-                editor2.putBoolean("doublecoll", true);
-                editor2.apply();
+                SharedPreferences editor2 = new ObscuredSharedPreferences(context,context.getSharedPreferences("doublecoll",Context.MODE_PRIVATE));
+                editor2.edit().putBoolean("doublecoll", true).apply();
                 Toast.makeText(context, "buy successful", Toast.LENGTH_SHORT).show();
 
 
@@ -327,20 +325,18 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
         if (doafter == "diastogold") {
 
                     //databank aktualisieren
-                    MyPreferences editor1 = MyPreferences.getInstance(context,"DIAMONDS");
-                    editor1.putInt("DIAMONDS", connectcode);
-                    editor1.apply();
+                    SharedPreferences editor1 = new ObscuredSharedPreferences(context,context.getSharedPreferences("DIAMONDS",Context.MODE_PRIVATE));
+                    editor1.edit().putInt("DIAMONDS", connectcode).apply();
 
                     Toast.makeText(context, "convert successful", Toast.LENGTH_SHORT).show();
 
-                   MyPreferences prefs = MyPreferences.getInstance(context,"POOL");
+                   SharedPreferences prefs = new ObscuredSharedPreferences(context,context.getSharedPreferences("POOL",Context.MODE_PRIVATE));
                    int goldpool = prefs.getInt("POOL", 0);
-                    MyPreferences prefs1 = MyPreferences.getInstance(context,"thatmanydiastogold");
+                    SharedPreferences prefs1 = new ObscuredSharedPreferences(context,context.getSharedPreferences("thatmanydiastogold",Context.MODE_PRIVATE));
 
                     int diaweg = (prefs1.getInt("thatmanydiastogold", 0) );
-                    MyPreferences editor2 = MyPreferences.getInstance(context,"POOL");
-                    editor2.putInt("POOL", (goldpool + diaweg*250));
-                    editor2.apply();
+                    SharedPreferences editor2 = new ObscuredSharedPreferences(context,context.getSharedPreferences("POOL",Context.MODE_PRIVATE));
+                    editor2.edit().putInt("POOL", (goldpool + diaweg*250)).apply();
 
 
 
@@ -358,10 +354,9 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
                     float rtrdrp = rappen / 100;
 
 
-                    MyPreferences editor2 = MyPreferences.getInstance(context,"cashout");
-                    editor2.putFloat("cashout", rtrdrp);
-                    editor2.apply();
-                    MyPreferences cashouttext = MyPreferences.getInstance(context,"cashout");
+                    SharedPreferences editor2 = new ObscuredSharedPreferences(context,context.getSharedPreferences("cashout",Context.MODE_PRIVATE));
+                    editor2.edit().putFloat("cashout", rtrdrp).apply();
+                    SharedPreferences cashouttext = new ObscuredSharedPreferences(context,context.getSharedPreferences("cashout",Context.MODE_PRIVATE));
                     BankActivity.cashoutonwait.setText(String.valueOf(cashouttext.getFloat("cashout", 0) + "$"));
 
                 }
@@ -372,9 +367,8 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
         if (doafter == "afterwinner") {
 
             //databank aktualisieren
-            MyPreferences editor1 = MyPreferences.getInstance(context,"DIAMONDS");
-            editor1.putInt("DIAMONDS", connectcode);
-            editor1.apply();
+            SharedPreferences editor1 = new ObscuredSharedPreferences(context,context.getSharedPreferences("DIAMONDS",Context.MODE_PRIVATE));
+            editor1.edit().putInt("DIAMONDS", connectcode).apply();
 
 
 

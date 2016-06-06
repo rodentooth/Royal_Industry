@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -135,7 +136,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //geld aktualisierung
-        final MyPreferences google = MyPreferences.getInstance(BankActivity.this,"google");
+        final SharedPreferences google = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("google", MODE_PRIVATE));
         String type = "convert";
         String dat = "request";
         String gid = google.getString("id", "0");
@@ -147,7 +148,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
         //notifications
 
-         mBuilder =
+        mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setPriority(2)
@@ -172,7 +173,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
         mBuilder.setContentIntent(resultPendingIntent);
-         mNotificationManager =
+        mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 // mId allows you to update the notification later on.
 
@@ -216,8 +217,9 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
         cashoutonwait = (TextView) findViewById(R.id.cashoutonwait);
 
-        MyPreferences cashouttext = MyPreferences.getInstance(BankActivity.this,"cashout");
-        cashoutonwait.setText( String.valueOf(cashouttext.getFloat("cashout", 0)+"$"));
+        SharedPreferences cashouttext = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("cashout", MODE_PRIVATE));
+
+      //  cashoutonwait.setText( String.valueOf(cashouttext.getFloat("cashout", 0)+"$"));
 
 
 
@@ -227,11 +229,11 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         diaconvertingtimeprogress.setMax(timerfürdias);
 
 
-        final MyPreferences BankMax = MyPreferences.getInstance(BankActivity.this,"dataBank");
+        SharedPreferences BankMax = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("dataBank", MODE_PRIVATE));
         String stringGoldmax = String.valueOf(BankMax.getInt("maxGoldStorage", 1000));
 
         //Aktualisiere den Kontostatus
-        MyPreferences prefs1 = MyPreferences.getInstance(BankActivity.this,"POOL");
+        SharedPreferences prefs1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("POOL", MODE_PRIVATE));
         String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
         currentGoldBalance.setText(": " + Pooltext + "/" + stringGoldmax);
 
@@ -266,14 +268,14 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     ActionBar actionBar = getSupportActionBar();
                     actionBar.hide();
                 }
-                MyPreferences prefs3 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
+                SharedPreferences prefs3 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DIAMONDS", MODE_PRIVATE));
                 //Diapool text aktualisieren
                 String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
                 diatext.setText(": " + diapooltext);
 
 
                 //startzeit holen
-                MyPreferences DiamantConvertCountdown = MyPreferences.getInstance(BankActivity.this,"DiamantConvertCountdown");
+                SharedPreferences DiamantConvertCountdown = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DiamantConvertCountdown", MODE_PRIVATE));
                 int startTime = DiamantConvertCountdown.getInt("startTime", 0); //0 is the default value.
 
 
@@ -311,7 +313,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
 
-                MyPreferences prefs4 = MyPreferences.getInstance(BankActivity.this,"DiamantConvertCountdownOFF");
+                SharedPreferences prefs4 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DiamantConvertCountdownOFF", MODE_PRIVATE));
                 Boolean hatsdiaszumholen = (prefs4.getBoolean("trueorfalse", false));
 
                 if (hatsdiaszumholen) {
@@ -319,7 +321,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                         //request senden
 
-                        final MyPreferences google = MyPreferences.getInstance(BankActivity.this,"google");
+                        final SharedPreferences google = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("google", MODE_PRIVATE));
 
                         if (inforeground) {
 
@@ -334,14 +336,12 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
                         //keine dias mehr zu holen also false
-                        MyPreferences editor3 = MyPreferences.getInstance(BankActivity.this,"DiamantConvertCountdownOFF");
-                        editor3.putBoolean("trueorfalse", false);
-                        editor3.apply();
+                        SharedPreferences editor3 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DiamantConvertCountdownOFF", MODE_PRIVATE));
+                        editor3.edit().putBoolean("trueorfalse", false).apply();
 
                         //diaspeicher im seekbar löschen
-                        MyPreferences editor1 = MyPreferences.getInstance(BankActivity.this,"thatmanydias");
-                        editor1.putInt("thatmanydias", 0);
-                        editor1.apply();
+                        SharedPreferences editor1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanydias", MODE_PRIVATE));
+                        editor1.edit().putInt("thatmanydias", 0).apply();
 
                         diaconvertingtimeprogress.setProgress(0);
                         //converterknopf sichtbar
@@ -376,7 +376,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(browserIntent);
 
         }
-            if (id == R.id.GoldToDias) {
+        if (id == R.id.GoldToDias) {
 
 
             diaconverter();
@@ -386,7 +386,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
         if (id == R.id.cashout) {
 
-            MyPreferences prefs3 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
+            SharedPreferences prefs3 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DIAMONDS", MODE_PRIVATE));
             //Diapool text aktualisieren
             int dias = (prefs3.getInt("DIAMONDS", 0));
 
@@ -405,7 +405,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             confirmcashout.setOnClickListener(this);
 
 
-                seekbar.setMax(dias/10);
+            seekbar.setMax(dias/10);
 
             float progressvalue = 0;
             howmanygoldtodias.setText(getString(R.string.Create) + " " + progressvalue/100 + "$");
@@ -443,9 +443,8 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                             diasCost.setText(getString(R.string.Costs) + " " + fück * 10 + getString(R.string.Diamonds));
 
                             //den progressvalue (wieviele dias) speichern
-                            MyPreferences editor1 = MyPreferences.getInstance(BankActivity.this,"thatmanycash");
-                            editor1.putFloat("thatmanycash", progressvalue/100);
-                            editor1.apply();
+                            SharedPreferences editor1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanycash", MODE_PRIVATE));
+                            editor1.edit().putFloat("thatmanycash", progressvalue/100).apply();
 
 
                         }
@@ -459,20 +458,20 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
-            if (id == R.id.verify) {
+        if (id == R.id.verify) {
 
 
-                TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-                final String imei = telephonyManager.getDeviceId();
-                final MyPreferences google = MyPreferences.getInstance(BankActivity.this,"google");
-                String m_Text = coucod.getText().toString() + phnr.getText().toString();
-                String type = "verify";
-                String gid = google.getString("id", "0");
-                bgworker bgworker =new bgworker(BankActivity.this);
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final String imei = telephonyManager.getDeviceId();
+            final SharedPreferences google = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+            String m_Text = coucod.getText().toString() + phnr.getText().toString();
+            String type = "verify";
+            String gid = google.getString("id", "0");
+            bgworker bgworker =new bgworker(BankActivity.this);
 
-                bgworker.execute(type, gid, imei, m_Text, "verifyonserver");
-                veridia.dismiss();
-            }
+            bgworker.execute(type, gid, imei, m_Text, "verifyonserver");
+            veridia.dismiss();
+        }
 
 
         if (id == R.id.confirmconvert) {
@@ -483,199 +482,195 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-                    //werbung starten
-                    // Nur wenn die ad geladen hat, das converten erlauben
-                    if (mInterstitialAd.isLoaded()) {
-                        mInterstitialAd.show();
+            //werbung starten
+            // Nur wenn die ad geladen hat, das converten erlauben
+            if (mInterstitialAd.isLoaded()) {
+                mInterstitialAd.show();
 
 
 
-                                //holen von wieviele diamanten erstellen
-                        MyPreferences prefs1 = MyPreferences.getInstance(BankActivity.this,"thatmanydias");
+                //holen von wieviele diamanten erstellen
+                SharedPreferences prefs1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanydias", MODE_PRIVATE));
 
-                                //wenn 0 diamanten gewählt, abbrechen
-                                if (prefs1.getInt("thatmanydias", 0) == 0) {
-
-
-                                    //dialog beenden
-                                    dialogconvertdias.dismiss();
-                                }
+                //wenn 0 diamanten gewählt, abbrechen
+                if (prefs1.getInt("thatmanydias", 0) == 0) {
 
 
-                                if (prefs1.getInt("thatmanydias", 0) >= 1) {
-
-                                    //CHECKEN OB ES DEN DIASPEICHER nicht überschreitet
-                                    MyPreferences BankMax = MyPreferences.getInstance(BankActivity.this,"dataBank");
-
-
-                                        //Holen von Pool
-                                    MyPreferences prefs2 = MyPreferences.getInstance(BankActivity.this,"POOL");
-
-                                        //diamantenanzahl in gold umwandeln
-                                        int goldweg = (prefs1.getInt("thatmanydias", 1)) * 200;
+                    //dialog beenden
+                    dialogconvertdias.dismiss();
+                }
 
 
-                                        //checken obs genug gold für den convert hat
-                                        if (goldweg >= prefs2.getInt("POOL", 0)) {
+                if (prefs1.getInt("thatmanydias", 0) >= 1) {
 
-                                            Toast.makeText(BankActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
-
-
-                                        }
-
-                                        if (goldweg <= prefs2.getInt("POOL", 0)) {
+                    //CHECKEN OB ES DEN DIASPEICHER nicht überschreitet
+                    SharedPreferences BankMax = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("dataBank", MODE_PRIVATE));
 
 
-                                            //Pool aktualisieren, gold abziehen
-                                            MyPreferences editor1 = MyPreferences.getInstance(BankActivity.this,"POOL");
-                                            editor1.putInt("POOL", (prefs2.getInt("POOL", 0)) - goldweg);
-                                            editor1.apply();
+                    //Holen von Pool
+                    SharedPreferences prefs2 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("POOL", MODE_PRIVATE));
 
-                                            //Pooltext aktualisieren
-
-                                            String stringGoldmax = String.valueOf(BankMax.getInt("maxGoldStorage", 1000));
-                                            String Pooltext = String.valueOf(prefs2.getInt("POOL", 0));
-                                            currentGoldBalance.setText(": " + Pooltext + "/" + stringGoldmax);
+                    //diamantenanzahl in gold umwandeln
+                    int goldweg = (prefs1.getInt("thatmanydias", 1)) * 200;
 
 
-                                            //Timer Starten
-                                            MyPreferences editor3 = MyPreferences.getInstance(BankActivity.this,"DiamantConvertCountdown");
-                                            editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
-                                            editor3.apply();
+                    //checken obs genug gold für den convert hat
+                    if (goldweg >= prefs2.getInt("POOL", 0)) {
 
+                        Toast.makeText(BankActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
-                                            //es hat dias true
-                                            MyPreferences editor4 = MyPreferences.getInstance(BankActivity.this,"DiamantConvertCountdownOFF");
-                                            editor4.putBoolean("trueorfalse", true);
-                                            editor4.apply();
-
-                                            //es hat dias linken
-
-                                            final MyPreferences google = MyPreferences.getInstance(BankActivity.this,"google");
-
-                                            int dias_int = prefs1.getInt("thatmanydias", 0);
-                                            String dias = Integer.toString(dias_int);
-
-                                            String type = "diamonds";
-                                            String gid = google.getString("id", "0");
-                                            bgworker bgworker =new bgworker(BankActivity.this);
-                                            bgworker.execute(type, gid,dias , "übertrag");
-
-
-                                            //dialog beenden
-                                            dialogconvertdias.dismiss();
-
-                                        }
-                                    }
-
-
-                        mInterstitialAd.setAdListener(new AdListener() {
-
-                            @Override
-
-                            public void onAdLoaded() {
-
-                            }
-                            @Override
-                            public void onAdFailedToLoad(int errorCode) {
-                                Toast.makeText(BankActivity.this, "we're so sorry. please try again", Toast.LENGTH_SHORT).show();
-                                dialogconvertdias.dismiss();
-                                AdRequest adRequest = new AdRequest.Builder()
-                                        .addTestDevice("16201-16201")
-                                        .build();
-
-                                mInterstitialAd.loadAd(adRequest);                            }
-
-                            @Override
-                            public void onAdClosed() {
-                                //thanks
-                                Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
-                                dialogconvertdias.dismiss();
-                                AdRequest adRequest = new AdRequest.Builder()
-                                        .addTestDevice("16201-16201")
-                                        .build();
-
-                                mInterstitialAd.loadAd(adRequest);
-                            }
-                        });
 
                     }
-                    else {
-                        Toast.makeText(BankActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
+
+                    if (goldweg <= prefs2.getInt("POOL", 0)) {
+
+
+                        //Pool aktualisieren, gold abziehen
+                        SharedPreferences editor1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("POOL", MODE_PRIVATE));
+                        editor1.edit().putInt("POOL", (prefs2.getInt("POOL", 0)) - goldweg).apply();
+
+                        //Pooltext aktualisieren
+
+                        String stringGoldmax = String.valueOf(BankMax.getInt("maxGoldStorage", 1000));
+                        String Pooltext = String.valueOf(prefs2.getInt("POOL", 0));
+                        currentGoldBalance.setText(": " + Pooltext + "/" + stringGoldmax);
+
+
+                        //Timer Starten
+                        SharedPreferences editor3 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DiamantConvertCountdown", MODE_PRIVATE));
+                        editor3.edit().putInt("startTime", ((int) System.currentTimeMillis()) / 1000).apply();
+
+
+                        //es hat dias true
+                        SharedPreferences editor4 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DiamantConvertCountdownOFF", MODE_PRIVATE));
+                        editor4.edit().putBoolean("trueorfalse", true).apply();
+
+                        //es hat dias linken
+
+                        final SharedPreferences google = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+
+                        int dias_int = prefs1.getInt("thatmanydias", 0);
+                        String dias = Integer.toString(dias_int);
+
+                        String type = "diamonds";
+                        String gid = google.getString("id", "0");
+                        bgworker bgworker =new bgworker(BankActivity.this);
+                        bgworker.execute(type, gid,dias , "übertrag");
+
+
+                        //dialog beenden
+                        dialogconvertdias.dismiss();
+
+                    }
+                }
+
+
+                mInterstitialAd.setAdListener(new AdListener() {
+
+                    @Override
+
+                    public void onAdLoaded() {
+
+                    }
+                    @Override
+                    public void onAdFailedToLoad(int errorCode) {
+                        Toast.makeText(BankActivity.this, "we're so sorry. please try again", Toast.LENGTH_SHORT).show();
+                        dialogconvertdias.dismiss();
+                        AdRequest adRequest = new AdRequest.Builder()
+                                .addTestDevice("16201-16201")
+                                .build();
+
+                        mInterstitialAd.loadAd(adRequest);                            }
+
+                    @Override
+                    public void onAdClosed() {
+                        //thanks
+                        Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
+                        dialogconvertdias.dismiss();
                         AdRequest adRequest = new AdRequest.Builder()
                                 .addTestDevice("16201-16201")
                                 .build();
 
                         mInterstitialAd.loadAd(adRequest);
-
                     }
-
-
-
-
+                });
 
             }
+            else {
+                Toast.makeText(BankActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
+                AdRequest adRequest = new AdRequest.Builder()
+                        .addTestDevice("16201-16201")
+                        .build();
+
+                mInterstitialAd.loadAd(adRequest);
+
+            }
+
+
+
+
+
+        }
         if (id == R.id.confirmcashout) {
 
 
 
 
 
-                                //holen von wieviele diamanten erstellen
-            MyPreferences prefs1 = MyPreferences.getInstance(BankActivity.this,"thatmanycash");
+            //holen von wieviele diamanten erstellen
+            SharedPreferences prefs1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanycash", MODE_PRIVATE));
 
-                                float diaweg = (prefs1.getFloat("thatmanycash", 0)*1000);
+            float diaweg = (prefs1.getFloat("thatmanycash", 0)*1000);
 
-                                //wenn 0 diamanten gewählt, abbrechen
-                                if (diaweg < 10) {
+            //wenn 0 diamanten gewählt, abbrechen
+            if (diaweg < 10) {
 
-                                    Toast.makeText(BankActivity.this, "minimum 10 diamonds", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BankActivity.this, "minimum 10 diamonds", Toast.LENGTH_SHORT).show();
 
-                                    //dialog beenden
-                                    dialogconvertdias.dismiss();
-                                }
-
-
-                                if (diaweg >= 10) {
+                //dialog beenden
+                dialogconvertdias.dismiss();
+            }
 
 
-
-                                    //Holen von Pool
-                                    MyPreferences prefs2 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
+            if (diaweg >= 10) {
 
 
 
-                                    //checken obs genug gold für den convert hat
-                                    if (diaweg >= prefs2.getInt("DIAMONDS", 0)) {
-
-                                        Toast.makeText(BankActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
-
-
-                                    }
-
-                                    if (diaweg <= prefs2.getInt("DIAMONDS", 0)) {
+                //Holen von Pool
+                SharedPreferences prefs2 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DIAMONDS", MODE_PRIVATE));
 
 
 
-                                        //es hat dias linken
+                //checken obs genug gold für den convert hat
+                if (diaweg >= prefs2.getInt("DIAMONDS", 0)) {
 
-                                        final MyPreferences google = MyPreferences.getInstance(BankActivity.this,"google");
-
-                                        int dias_int = prefs1.getInt("thatmanydias", 0);
-                                        int loldiasfuck = (int)diaweg;
-                                        String dias = Integer.toString(loldiasfuck);
-
-                                        String type = "convert";
-                                        String gid = google.getString("id", "0");
-                                        bgworker bgworker =new bgworker(BankActivity.this);
-                                        bgworker.execute(type, gid,dias , "convert");
+                    Toast.makeText(BankActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
 
-                                        //dialog beenden
-                                        dialogconvertdias.dismiss();
+                }
 
-                                    }
-                                }
+                if (diaweg <= prefs2.getInt("DIAMONDS", 0)) {
+
+
+
+                    //es hat dias linken
+
+                    final SharedPreferences google = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+
+                    int loldiasfuck = (int)diaweg;
+                    String dias = Integer.toString(loldiasfuck);
+
+                    String type = "convert";
+                    String gid = google.getString("id", "0");
+                    bgworker bgworker =new bgworker(BankActivity.this);
+                    bgworker.execute(type, gid,dias , "convert");
+
+
+                    //dialog beenden
+                    dialogconvertdias.dismiss();
+
+                }
+            }
 
 
 
@@ -741,9 +736,8 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         diasCost.setText(getString(R.string.Costs) + progressvalue * 200 + getString(R.string.Gold));
 
                         //den progressvalue (wieviele dias) speichern
-                        MyPreferences editor1 = MyPreferences.getInstance(BankActivity.this,"thatmanydias");
-                        editor1.putInt("thatmanydias", progressvalue);
-                        editor1.apply();
+                        SharedPreferences editor1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanydias", MODE_PRIVATE));
+                        editor1.edit().putInt("thatmanydias", progressvalue).apply();
 
 
                     }
@@ -754,20 +748,20 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-        @Override
-        public void onStart () {
-            super.onStart();
-            inforeground = true;
+    @Override
+    public void onStart () {
+        super.onStart();
+        inforeground = true;
 
 
-        }
-        @Override
-        public void onStop () {
-            super.onStop();
-            inforeground = false;
+    }
+    @Override
+    public void onStop () {
+        super.onStop();
+        inforeground = false;
 
 
-        }
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -777,7 +771,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
-       inforeground = false;
+        inforeground = false;
     }
 
 
@@ -786,429 +780,423 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-class bgworker extends AsyncTask<String, Void, String> {
+    class bgworker extends AsyncTask<String, Void, String> {
 
-    ProgressDialog waite;
+        ProgressDialog waite;
 
-    String doafter;
+        String doafter;
 
-    public bgworker(Context context) {
-        waite = new ProgressDialog(context);
-        waite.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        waite.setMessage("checking user...");
+        public bgworker(Context context) {
+            waite = new ProgressDialog(context);
+            waite.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            waite.setMessage("checking user...");
 
 
 
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        if (! ((Activity) context).isFinishing()) {
-            waite.show();
         }
-       // waite.show();
-    }
 
-
-    @Override
-    protected String doInBackground(String... params) {
-
-
-        String type = params[0];
-        String dia_url = "http://frozensparks.com/diamonds.php";
-        String collect_url =  "http://frozensparks.com/collect.php";
-        String convert_url =  "http://frozensparks.com/cashout.php";
-
-
-        if(type.equals("diamonds")){
-            try {
-                doafter = params[3];
-                String googleID = params[1];
-                String diamonds = params[2];
-
-
-                URL url = new URL(dia_url);
-                HttpURLConnection httpurlconn = (HttpURLConnection) url.openConnection();
-                httpurlconn.setRequestMethod("POST");
-                httpurlconn.setDoOutput(true);
-                httpurlconn.setDoInput(true);
-                OutputStream outputStream = httpurlconn.getOutputStream();
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                String post_data = URLEncoder.encode("googleID", "UTF-8")+"="+URLEncoder.encode(googleID, "UTF-8")+"&"
-                        +URLEncoder.encode("diamonds", "UTF-8")+"="+URLEncoder.encode(diamonds, "UTF-8");
-
-                bufferedWriter.write(post_data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
-                outputStream.close();
-
-                InputStream inputStream =httpurlconn.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
-                String result="";
-                String line="";
-
-                while((line=bufferedReader.readLine())!=null){
-                    result +=line;
-
-
-                }
-                bufferedReader.close();
-                inputStream.close();
-                httpurlconn.disconnect();
-
-                return result;
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (! ((Activity) context).isFinishing()) {
+                waite.show();
             }
-
-
-        }
-        if(type.equals("convert")){
-            try {
-                doafter = params[3];
-                String googleID = params[1];
-                String diamonds = params[2];
-
-
-                URL url = new URL(convert_url);
-                HttpURLConnection httpurlconn = (HttpURLConnection) url.openConnection();
-                httpurlconn.setRequestMethod("POST");
-                httpurlconn.setDoOutput(true);
-                httpurlconn.setDoInput(true);
-                OutputStream outputStream = httpurlconn.getOutputStream();
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                String post_data = URLEncoder.encode("googleID", "UTF-8")+"="+URLEncoder.encode(googleID, "UTF-8")+"&"
-                        +URLEncoder.encode("diamonds", "UTF-8")+"="+URLEncoder.encode(diamonds, "UTF-8");
-
-                bufferedWriter.write(post_data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
-                outputStream.close();
-
-                InputStream inputStream =httpurlconn.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
-                String result="";
-                String line="";
-
-                while((line=bufferedReader.readLine())!=null){
-                    result +=line;
-
-
-                }
-                bufferedReader.close();
-                inputStream.close();
-                httpurlconn.disconnect();
-
-                return result;
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-
-        if(type.equals("request")){
-            try {
-                doafter = params[2];
-                String googleID = params[1];
-
-
-
-                URL url = new URL(collect_url);
-                HttpURLConnection httpurlconn = (HttpURLConnection) url.openConnection();
-                httpurlconn.setRequestMethod("POST");
-                httpurlconn.setDoOutput(true);
-                httpurlconn.setDoInput(true);
-                OutputStream outputStream = httpurlconn.getOutputStream();
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                String post_data = URLEncoder.encode("googleID", "UTF-8")+"="+URLEncoder.encode(googleID, "UTF-8");
-                bufferedWriter.write(post_data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
-                outputStream.close();
-
-                InputStream inputStream =httpurlconn.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
-                String result="";
-                String line="";
-
-                while((line=bufferedReader.readLine())!=null){
-                    result +=line;
-
-
-                }
-                bufferedReader.close();
-                inputStream.close();
-                httpurlconn.disconnect();
-
-                return result;
-
-
-
-
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
+            // waite.show();
         }
 
 
+        @Override
+        protected String doInBackground(String... params) {
 
 
+            String type = params[0];
+            String dia_url = "http://frozensparks.com/diamonds.php";
+            String collect_url =  "http://frozensparks.com/collect.php";
+            String convert_url =  "http://frozensparks.com/cashout.php";
 
 
-
-        return null;
-
-
-    }
-
-
-
-    @Override
-    protected void onPostExecute(String result) {
+            if(type.equals("diamonds")){
+                try {
+                    doafter = params[3];
+                    String googleID = params[1];
+                    String diamonds = params[2];
 
 
+                    URL url = new URL(dia_url);
+                    HttpURLConnection httpurlconn = (HttpURLConnection) url.openConnection();
+                    httpurlconn.setRequestMethod("POST");
+                    httpurlconn.setDoOutput(true);
+                    httpurlconn.setDoInput(true);
+                    OutputStream outputStream = httpurlconn.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    String post_data = URLEncoder.encode("googleID", "UTF-8")+"="+URLEncoder.encode(googleID, "UTF-8")+"&"
+                            +URLEncoder.encode("diamonds", "UTF-8")+"="+URLEncoder.encode(diamonds, "UTF-8");
 
-        DASRESULTAT = result;
-        waite.dismiss();
+                    bufferedWriter.write(post_data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
 
+                    InputStream inputStream =httpurlconn.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    String result="";
+                    String line="";
 
-        str_result = DASRESULTAT;
-
-        if (str_result != null) {
-
-            str_result = str_result.replace(" ", "");
-            connectcode = Integer.parseInt(str_result);
-        }
-
-        if(doafter =="convert") {
-
-
-            if (connectcode >= 0) {
-
-                MyPreferences prefs1 = MyPreferences.getInstance(BankActivity.this,"thatmanycash");
-                MyPreferences prefs2 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
-
-                float diaweg = prefs1.getFloat("thatmanycash", 0)*1000;
-
-                //Pool aktualisieren, gold abziehen
-                MyPreferences editor1 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
-                editor1.putInt("DIAMONDS", (prefs2.getInt("DIAMONDS", 0)) - (int)diaweg);
-                editor1.apply();
-
-                //Pooltext aktualisieren
-                MyPreferences prefs3 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
-                String Pooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
-                diatext.setText(": " + Pooltext);
+                    while((line=bufferedReader.readLine())!=null){
+                        result +=line;
 
 
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpurlconn.disconnect();
 
-                //Pool aktualisieren, dias abziehen
+                    return result;
 
-
-                // cashout aktualisieren
-                float rappen = (float)(connectcode);
-                float rtrdrp = rappen/100;
-                String rpstr = Float.toString(rtrdrp);
-
-                Toast.makeText(BankActivity.this, rpstr, Toast.LENGTH_SHORT).show();
-
-                MyPreferences editor2 = MyPreferences.getInstance(BankActivity.this,"cashout");
-                editor2.putFloat("cashout", rtrdrp);
-                editor2.commit();
-                MyPreferences cashouttext = MyPreferences.getInstance(BankActivity.this,"cashout");
-
-                cashoutonwait.setText( String.valueOf(cashouttext.getFloat("cashout", 0) + "$"));
-
-                if(mInterstitialAd.isLoaded()){
-                    mInterstitialAd.show();
-
-
-                    mInterstitialAd.setAdListener(new AdListener() {
-
-                        @Override
-
-                        public void onAdLoaded() {
-
-                        }
-                        @Override
-                        public void onAdFailedToLoad(int errorCode) {
-                            AdRequest adRequest = new AdRequest.Builder()
-                                    .addTestDevice("16201-16201")
-                                    .build();
-
-                            mInterstitialAd.loadAd(adRequest);
-                        }
-                        @Override
-                        public void onAdClosed() {
-                            //thanks
-                            Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
-                            dialogconvertdias.dismiss();
-                            AdRequest adRequest = new AdRequest.Builder()
-                                    .addTestDevice("16201-16201")
-                                    .build();
-
-                            mInterstitialAd.loadAd(adRequest);
-                        }
-                    });
-
-                }
-
-                else {
-                    Toast.makeText(BankActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
-                    AdRequest adRequest = new AdRequest.Builder()
-                            .addTestDevice("16201-16201")
-                            .build();
-
-                    mInterstitialAd.loadAd(adRequest);
-
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
 
+            }
+            if(type.equals("convert")){
+                try {
+                    doafter = params[3];
+                    String googleID = params[1];
+                    String diamonds = params[2];
+
+
+                    URL url = new URL(convert_url);
+                    HttpURLConnection httpurlconn = (HttpURLConnection) url.openConnection();
+                    httpurlconn.setRequestMethod("POST");
+                    httpurlconn.setDoOutput(true);
+                    httpurlconn.setDoInput(true);
+                    OutputStream outputStream = httpurlconn.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    String post_data = URLEncoder.encode("googleID", "UTF-8")+"="+URLEncoder.encode(googleID, "UTF-8")+"&"
+                            +URLEncoder.encode("diamonds", "UTF-8")+"="+URLEncoder.encode(diamonds, "UTF-8");
+
+                    bufferedWriter.write(post_data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+
+                    InputStream inputStream =httpurlconn.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    String result="";
+                    String line;
+
+                    while((line=bufferedReader.readLine())!=null){
+                        result +=line;
+
+
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpurlconn.disconnect();
+
+                    return result;
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
             }
-            if (connectcode == -1) {
-                Toast.makeText(BankActivity.this, "too much diamonds fordered", Toast.LENGTH_SHORT).show();
+
+            if(type.equals("request")){
+                try {
+                    doafter = params[2];
+                    String googleID = params[1];
+
+
+
+                    URL url = new URL(collect_url);
+                    HttpURLConnection httpurlconn = (HttpURLConnection) url.openConnection();
+                    httpurlconn.setRequestMethod("POST");
+                    httpurlconn.setDoOutput(true);
+                    httpurlconn.setDoInput(true);
+                    OutputStream outputStream = httpurlconn.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    String post_data = URLEncoder.encode("googleID", "UTF-8")+"="+URLEncoder.encode(googleID, "UTF-8");
+                    bufferedWriter.write(post_data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    outputStream.close();
+
+                    InputStream inputStream =httpurlconn.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    String result="";
+                    String line;
+
+                    while((line=bufferedReader.readLine())!=null){
+                        result +=line;
+
+
+                    }
+                    bufferedReader.close();
+                    inputStream.close();
+                    httpurlconn.disconnect();
+
+                    return result;
+
+
+
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
             }
 
-            if (connectcode == -2) {
-                Toast.makeText(BankActivity.this, "damn son y u play dis?", Toast.LENGTH_SHORT).show();
-            }
+
+
+
+
+
+
+            return null;
 
 
         }
 
 
-        if(doafter =="diacollect") {
-            if (connectcode >= 1) {
-                //
-                Toast.makeText(BankActivity.this, "diamonds collected", Toast.LENGTH_SHORT).show();
+
+        @Override
+        protected void onPostExecute(String result) {
 
 
-                //Diapool text aktualisieren
-                diatext.setText((": " + connectcode));
 
-                //databank aktualisieren
-                MyPreferences editor1 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
-                editor1.putInt("DIAMONDS", connectcode);
-                editor1.apply();
-                if(mInterstitialAd.isLoaded()){
-                    mInterstitialAd.show();
+            DASRESULTAT = result;
+            waite.dismiss();
 
 
-                    mInterstitialAd.setAdListener(new AdListener() {
+            str_result = DASRESULTAT;
 
-                        @Override
+            if (str_result != null) {
 
-                        public void onAdLoaded() {
+                str_result = str_result.replace(" ", "");
+                connectcode = Integer.parseInt(str_result);
+            }
 
-                        }
-                        @Override
-                        public void onAdFailedToLoad(int errorCode) {
-                            AdRequest adRequest = new AdRequest.Builder()
-                                    .addTestDevice("16201-16201")
-                                    .build();
+            if(doafter =="convert") {
 
-                            mInterstitialAd.loadAd(adRequest);                        }
-                        @Override
-                        public void onAdClosed() {
-                            //thanks
-                            Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
-                            if (dialogconvertdias!= null) {
-                                if (dialogconvertdias.isShowing()) {
-                                    dialogconvertdias.dismiss();
-                                }
+
+                if (connectcode >= 0) {
+
+                    SharedPreferences prefs1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanycash", MODE_PRIVATE));
+                    SharedPreferences prefs2 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DIAMONDS", MODE_PRIVATE));
+
+                    float diaweg = prefs1.getFloat("thatmanycash", 0)*1000;
+
+                    //Pool aktualisieren, gold abziehen
+                    SharedPreferences editor1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DIAMONDS", MODE_PRIVATE));
+                    editor1.edit().putInt("DIAMONDS", (prefs2.getInt("DIAMONDS", 0)) - (int)diaweg).apply();
+
+
+                    //Pooltext aktualisieren
+                    SharedPreferences prefs3 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DIAMONDS", MODE_PRIVATE));
+                    String Pooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
+                    diatext.setText(": " + Pooltext);
+
+
+
+                    //Pool aktualisieren, dias abziehen
+
+
+                    // cashout aktualisieren
+                    float rappen = (float)(connectcode);
+                    float rtrdrp = rappen/100;
+                    String rpstr = Float.toString(rtrdrp);
+
+                    Toast.makeText(BankActivity.this, rpstr, Toast.LENGTH_SHORT).show();
+
+                    SharedPreferences editor2 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("cashout", MODE_PRIVATE));
+                    editor2.edit().putFloat("cashout", rtrdrp).apply();
+
+                    SharedPreferences cashouttext = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("cashout", MODE_PRIVATE));
+
+                    cashoutonwait.setText( String.valueOf(cashouttext.getFloat("cashout", 0) + "$"));
+
+                    if(mInterstitialAd.isLoaded()){
+                        mInterstitialAd.show();
+
+
+                        mInterstitialAd.setAdListener(new AdListener() {
+
+                            @Override
+
+                            public void onAdLoaded() {
+
                             }
-                            AdRequest adRequest = new AdRequest.Builder()
-                                    .addTestDevice("16201-16201")
-                                    .build();
+                            @Override
+                            public void onAdFailedToLoad(int errorCode) {
+                                AdRequest adRequest = new AdRequest.Builder()
+                                        .addTestDevice("16201-16201")
+                                        .build();
 
-                            mInterstitialAd.loadAd(adRequest);
-                        }
-                    });
+                                mInterstitialAd.loadAd(adRequest);
+                            }
+                            @Override
+                            public void onAdClosed() {
+                                //thanks
+                                Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
+                                dialogconvertdias.dismiss();
+                                AdRequest adRequest = new AdRequest.Builder()
+                                        .addTestDevice("16201-16201")
+                                        .build();
+
+                                mInterstitialAd.loadAd(adRequest);
+                            }
+                        });
+
+                    }
+
+                    else {
+                        Toast.makeText(BankActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
+                        AdRequest adRequest = new AdRequest.Builder()
+                                .addTestDevice("16201-16201")
+                                .build();
+
+                        mInterstitialAd.loadAd(adRequest);
+
+                    }
+
+
+
+                }
+                if (connectcode == -1) {
+                    Toast.makeText(BankActivity.this, "too much diamonds fordered", Toast.LENGTH_SHORT).show();
+                }
+
+                if (connectcode == -2) {
+                    Toast.makeText(BankActivity.this, "damn son y u play dis?", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+
+
+            if(doafter =="diacollect") {
+                if (connectcode >= 1) {
+                    //
+                    Toast.makeText(BankActivity.this, "diamonds collected", Toast.LENGTH_SHORT).show();
+
+
+                    //Diapool text aktualisieren
+                    diatext.setText((": " + connectcode));
+
+                    //databank aktualisieren
+                    SharedPreferences editor1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DIAMONDS", MODE_PRIVATE));
+                    editor1.edit().putInt("DIAMONDS", connectcode).apply();
+
+                    if(mInterstitialAd.isLoaded()){
+                        mInterstitialAd.show();
+
+
+                        mInterstitialAd.setAdListener(new AdListener() {
+
+                            @Override
+
+                            public void onAdLoaded() {
+
+                            }
+                            @Override
+                            public void onAdFailedToLoad(int errorCode) {
+                                AdRequest adRequest = new AdRequest.Builder()
+                                        .addTestDevice("16201-16201")
+                                        .build();
+
+                                mInterstitialAd.loadAd(adRequest);                        }
+                            @Override
+                            public void onAdClosed() {
+                                //thanks
+                                Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
+                                if (dialogconvertdias!= null) {
+                                    if (dialogconvertdias.isShowing()) {
+                                        dialogconvertdias.dismiss();
+                                    }
+                                }
+                                AdRequest adRequest = new AdRequest.Builder()
+                                        .addTestDevice("16201-16201")
+                                        .build();
+
+                                mInterstitialAd.loadAd(adRequest);
+                            }
+                        });
+
+                    }
+
+                    else {
+                        Toast.makeText(BankActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
+                        AdRequest adRequest = new AdRequest.Builder()
+                                .addTestDevice("16201-16201")
+                                .build();
+
+                        mInterstitialAd.loadAd(adRequest);
+
+                    }
+
+
+
+
+
 
                 }
 
-                else {
-                    Toast.makeText(BankActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
-                    AdRequest adRequest = new AdRequest.Builder()
-                            .addTestDevice("16201-16201")
-                            .build();
 
-                    mInterstitialAd.loadAd(adRequest);
 
+            }
+            if(doafter =="übertrag") {
+                if (connectcode == 10) {
+                    //
+                    Toast.makeText(BankActivity.this, "no user found. restart the app", Toast.LENGTH_SHORT).show();
+                }
+
+                if (connectcode == 101) {
+                    //hacker ban
+                    Toast.makeText(BankActivity.this, "you are banned", Toast.LENGTH_SHORT).show();
+                }
+                if (connectcode == 1111) {
+                    //übertrag ok
+                    Toast.makeText(BankActivity.this, "Timer started", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            if(doafter =="diascreator") {
+                if (connectcode == 11) {
+                    //show 'createdias'
+                    diaconverter();
                 }
 
 
+                if(connectcode == 1010) {
+                    //check number on verification server
 
 
 
+                }
+                if(connectcode == 100) {
 
+                    //create new verification
+
+                }
             }
-
 
 
         }
-        if(doafter =="übertrag") {
-            if (connectcode == 10) {
-                //
-                Toast.makeText(BankActivity.this, "no user found. restart the app", Toast.LENGTH_SHORT).show();
-            }
 
-            if (connectcode == 101) {
-                //hacker ban
-                Toast.makeText(BankActivity.this, "you are banned", Toast.LENGTH_SHORT).show();
-            }
-            if (connectcode == 1111) {
-                //übertrag ok
-                Toast.makeText(BankActivity.this, "Timer started", Toast.LENGTH_SHORT).show();
-            }
+
+        @Override
+        protected void onProgressUpdate(Void ... values) {
+            super.onProgressUpdate(values);
 
         }
 
-if(doafter =="diascreator") {
-    if (connectcode == 11) {
-        //show 'createdias'
-        diaconverter();
-    }
-
-
-    if (connectcode == 1010) {
-        //check number on verification server
-
-
 
     }
-    if (connectcode == 100) {
-
-        //create new verification
-
-    }
-}
-
-
-    }
-
-
-    @Override
-    protected void onProgressUpdate(Void ... values) {
-        super.onProgressUpdate(values);
-
-    }
-
-
-}
 
 }

@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import com.frozensparks.royalindustry.MyPreferences;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -87,9 +87,9 @@ public class IntroActivity extends AppCompatActivity implements
         typeface = Typeface.createFromAsset(am,
                 String.format(Locale.US, "fonts/%2s", "OldGlyphs.ttf"));
 
-         splash = (TextView) findViewById(R.id.splash);
+        splash = (TextView) findViewById(R.id.splash);
         splash.setTypeface(typeface);
-       splash.setText("frozen \n sparks");
+        splash.setText("frozen \n sparks");
         //Fullscreen
         if (Build.VERSION.SDK_INT < 16) { //ye olde method
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -138,36 +138,36 @@ public class IntroActivity extends AppCompatActivity implements
         super.onStart();
 
         if  (isConnectingToInternet()){
-        signIn();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+            signIn();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
 
-                AlphaAnimation fadeOutAnimation = new AlphaAnimation(0, 1); // start alpha, end alpha
-                fadeOutAnimation.setDuration(2000); // time for animation in milliseconds
-                fadeOutAnimation.setFillAfter(true); // make the transformation persist
-                fadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
+                    AlphaAnimation fadeOutAnimation = new AlphaAnimation(0, 1); // start alpha, end alpha
+                    fadeOutAnimation.setDuration(2000); // time for animation in milliseconds
+                    fadeOutAnimation.setFillAfter(true); // make the transformation persist
+                    fadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                        }
 
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        splash.setVisibility(View.VISIBLE);
-                    }
-                });
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            splash.setVisibility(View.VISIBLE);
+                        }
+                    });
 
-                splash.setAnimation(fadeOutAnimation);
+                    splash.setAnimation(fadeOutAnimation);
 
 
-            }
-        }, 100);
-    }
+                }
+            }, 100);
+        }
     }
 
 
@@ -242,7 +242,7 @@ public class IntroActivity extends AppCompatActivity implements
 
             }
 
-            }
+        }
     }
 
 
@@ -269,11 +269,11 @@ public class IntroActivity extends AppCompatActivity implements
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-if(str_result!=null)
-       if(!str_result.toLowerCase().contains("-")) {
+            if(str_result!=null)
+                if(!str_result.toLowerCase().contains("-")) {
 
-              connectcode = Integer.parseInt(str_result);
-            }
+                    connectcode = Integer.parseInt(str_result);
+                }
 
             if (connectcode == 0) {
 
@@ -291,18 +291,16 @@ if(str_result!=null)
             if (connectcode == 11) {
 
                 Toast.makeText(this, "login success", Toast.LENGTH_SHORT).show();
-                MyPreferences editor1 = MyPreferences.getInstance(IntroActivity.this,"google");
-                editor1.putString("id", personId);
-                editor1.apply();
+                SharedPreferences editor1 = new ObscuredSharedPreferences(IntroActivity.this,IntroActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+                editor1.edit().putString("id", personId).apply();
 
             }
 
             if (connectcode == 121) {
 
                 Toast.makeText(this, "new account created", Toast.LENGTH_SHORT).show();
-                MyPreferences editor1 = MyPreferences.getInstance(IntroActivity.this,"google");
-                editor1.putString("id", personId);
-                editor1.apply();
+                SharedPreferences editor1 = new ObscuredSharedPreferences(IntroActivity.this,IntroActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+                editor1.edit().putString("id", personId).apply();
             }
 
             if (str_result.toLowerCase().contains("error")) {
@@ -339,7 +337,7 @@ if(str_result!=null)
 
                 /* Create an Intent that will start the Menu-Activity. */
 
-                            MyPreferences firstopen = MyPreferences.getInstance(IntroActivity.this,"firstope");
+                            SharedPreferences firstopen = new ObscuredSharedPreferences(IntroActivity.this,IntroActivity.this.getSharedPreferences("firstope", MODE_PRIVATE));
                             Boolean datopen = firstopen.getBoolean("firstope", true);
                             if (!datopen){
 
@@ -573,12 +571,9 @@ if(str_result!=null)
             if (doafter == "diacollect") {
                 if (connectcode >= 1) {
                     //
-                //    Toast.makeText(IntroActivity.this, str_result, Toast.LENGTH_SHORT).show();
+                    //    Toast.makeText(IntroActivity.this, str_result, Toast.LENGTH_SHORT).show();
 
-                /*    //databank aktualisieren
-                    MyPreferences editor1 = MyPreferences.getInstance(IntroActivity.this,"DIAMONDS");
-                    editor1.putInt("DIAMONDS", connectcode);
-                    editor1.commit();*/
+
 
 
                 }

@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import com.frozensparks.royalindustry.MyPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -291,7 +291,7 @@ if(str_result!=null)
             if (connectcode == 11) {
 
                 Toast.makeText(this, "login success", Toast.LENGTH_SHORT).show();
-                SharedPreferences.Editor editor1 = getSharedPreferences("google", MODE_PRIVATE).edit();
+                MyPreferences editor1 = MyPreferences.getInstance(IntroActivity.this,"google");
                 editor1.putString("id", personId);
                 editor1.apply();
 
@@ -300,7 +300,7 @@ if(str_result!=null)
             if (connectcode == 121) {
 
                 Toast.makeText(this, "new account created", Toast.LENGTH_SHORT).show();
-                SharedPreferences.Editor editor1 = getSharedPreferences("google", MODE_PRIVATE).edit();
+                MyPreferences editor1 = MyPreferences.getInstance(IntroActivity.this,"google");
                 editor1.putString("id", personId);
                 editor1.apply();
             }
@@ -339,7 +339,7 @@ if(str_result!=null)
 
                 /* Create an Intent that will start the Menu-Activity. */
 
-                            SharedPreferences firstopen = getSharedPreferences("firstope", MODE_PRIVATE);
+                            MyPreferences firstopen = MyPreferences.getInstance(IntroActivity.this,"firstope");
                             Boolean datopen = firstopen.getBoolean("firstope", true);
                             if (!datopen){
 
@@ -576,7 +576,7 @@ if(str_result!=null)
                 //    Toast.makeText(IntroActivity.this, str_result, Toast.LENGTH_SHORT).show();
 
                 /*    //databank aktualisieren
-                    SharedPreferences.Editor editor1 = getSharedPreferences("DIAMONDS", MODE_PRIVATE).edit();
+                    MyPreferences editor1 = MyPreferences.getInstance(IntroActivity.this,"DIAMONDS");
                     editor1.putInt("DIAMONDS", connectcode);
                     editor1.commit();*/
 

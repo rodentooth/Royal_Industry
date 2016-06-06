@@ -4,7 +4,7 @@ package com.frozensparks.royalindustry;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
+import com.frozensparks.royalindustry.MyPreferences;
 import android.os.AsyncTask;
 
 import java.io.BufferedReader;
@@ -158,9 +158,9 @@ public class bgworkerdias2 extends AsyncTask<String, Void, String> {
                 //
 
                 //databank aktualisieren
-                SharedPreferences.Editor editor1 = context.getSharedPreferences("DIAMONDS", Context.MODE_PRIVATE).edit();
+                MyPreferences editor1 = MyPreferences.getInstance(context,"DIAMONDS");
                 editor1.putInt("DIAMONDS", connectcode);
-                editor1.commit();
+                editor1.apply();
 
 
             }
@@ -178,10 +178,10 @@ public class bgworkerdias2 extends AsyncTask<String, Void, String> {
                 String rpstr = Float.toString(rtrdrp);
 
 
-                SharedPreferences.Editor editor2 = context.getSharedPreferences("cashout", Context.MODE_PRIVATE).edit();
+                MyPreferences editor2 = MyPreferences.getInstance(context,"cashout");
                 editor2.putFloat("cashout", rtrdrp);
                 editor2.apply();
-                SharedPreferences cashouttext = context.getSharedPreferences("cashout", Context.MODE_PRIVATE);
+                MyPreferences cashouttext = MyPreferences.getInstance(context,"cashout");
                 BankActivity.cashoutonwait.setText("waiting for payout:" + String.valueOf(cashouttext.getFloat("cashout", 0) + "$"));
 
             }

@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button SammelnFabrik1;
     ProgressBar progressBarFabrik1;
     Context context = this;
-    SharedPreferences datafab1;
+    MyPreferences datafab1;
     TextView countfab1;
     TextView leveltextfabr1;
     TextView leveltextdiafab1;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button Fabrik2;
     Button SammelnFabrik2;
     ProgressBar progressBarFabrik2;
-    SharedPreferences datafab2;
+    MyPreferences datafab2;
     TextView countfab2;
     TextView leveltextfabr2;
     TextView leveltextdiafab2;
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button Fabrik3;
     Button SammelnFabrik3;
     ProgressBar progressBarFabrik3;
-    SharedPreferences datafab3;
+    MyPreferences datafab3;
     TextView countfab3;
     TextView leveltextfabr3;
     TextView leveltextdiafab3;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button Fabrik4;
     Button SammelnFabrik4;
     ProgressBar progressBarFabrik4;
-    SharedPreferences datafab4;
+    MyPreferences datafab4;
     TextView countfab4;
     TextView leveltextfabr4;
     TextView leveltextdiafab4;
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //agency
     Button Agency;
-    SharedPreferences dataAgency;
+    MyPreferences dataAgency;
     ProgressBar progressBarUpgradeAgency;
 
 
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBarUpgradeAgency = (ProgressBar) findViewById(R.id.progressBarUpgradeAgency);
         assert progressBarUpgradeAgency != null;
         progressBarUpgradeAgency.setVisibility(View.INVISIBLE);
-        final SharedPreferences dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
+        final MyPreferences dataAgency = MyPreferences.getInstance(this, "dataAgency");
         if (dataAgency.getInt("Level", 0) == 0) {
 
             Agency.setVisibility(View.INVISIBLE);
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBarUpgradeBank = (ProgressBar) findViewById(R.id.progressBarUpgradeBank);
         assert progressBarUpgradeBank != null;
         progressBarUpgradeBank.setVisibility(View.INVISIBLE);
-        SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
+        MyPreferences dataBank = MyPreferences.getInstance(this,"dataBank");
         //bilder
         if (dataBank.getInt("Level", 1) == 2) {
             Bank.setBackgroundResource(R.drawable.banklvl2);
@@ -293,10 +293,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //counter für fabriken. Hat die fabrik schonmal produziert?
-        datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
+        datafab1 = MyPreferences.getInstance(this,"datafab1");
 
 
-        SharedPreferences firstopen = getSharedPreferences("firstopen", MODE_PRIVATE);
+        MyPreferences firstopen = MyPreferences.getInstance(this,"firstopen");
         Boolean firstopenboo = (firstopen.getBoolean("firstopen", true));
 
         //Sachen, nur auf das allererste öffnen ausführen
@@ -305,12 +305,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //zweite versicherung (damit die fabrick nicht versehentlich auf lvl 1 zurückgesetzt wird)
             if ((datafab1.getInt("Level", 1) == 1)) {
                 //erste startzeit speichern
-                SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
+                MyPreferences editor = MyPreferences.getInstance(this, "speichervonstartzeit1");
                 editor.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - 1500);
                 editor.apply();
 
                 //Fabrik 1 auf lvl 1 setzen
-                SharedPreferences.Editor editorfab1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                MyPreferences editorfab1 = MyPreferences.getInstance(this,"datafab1");
                 editorfab1.putInt("maxfabrik1", 500);
                 editorfab1.putInt("minfabrik1", 1);
                 editorfab1.putFloat("goldphfab1", (float) 0.05);
@@ -319,19 +319,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 //Agency auf lvl 0
-                SharedPreferences.Editor editorAgency = getSharedPreferences("dataAgency", MODE_PRIVATE).edit();
+                MyPreferences editorAgency = MyPreferences.getInstance(this,"dataAgency");
                 editorAgency.putString("leveltext", getString(R.string.agency) + " ");
                 editorAgency.apply();
 
 
                 //Bank auf lvl 1
-                SharedPreferences.Editor editorBank = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
+                MyPreferences editorBank = MyPreferences.getInstance(this,"dataBank");
                 editorBank.putInt("maxGoldStorage", 1000);
                 editorBank.putString("leveltext", getString(R.string.bank) + " " + getString(R.string.level1));
                 editorBank.apply();
 
                 //Fabrik 2 auf lvl 0 setzen
-                SharedPreferences.Editor editorfab2 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                MyPreferences editorfab2 = MyPreferences.getInstance(this,"datafab2");
                 editorfab2.putInt("maxfabrik2", 0);
                 editorfab2.putInt("minfabrik2", 1);
                 editorfab2.putFloat("goldphfab2", (float) 0);
@@ -340,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 editorfab2.apply();
 
                 //Fabrik 3 auf lvl 0 setzen
-                SharedPreferences.Editor editorfab3 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
+                MyPreferences editorfab3 = MyPreferences.getInstance(this,"datafab3");
                 editorfab3.putInt("maxfabrik3", 0);
                 editorfab3.putInt("minfabrik3", 1);
                 editorfab3.putFloat("goldphfab3", (float) 0);
@@ -349,7 +349,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 editorfab3.apply();
 
                 //Fabrik 4 auf lvl 0 setzen
-                SharedPreferences.Editor editorfab4 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
+                MyPreferences editorfab4 = MyPreferences.getInstance(this,"datafab4");
                 editorfab4.putInt("maxfabrik4", 0);
                 editorfab4.putInt("minfabrik4", 1);
                 editorfab4.putFloat("goldphfab4", (float) 0);
@@ -359,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 //firstopen auf falsch stellen
-                SharedPreferences.Editor editor2 = getSharedPreferences("firstopen", MODE_PRIVATE).edit();
+                MyPreferences editor2 = MyPreferences.getInstance(this,"firstopen");
                 editor2.putBoolean("firstopen", false);
                 editor2.apply();
 
@@ -369,36 +369,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Aktualisator
 
-        datafab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
-        datafab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
-        datafab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
-            if (datafab1.getInt("Level", 1) == 2) {
-                Fabrik1.setBackgroundResource(R.drawable.fablvl2);
-            }
+        datafab2 = MyPreferences.getInstance(this,"datafab2");
+        datafab3 = MyPreferences.getInstance(this,"datafab3");
+        datafab4 = MyPreferences.getInstance(this,"datafab4");
+
+        int fabbild1 = datafab1.getInt("Level", 1);
+        int fabbild1id= getResources().getIdentifier("fablvl"+fabbild1, "drawable", getPackageName());
+        Fabrik1.setBackgroundResource(fabbild1id);
+
         if (datafab2.getInt("Level", 0) == 0) {
             Fabrik2.setVisibility(View.INVISIBLE);
             SammelnFabrik2.setVisibility(View.INVISIBLE);
 
         }
-            if (datafab2.getInt("Level", 1) == 2) {
-                Fabrik2.setBackgroundResource(R.drawable.fablvl2);
+            if (datafab2.getInt("Level", 0) >= 1) {
+                int fabbild2 = datafab2.getInt("Level", 1);
+                int fabbild2id= getResources().getIdentifier("fablvl"+fabbild2, "drawable", getPackageName());
+                Fabrik2.setBackgroundResource(fabbild2id);
             }
         if (datafab3.getInt("Level", 0) == 0) {
             Fabrik3.setVisibility(View.INVISIBLE);
             SammelnFabrik3.setVisibility(View.INVISIBLE);
 
         }
-            if (datafab3.getInt("Level", 1) == 2) {
-                Fabrik3.setBackgroundResource(R.drawable.fablvl2);
-            }
+        if (datafab3.getInt("Level", 0) >= 1) {
+            int fabbild3 = datafab3.getInt("Level", 1);
+            int fabbild3id= getResources().getIdentifier("fablvl"+fabbild3, "drawable", getPackageName());
+            Fabrik3.setBackgroundResource(fabbild3id);
+        }
         if (datafab4.getInt("Level", 0) == 0) {
             Fabrik4.setVisibility(View.INVISIBLE);
             SammelnFabrik4.setVisibility(View.INVISIBLE);
 
         }
-            if (datafab4.getInt("Level", 1) == 2) {
-                Fabrik4.setBackgroundResource(R.drawable.fablvl2);
-            }
+        if (datafab4.getInt("Level", 0) >= 1) {
+            int fabbild4 = datafab4.getInt("Level", 1);
+            int fabbild4id= getResources().getIdentifier("fablvl"+fabbild4, "drawable", getPackageName());
+            Fabrik4.setBackgroundResource(fabbild4id);
+        }
         h.postDelayed(new Runnable() {
             public void run() {
 
@@ -421,8 +429,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+//jede sekunde fabrikbilder checken
 
+                int fabbild1 = datafab1.getInt("Level", 1);
+                int fabbild1id= getResources().getIdentifier("fablvl"+fabbild1, "drawable", getPackageName());
+                Fabrik1.setBackgroundResource(fabbild1id);
 
+                if (datafab2.getInt("Level", 0) == 0) {
+                    Fabrik2.setVisibility(View.INVISIBLE);
+                    SammelnFabrik2.setVisibility(View.INVISIBLE);
+
+                }
+                if (datafab2.getInt("Level", 0) >= 1) {
+                    int fabbild2 = datafab2.getInt("Level", 1);
+                    int fabbild2id= getResources().getIdentifier("fablvl"+fabbild2, "drawable", getPackageName());
+                    Fabrik2.setBackgroundResource(fabbild2id);
+                }
+                if (datafab3.getInt("Level", 0) == 0) {
+                    Fabrik3.setVisibility(View.INVISIBLE);
+                    SammelnFabrik3.setVisibility(View.INVISIBLE);
+
+                }
+                if (datafab3.getInt("Level", 0) >= 1) {
+                    int fabbild3 = datafab3.getInt("Level", 1);
+                    int fabbild3id= getResources().getIdentifier("fablvl"+fabbild3, "drawable", getPackageName());
+                    Fabrik3.setBackgroundResource(fabbild3id);
+                }
+                if (datafab4.getInt("Level", 0) == 0) {
+                    Fabrik4.setVisibility(View.INVISIBLE);
+                    SammelnFabrik4.setVisibility(View.INVISIBLE);
+
+                }
+                if (datafab4.getInt("Level", 0) >= 1) {
+                    int fabbild4 = datafab4.getInt("Level", 1);
+                    int fabbild4id= getResources().getIdentifier("fablvl"+fabbild4, "drawable", getPackageName());
+                    Fabrik4.setBackgroundResource(fabbild4id);
+                }
 
 
 
@@ -432,8 +474,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 //Gold check Fabrik1
-                SharedPreferences prefs = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE);
-                SharedPreferences prefs1 = getSharedPreferences("datafab1", MODE_PRIVATE);
+                MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeit1");
+                MyPreferences prefs1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
                 int startTime = prefs.getInt("startTime", 0); //0 is the default value.
 
                 int endTime = ((int) System.currentTimeMillis() / 1000);
@@ -449,13 +491,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (gold >= prefs1.getInt("minfabrik1", 1)) {
                     SammelnFabrik1.setVisibility(View.VISIBLE);
                 }
-                if (datafab1.getInt("Level", 1) == 2) {
-                    Fabrik1.setBackgroundResource(R.drawable.fablvl2);
-                }
+
 
                 //Gold check Fabrik2
-                SharedPreferences prefsfab2 = getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE);
-                SharedPreferences prefs1fab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
+                MyPreferences prefsfab2 = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab2");
+                MyPreferences prefs1fab2 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                 int startTimefab2 = prefsfab2.getInt("startTime", 0); //0 is the default value.
 
                 int endTimefab2 = ((int) System.currentTimeMillis() / 1000);
@@ -478,12 +518,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Fabrik2.setVisibility(View.VISIBLE);
                 }
 
-                if (datafab2.getInt("Level", 1) == 2) {
-                    Fabrik2.setBackgroundResource(R.drawable.fablvl2);
-                }
+
                 //Gold check Fabrik3
-                SharedPreferences prefsfab3 = getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE);
-                SharedPreferences prefs1fab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
+                MyPreferences prefsfab3 = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab3");
+                MyPreferences prefs1fab3 = MyPreferences.getInstance(MainActivity.this,"datafab3");
                 int startTimefab3 = prefsfab3.getInt("startTime", ((int) System.currentTimeMillis() / 1000)); //0 is the default value.
 
                 int endTimefab3 = ((int) System.currentTimeMillis() / 1000);
@@ -507,14 +545,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (datafab3.getInt("Level", 0) >= 1) {
                     Fabrik3.setVisibility(View.VISIBLE);
                 }
-                if (datafab3.getInt("Level", 1) == 2) {
-                    Fabrik3.setBackgroundResource(R.drawable.fablvl2);
-                }
 
 
                 //Gold check Fabrik4
-                SharedPreferences prefsfab4 = getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE);
-                SharedPreferences prefs1fab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
+                MyPreferences prefsfab4 = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab4");
+                MyPreferences prefs1fab4 = MyPreferences.getInstance(MainActivity.this,"datafab4");
                 int startTimefab4 = prefsfab4.getInt("startTime", ((int) System.currentTimeMillis() / 1000)); //0 is the default value.
 
                 int endTimefab4 = ((int) System.currentTimeMillis() / 1000);
@@ -536,9 +571,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (datafab4.getInt("Level", 0) >= 1) {
                     Fabrik4.setVisibility(View.VISIBLE);
                 }
-                if (datafab4.getInt("Level", 1) == 2) {
-                    Fabrik4.setBackgroundResource(R.drawable.fablvl2);
-                }
 
 
                 if (dataAgency.getInt("Level", 0) == 0) {
@@ -551,13 +583,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 //Agency
-                SharedPreferences dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
+                MyPreferences dataAgency = MyPreferences.getInstance(MainActivity.this,"dataAgency");
                 Boolean cdAgency = (dataAgency.getBoolean("isLeveling", false));
                 if (cdAgency) {
 
                     progressBarUpgradeAgency.setVisibility(View.VISIBLE);
                     //startzeit holen
-                    SharedPreferences AgencyupgradeContdown = getSharedPreferences("startTimeUpgradeAgency", MODE_PRIVATE);
+                    MyPreferences AgencyupgradeContdown = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeAgency");
                     int startTimeAgency = AgencyupgradeContdown.getInt("startTime", 0); //0 is the default value.
                     //endzeit als jetzt definieren
                     int endTimeAgency = ((int) System.currentTimeMillis() / 1000);
@@ -571,8 +603,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (elapsedSecondsAgency > AgencyupgradeContdown.getInt("countdown", 0)) {
 
 
-                        SharedPreferences.Editor editorAgency = getSharedPreferences("dataAgency", MODE_PRIVATE).edit();
-                        dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
+                        MyPreferences editorAgency = MyPreferences.getInstance(MainActivity.this,"dataAgency");
+                        dataAgency = MyPreferences.getInstance(MainActivity.this,"dataAgency");
 
                         if (dataAgency.getInt("Level", 0) == 0) {
                             Agency.setVisibility(View.VISIBLE);
@@ -596,13 +628,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 //Bank
-                SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
+                MyPreferences dataBank = MyPreferences.getInstance(MainActivity.this,"dataBank");
                 Boolean cdBank = (dataBank.getBoolean("isLeveling", false));
                 if (cdBank) {
 
                     progressBarUpgradeBank.setVisibility(View.VISIBLE);
                     //startzeit holen
-                    SharedPreferences BankupgradeContdown = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE);
+                    MyPreferences BankupgradeContdown = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeBank");
                     int startTimeBank = BankupgradeContdown.getInt("startTime", 0); //0 is the default value.
                     //endzeit als jetzt definieren
                     int endTimeBank = ((int) System.currentTimeMillis() / 1000);
@@ -616,10 +648,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (elapsedSecondsBank > BankupgradeContdown.getInt("countdown", 0)) {
 
 
-                        dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
+                        dataBank = MyPreferences.getInstance(MainActivity.this,"dataBank");
 
 
-                        SharedPreferences.Editor editorBank = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
+                        MyPreferences editorBank = MyPreferences.getInstance(MainActivity.this,"dataBank");
 
                         if (dataBank.getInt("Level", 1) == 1) {
                             Bank.setBackgroundResource(R.drawable.banklvl2);
@@ -639,19 +671,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             //Fabrik 1 level4
 
-                            SharedPreferences.Editor Levelbedingungfab1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                            MyPreferences Levelbedingungfab1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
                             Levelbedingungfab1.putBoolean("bedingungenerfüllt", true);
                             Levelbedingungfab1.apply();
 
                             //Fabrik 2
 
-                            SharedPreferences.Editor Levelbedingungfab2 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                            MyPreferences Levelbedingungfab2 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                             Levelbedingungfab2.putBoolean("bedingungenerfüllt", true);
                             Levelbedingungfab2.apply();
 
                             //Agentur
 
-                            SharedPreferences.Editor lvlbedagency = getSharedPreferences("dataAgency", MODE_PRIVATE).edit();
+                            MyPreferences lvlbedagency = MyPreferences.getInstance(MainActivity.this,"dataAgency");
                             lvlbedagency.putBoolean("bedingungenerfüllt", true);
                             lvlbedagency.apply();
 
@@ -675,17 +707,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                 //gebäude auf Bank level 3 freischalten:
                                 //fabrik3
-                                SharedPreferences.Editor Levelbedingungfab3 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
+                                MyPreferences Levelbedingungfab3 = MyPreferences.getInstance(MainActivity.this,"datafab3");
                                 Levelbedingungfab3.putBoolean("bedingungenerfüllt", true);
                                 Levelbedingungfab3.apply();
 
                                 //Fabriken auf lvl 7
-                                SharedPreferences.Editor Levelbedingungfab1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                                MyPreferences Levelbedingungfab1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
                                 Levelbedingungfab1.putBoolean("bedingungenerfüllt", true);
                                 Levelbedingungfab1.apply();
 
 
-                                SharedPreferences.Editor Levelbedingungfab2 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                                MyPreferences Levelbedingungfab2 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                                 Levelbedingungfab2.putBoolean("bedingungenerfüllt", true);
                                 Levelbedingungfab2.apply();
 
@@ -711,7 +743,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                 //gebäude auf Bank level 4 freischalten:
                                 //fabrik4
-                                SharedPreferences.Editor Levelbedingungfab4 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
+                                MyPreferences Levelbedingungfab4 = MyPreferences.getInstance(MainActivity.this,"datafab4");
                                 Levelbedingungfab4.putBoolean("bedingungenerfüllt", true);
                                 Levelbedingungfab4.apply();
 
@@ -725,14 +757,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 //Fabrik1
-                datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
+                datafab1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
                 Boolean cdfab1 = (datafab1.getBoolean("isLeveling", false));
                 if (cdfab1) {
 
                     progressBarUpgradefab1.setVisibility(View.VISIBLE);
                     SammelnFabrik1.setVisibility(View.INVISIBLE);
                     //startzeit holen
-                    SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
+                    MyPreferences Fab1upgradeContdown = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab1");
                     int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
                     //endzeit als jetzt definieren
                     int endTimefab1 = ((int) System.currentTimeMillis() / 1000);
@@ -744,14 +776,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     //goldprod.während des lvlns stoppen
 
-                    SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
+                    MyPreferences editor = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeit1");
                     editor.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
                     editor.apply();
 
                     if (elapsedSecondsfab1 > Fab1upgradeContdown.getInt("countdown", 0)) {
 
 
-                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
 
                         if (datafab1.getInt("Level", 1) == 1) {
 
@@ -771,7 +803,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             //gebäude auf lvl 2 freischalten:
 
                             //bank lvl 2
-                            SharedPreferences.Editor LevelbedingungBank = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
+                            MyPreferences LevelbedingungBank = MyPreferences.getInstance(MainActivity.this,"dataBank");
                             LevelbedingungBank.putBoolean("bedingungenerfüllt", true);
                             LevelbedingungBank.apply();
 
@@ -846,7 +878,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                 //bedingung 1 für bank lvl 3 ok
-                                SharedPreferences.Editor LevelbedingungBank = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
+                                MyPreferences LevelbedingungBank = MyPreferences.getInstance(MainActivity.this,"dataBank");
                                 LevelbedingungBank.putBoolean("bedingungenerfüllt", true);
                                 LevelbedingungBank.apply();
 
@@ -923,14 +955,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 //Fabrik2
-                datafab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
+                datafab2 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                 Boolean cdfab2 = (datafab2.getBoolean("isLeveling", false));
                 if (cdfab2) {
 
                     progressBarUpgradefab2.setVisibility(View.VISIBLE);
                     SammelnFabrik2.setVisibility(View.INVISIBLE);
                     //startzeit holen
-                    SharedPreferences Fab2upgradeContdown = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE);
+                    MyPreferences Fab2upgradeContdown = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab2");
                     int startTimeupgradefab2 = Fab2upgradeContdown.getInt("startTime", 0); //0 is the default value.
                     //endzeit als jetzt definieren
                     int endTimeupgradefab2 = ((int) System.currentTimeMillis() / 1000);
@@ -942,14 +974,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     //goldprod.während des lvlns stoppen
 
-                    SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE).edit();
+                    MyPreferences editor = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab2");
                     editor.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
                     editor.apply();
 
                     if (elapsedSecondsfab2 > Fab2upgradeContdown.getInt("countdown", 0)) {
 
 
-                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab2");
 
                         if (datafab2.getInt("Level", 0) == 0) {
 
@@ -967,7 +999,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Fabrik2.setVisibility(View.VISIBLE);
 
                             //Startzeit als jetzt definieren
-                            SharedPreferences.Editor editor3 = getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE).edit();
+                            MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab2");
                             editor3.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
                             editor3.apply();
 
@@ -1062,7 +1094,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                 //bedingung 2 für bank lvl 3 ok
-                                SharedPreferences.Editor LevelbedingungBank = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
+                                MyPreferences LevelbedingungBank = MyPreferences.getInstance(MainActivity.this,"dataBank");
                                 LevelbedingungBank.putBoolean("bedingungen2erfüllt", true);
                                 LevelbedingungBank.apply();
 
@@ -1138,14 +1170,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 //Fabrik3
-                datafab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
+                datafab3 = MyPreferences.getInstance(MainActivity.this,"datafab3");
                 Boolean cdfab3 = (datafab3.getBoolean("isLeveling", false));
                 if (cdfab3) {
 
                     progressBarUpgradefab3.setVisibility(View.VISIBLE);
                     SammelnFabrik3.setVisibility(View.INVISIBLE);
                     //startzeit holen
-                    SharedPreferences Fab3upgradeContdown = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE);
+                    MyPreferences Fab3upgradeContdown = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab3");
                     int startTimeupgradefab3 = Fab3upgradeContdown.getInt("startTime", 0); //0 is the default value.
                     //endzeit als jetzt definieren
                     int endTimeupgradefab3 = ((int) System.currentTimeMillis() / 1000);
@@ -1157,14 +1189,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     //goldprod.während des lvlns stoppen
 
-                    SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE).edit();
+                    MyPreferences editor = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab3");
                     editor.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
                     editor.apply();
 
                     if (elapsedSecondsfab3 > Fab3upgradeContdown.getInt("countdown", 0)) {
 
 
-                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
+                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab3");
 
                         if (datafab3.getInt("Level", 0) == 0) {
                             //Level1
@@ -1180,7 +1212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             //fabrik 3 sichtbar machen
                             Fabrik3.setVisibility(View.VISIBLE);
                             //Startzeit als jetzt definieren
-                            SharedPreferences.Editor editor3 = getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE).edit();
+                            MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab3");
                             editor3.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - 20);
                             editor3.apply();
 
@@ -1343,14 +1375,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 //Fabrik4
-                datafab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
+                datafab4 = MyPreferences.getInstance(MainActivity.this,"datafab4");
                 Boolean cdfab4 = (datafab4.getBoolean("isLeveling", false));
                 if (cdfab4) {
 
                     progressBarUpgradefab4.setVisibility(View.VISIBLE);
                     SammelnFabrik4.setVisibility(View.INVISIBLE);
                     //startzeit holen
-                    SharedPreferences Fab4upgradeContdown = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE);
+                    MyPreferences Fab4upgradeContdown = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab4");
                     int startTimeupgradefab4 = Fab4upgradeContdown.getInt("startTime", 0); //0 is the default value.
                     //endzeit als jetzt definieren
                     int endTimeupgradefab4 = ((int) System.currentTimeMillis() / 1000);
@@ -1362,14 +1394,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     //goldprod.während des lvlns stoppen
 
-                    SharedPreferences.Editor editor = getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE).edit();
+                    MyPreferences editor = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab4");
                     editor.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
                     editor.apply();
 
                     if (elapsedSecondsfab4 > Fab4upgradeContdown.getInt("countdown", 0)) {
 
 
-                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
+                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab4");
 
                         if (datafab4.getInt("Level", 0) == 0) {
 
@@ -1386,7 +1418,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Fabrik4.setVisibility(View.VISIBLE);
 
                             //Startzeit als jetzt definieren
-                            SharedPreferences.Editor editor4 = getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE).edit();
+                            MyPreferences editor4 = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab4");
                             editor4.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - 20);
                             editor4.apply();
 
@@ -1573,7 +1605,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //FAbrik 1
-        datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
+        datafab1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
 
 
         int id = v.getId();
@@ -1589,7 +1621,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //FAbrik 2
-        datafab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
+        datafab2 = MyPreferences.getInstance(MainActivity.this,"datafab2");
 
         if (id == R.id.Fabrik2) {
 
@@ -1602,7 +1634,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //FAbrik 3
-        datafab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
+        datafab3 = MyPreferences.getInstance(MainActivity.this,"datafab3");
 
         if (id == R.id.Fabrik3) {
 
@@ -1615,7 +1647,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //FAbrik 4
-        datafab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
+        datafab4 = MyPreferences.getInstance(MainActivity.this,"datafab4");
 
         if (id == R.id.Fabrik4) {
 
@@ -1629,7 +1661,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //Bank
-        SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
+        MyPreferences dataBank = MyPreferences.getInstance(MainActivity.this,"dataBank");
         if (id == R.id.Bank) {
             Intent start = new Intent(MainActivity.this, BankActivity.class);
             MainActivity.this.startActivity(start);
@@ -1638,7 +1670,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         //Bauhaus
         if (id == R.id.bauhaus) {
-            SharedPreferences dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
+            MyPreferences dataAgency = MyPreferences.getInstance(MainActivity.this,"dataAgency");
 
 
             View bauhausdia = View.inflate(this, R.layout.bauhausdialog, null);
@@ -1679,7 +1711,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             upcdfab2 = (TextView) bauhausdialog.findViewById(R.id.upcdfab2);
             upcdfab2.setTypeface(typeface);
             leveltextfabr2.setText(datafab2.getString("leveltextfab2", "2"));
-            datafab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
+            datafab2 = MyPreferences.getInstance(MainActivity.this,"datafab2");
             //btn auf upgrade wechseln, wenn gebàude gebaut
             if (datafab2.getInt("Level", 0) >= 1) {
 
@@ -1709,7 +1741,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             upcdfab3 = (TextView) bauhausdialog.findViewById(R.id.upcdfab3);
             upcdfab3.setTypeface(typeface);
             leveltextfabr3.setText(datafab3.getString("leveltextfab3", "3"));
-            datafab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
+            datafab3 = MyPreferences.getInstance(MainActivity.this,"datafab3");
             //btn auf upgrade wechseln, wenn gebàude gebaut
             if (datafab3.getInt("Level", 0) >= 1) {
 
@@ -1738,7 +1770,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             upcdfab4.setTypeface(typeface);
             leveltextfabr4.setOnClickListener(this);
             leveltextfabr4.setText(datafab4.getString("leveltextfab4", "4"));
-            datafab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
+            datafab4 = MyPreferences.getInstance(MainActivity.this,"datafab4");
             //btn auf upgrade wechseln, wenn gebàude gebaut
             if (datafab4.getInt("Level", 0) >= 1) {
 
@@ -1816,15 +1848,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                     //Aktualisiere den Kontostatus
-                    SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
+                    MyPreferences prefs1 = MyPreferences.getInstance(MainActivity.this,"POOL");
                     String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
                     goldtextarch.setText(": " + Pooltext);
 
                     //BAnk
-                    SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
+                    MyPreferences dataBank = MyPreferences.getInstance(MainActivity.this,"dataBank");
                     Boolean cdBank = (dataBank.getBoolean("isLeveling", false));
 
-                    SharedPreferences BankupgradeContdown = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE);
+                    MyPreferences BankupgradeContdown = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeBank");
                     int startTimeBank = BankupgradeContdown.getInt("startTime", 0); //0 is the default value.
                     int countdownBank = BankupgradeContdown.getInt("countdown", 0); //0 is the default value.
                     //endzeit als jetzt definieren
@@ -1851,10 +1883,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
 
                     //Agency
-                    SharedPreferences dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
+                    MyPreferences dataAgency = MyPreferences.getInstance(MainActivity.this,"dataAgency");
                     Boolean cdAgency = (dataAgency.getBoolean("isLeveling", false));
 
-                    SharedPreferences AgencyupgradeContdown = getSharedPreferences("startTimeUpgradeAgency", MODE_PRIVATE);
+                    MyPreferences AgencyupgradeContdown = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeAgency");
                     int startTimeAgency = AgencyupgradeContdown.getInt("startTime", 0); //0 is the default value.
                     int countdownAgency = AgencyupgradeContdown.getInt("countdown", 0); //0 is the default value.
                     //endzeit als jetzt definieren
@@ -1884,7 +1916,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //Fabrik1
                     Boolean cdfab1 = (datafab1.getBoolean("isLeveling", false));
 
-                    SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
+                    MyPreferences Fab1upgradeContdown = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab1");
                     int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
                     int countdownfab1 = Fab1upgradeContdown.getInt("countdown", 0); //0 is the default value.
                     //endzeit als jetzt definieren
@@ -1912,7 +1944,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //Fabrik2
                     Boolean cdfab2 = (datafab2.getBoolean("isLeveling", false));
 
-                    SharedPreferences Fab2upgradeContdown = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE);
+                    MyPreferences Fab2upgradeContdown = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab2");
                     int startTimefab2 = Fab2upgradeContdown.getInt("startTime", 0); //0 is the default value.
                     int countdownfab2 = Fab2upgradeContdown.getInt("countdown", 0); //0 is the default value.
                     //endzeit als jetzt definieren
@@ -1940,7 +1972,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //Fabrik3
                     Boolean cdfab3 = (datafab3.getBoolean("isLeveling", false));
 
-                    SharedPreferences Fab3upgradeContdown = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE);
+                    MyPreferences Fab3upgradeContdown = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab3");
                     int startTimefab3 = Fab3upgradeContdown.getInt("startTime", 0); //0 is the default value.
                     int countdownfab3 = Fab3upgradeContdown.getInt("countdown", 0); //0 is the default value.
                     //endzeit als jetzt definieren
@@ -1969,7 +2001,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //Fabrik4
                     Boolean cdfab4 = (datafab4.getBoolean("isLeveling", false));
 
-                    SharedPreferences Fab4upgradeContdown = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE);
+                    MyPreferences Fab4upgradeContdown = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab4");
                     int startTimefab4 = Fab4upgradeContdown.getInt("startTime", 0); //0 is the default value.
                     int countdownfab4 = Fab4upgradeContdown.getInt("countdown", 0); //0 is the default value.
                     //endzeit als jetzt definieren
@@ -2037,7 +2069,7 @@ if(bauhausdialog.isShowing()) {
         //race
         if (id == R.id.werkstatt) {
             //Dias sync
-            final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
+            final MyPreferences google = MyPreferences.getInstance(MainActivity.this,"google");
             String dat = "request";
             String gid =google.getString("id", "0");;
             bgworkerdias lol = new bgworkerdias(context);
@@ -2057,7 +2089,7 @@ if(bauhausdialog.isShowing()) {
         //Agency
         if (id == R.id.upgradeAgentur | id == R.id.leveltextAgentur) {
 
-            dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
+            dataAgency = MyPreferences.getInstance(MainActivity.this,"dataAgency");
             Boolean cdAgency = dataAgency.getBoolean("isLeveling", false);
 
             //wenn ein upgrade am laufen ist, toast machen
@@ -2094,8 +2126,8 @@ if(bauhausdialog.isShowing()) {
 
 
                                 //Upgrade
-                                SharedPreferences dataAgency = getSharedPreferences("dataAgency", MODE_PRIVATE);
-                                SharedPreferences prefs = getSharedPreferences("POOL", MODE_PRIVATE);
+                                MyPreferences dataAgency = MyPreferences.getInstance(MainActivity.this,"dataAgency");
+                                MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"POOL");
 
 
                                 //Level 1
@@ -2114,7 +2146,7 @@ if(bauhausdialog.isShowing()) {
                                     if (bederfüllt) {
 
 
-                                        SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                        MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
 
                                         if ((prefs.getInt("POOL", 0)) < 100) {
@@ -2127,7 +2159,7 @@ if(bauhausdialog.isShowing()) {
                                             editor2.apply();
 
                                             //Countdown Starten
-                                            SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeAgency", MODE_PRIVATE).edit();
+                                            MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeAgency");
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
@@ -2135,7 +2167,7 @@ if(bauhausdialog.isShowing()) {
                                             editor3.putInt("countdown", 36);
                                             editor3.apply();
 
-                                            SharedPreferences.Editor editor1 = getSharedPreferences("dataAgency", MODE_PRIVATE).edit();
+                                            MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"dataAgency");
                                             editor1.putBoolean("isLeveling", true);
                                             editor1.putBoolean("bedingungenerfüllt", false);
                                             editor1.apply();
@@ -2174,7 +2206,7 @@ if(bauhausdialog.isShowing()) {
         //BANK
         if (id == R.id.upgradeBank | id == R.id.leveltextBank) {
 
-            dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
+            dataBank = MyPreferences.getInstance(MainActivity.this,"dataBank");
             Boolean cdbank = dataBank.getBoolean("isLeveling", false);
 
             //wenn ein upgrade am laufen ist, toast machen
@@ -2219,8 +2251,8 @@ if(bauhausdialog.isShowing()) {
 
 
                                 //Upgrade
-                                SharedPreferences dataBank = getSharedPreferences("dataBank", MODE_PRIVATE);
-                                SharedPreferences prefs = getSharedPreferences("POOL", MODE_PRIVATE);
+                                MyPreferences dataBank = MyPreferences.getInstance(MainActivity.this,"dataBank");
+                                MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                                 Boolean bederfüllt = dataBank.getBoolean("bedingungenerfüllt", false);
                                 Boolean bed2erfüllt = dataBank.getBoolean("bedingungen2erfüllt", false);
@@ -2237,7 +2269,7 @@ if(bauhausdialog.isShowing()) {
 
                                     }
                                     if (bederfüllt) {
-                                        SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                        MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                                         if ((prefs.getInt("POOL", 0)) < 100) {
                                             Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
@@ -2249,7 +2281,7 @@ if(bauhausdialog.isShowing()) {
                                             editor2.apply();
 
                                             //Countdown Starten
-                                            SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE).edit();
+                                            MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeBank");
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
@@ -2257,7 +2289,7 @@ if(bauhausdialog.isShowing()) {
                                             editor3.putInt("countdown", 36);
                                             editor3.apply();
 
-                                            SharedPreferences.Editor editor1 = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
+                                            MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"dataBank");
                                             editor1.putBoolean("isLeveling", true);
                                             editor1.putBoolean("bedingungenerfüllt", false);
                                             editor1.apply();
@@ -2285,7 +2317,7 @@ if(bauhausdialog.isShowing()) {
 
                                         if (bed2erfüllt) {
 
-                                            SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                            MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                             if ((prefs.getInt("POOL", 0)) < 20000) {
                                                 Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -2296,14 +2328,14 @@ if(bauhausdialog.isShowing()) {
                                                 editor2.apply();
 
                                                 //Countdown Starten
-                                                SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE).edit();
+                                                MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeBank");
                                                 editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                                 //Countdownzeit definieren
                                                 editor3.putInt("countdown", 18000);
                                                 editor3.apply();
 
-                                                SharedPreferences.Editor editor1 = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
+                                                MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"dataBank");
                                                 editor1.putBoolean("isLeveling", true);
                                                 editor1.putBoolean("bedingungen2erfüllt", false);
                                                 editor1.putBoolean("bedingungenerfüllt", false);
@@ -2317,7 +2349,7 @@ if(bauhausdialog.isShowing()) {
 
                                 //Level 4
                                 if (dataBank.getInt("Level", 1) == 3) {
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) < 75000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -2328,14 +2360,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeBank");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 172800);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("dataBank", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"dataBank");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -2379,7 +2411,7 @@ if(bauhausdialog.isShowing()) {
             //ist ein upgrade am laufen?
 
 
-            datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
+            datafab1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
             Boolean cdfab1 = (datafab1.getBoolean("isLeveling", false));
             if (cdfab1) {
 
@@ -2453,13 +2485,13 @@ if(bauhausdialog.isShowing()) {
 
 
                                 //Upgrade
-                                SharedPreferences prefs = getSharedPreferences("POOL", MODE_PRIVATE);
+                                MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                                 if (datafab1.getInt("Level", 1) == 1) {
 
                                     //LeveL2
 
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) < 50) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -2470,7 +2502,7 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab1");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
@@ -2478,12 +2510,12 @@ if(bauhausdialog.isShowing()) {
                                         editor3.putInt("countdown", 10);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
 
-                                        SharedPreferences.Editor firstopen1 = getSharedPreferences("firstope", MODE_PRIVATE).edit();
+                                        MyPreferences firstopen1 = MyPreferences.getInstance(MainActivity.this,"firstope");
                                         firstopen1.putBoolean("showHangarTutorial", true);
                                         firstopen1.apply();
                                     }
@@ -2496,7 +2528,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab1.getInt("Level", 1) == 2) {
                                     //bedingung erfüllt?
 
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 500) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -2507,14 +2539,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab1");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 600);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
                                         editor1.putBoolean("isLeveling", true);
                                         //bedingung ist nicht mehr erfüllt für die kommenden lvl
                                         editor1.apply();
@@ -2534,7 +2566,7 @@ if(bauhausdialog.isShowing()) {
                                     if (bederfüllt) {
 
                                         //LEVEL4
-                                        SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                        MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                                         if ((prefs.getInt("POOL", 0)) <= 1500) {
                                             Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
@@ -2546,14 +2578,14 @@ if(bauhausdialog.isShowing()) {
                                             editor2.apply();
 
                                             //Countdown Starten
-                                            SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                                            MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab1");
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
                                             editor3.putInt("countdown", 3600);
                                             editor3.apply();
 
-                                            SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                                            MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
                                             editor1.putBoolean("isLeveling", true);
                                             editor1.putBoolean("bedingungenerfüllt", false);
                                             editor1.apply();
@@ -2566,7 +2598,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab1.getInt("Level", 1) == 4) {
 
                                     //LEVEL5
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 5000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -2577,14 +2609,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab1");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 21600);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -2596,7 +2628,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab1.getInt("Level", 1) == 5) {
 
                                     //LEVEL6
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 20000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -2607,14 +2639,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab1");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 36000);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -2634,7 +2666,7 @@ if(bauhausdialog.isShowing()) {
                                     if (bederfüllt) {
 
                                         //LEVEL7
-                                        SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                        MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                         if ((prefs.getInt("POOL", 0)) <= 35000) {
                                             Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -2645,14 +2677,14 @@ if(bauhausdialog.isShowing()) {
                                             editor2.apply();
 
                                             //Countdown Starten
-                                            SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                                            MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab1");
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
                                             editor3.putInt("countdown", 43200);
                                             editor3.apply();
 
-                                            SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                                            MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
                                             editor1.putBoolean("isLeveling", true);
                                             editor1.apply();
 
@@ -2664,7 +2696,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab1.getInt("Level", 1) == 7) {
 
                                     //LEVEL8
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 70000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -2675,14 +2707,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab1");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 86400);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -2693,7 +2725,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab1.getInt("Level", 1) == 8) {
 
                                     //LEVEL9
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 110000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -2704,14 +2736,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab1");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 129600);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -2722,7 +2754,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab1.getInt("Level", 1) == 9) {
 
                                     //LEVEL10
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 150000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -2733,7 +2765,7 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab1");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
 
@@ -2741,7 +2773,7 @@ if(bauhausdialog.isShowing()) {
                                         editor3.putInt("countdown", 172800);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab1", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -2784,7 +2816,7 @@ if(bauhausdialog.isShowing()) {
             //ist ein upgrade am laufen?
 
 
-            datafab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
+            datafab2 = MyPreferences.getInstance(MainActivity.this,"datafab2");
             Boolean cdfab2 = (datafab2.getBoolean("isLeveling", false));
             if (cdfab2) {
 
@@ -2872,7 +2904,7 @@ if(bauhausdialog.isShowing()) {
 
 
                                 //Upgrade
-                                SharedPreferences prefs = getSharedPreferences("POOL", MODE_PRIVATE);
+                                MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                                 //bedingung erfüllt?
 
@@ -2887,7 +2919,7 @@ if(bauhausdialog.isShowing()) {
                                     if (bederfüllt) {
                                         //LeveL1
 
-                                        SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                        MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                         if ((prefs.getInt("POOL", 0)) < 500) {
                                             Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -2898,14 +2930,14 @@ if(bauhausdialog.isShowing()) {
                                             editor2.apply();
 
                                             //Countdown Starten
-                                            SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE).edit();
+                                            MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab2");
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
                                             editor3.putInt("countdown", 60);
                                             editor3.apply();
 
-                                            SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                                            MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                                             editor1.putBoolean("isLeveling", true);
                                             //bedingungen nicht mehr erfüllt
                                             editor1.putBoolean("bedingungenerfüllt", false);
@@ -2919,7 +2951,7 @@ if(bauhausdialog.isShowing()) {
 
                                     //LeveL2
 
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) < 50) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -2930,14 +2962,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab2");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 1800);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -2950,7 +2982,7 @@ if(bauhausdialog.isShowing()) {
 
                                 if (datafab2.getInt("Level", 0) == 2) {
 
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 500) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -2961,14 +2993,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab2");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 3600);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                                         editor1.putBoolean("isLeveling", true);
 
                                         editor1.apply();
@@ -2980,7 +3012,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab2.getInt("Level", 0) == 3) {
 
                                     //LEVEL4
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                                     if ((prefs.getInt("POOL", 0)) <= 1500) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
@@ -2992,14 +3024,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab2");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 10800);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3011,7 +3043,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab2.getInt("Level", 0) == 4) {
 
                                     //LEVEL5
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 5000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3022,14 +3054,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab2");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 21600);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3041,7 +3073,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab2.getInt("Level", 0) == 5) {
 
                                     //LEVEL6
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 20000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3052,14 +3084,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab2");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 36000);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3072,7 +3104,7 @@ if(bauhausdialog.isShowing()) {
 
 
                                     //LEVEL7
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 35000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3083,14 +3115,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab2");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 43200);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3101,7 +3133,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab2.getInt("Level", 0) == 7) {
 
                                     //LEVEL8
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 70000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3112,14 +3144,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab2");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 86400);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3130,7 +3162,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab2.getInt("Level", 0) == 8) {
 
                                     //LEVEL9
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 110000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3141,14 +3173,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab2");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 129000);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3159,7 +3191,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab2.getInt("Level", 0) == 9) {
 
                                     //LEVEL10
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 150000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3170,7 +3202,7 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab2");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
 
@@ -3178,7 +3210,7 @@ if(bauhausdialog.isShowing()) {
                                         editor3.putInt("countdown", 172800);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab2", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab2");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3222,7 +3254,7 @@ if(bauhausdialog.isShowing()) {
             //ist ein upgrade am laufen?
 
 
-            datafab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
+            datafab3 = MyPreferences.getInstance(MainActivity.this,"datafab3");
             Boolean cdfab3 = (datafab3.getBoolean("isLeveling", false));
             if (cdfab3) {
 
@@ -3308,7 +3340,7 @@ if(bauhausdialog.isShowing()) {
 
 
                                 //Upgrade
-                                SharedPreferences prefs = getSharedPreferences("POOL", MODE_PRIVATE);
+                                MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                                 //bedingung erfüllt?
 
@@ -3323,7 +3355,7 @@ if(bauhausdialog.isShowing()) {
                                     if (bederfüllt) {
                                         //LeveL1
 
-                                        SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                        MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                         if ((prefs.getInt("POOL", 0)) < 1000) {
                                             Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3334,14 +3366,14 @@ if(bauhausdialog.isShowing()) {
                                             editor2.apply();
 
                                             //Countdown Starten
-                                            SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE).edit();
+                                            MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab3");
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
                                             editor3.putInt("countdown", 60);
                                             editor3.apply();
 
-                                            SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
+                                            MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab3");
                                             editor1.putBoolean("isLeveling", true);
                                             //bedingungen nicht mehr erfüllt
                                             editor1.putBoolean("bedingungenerfüllt", false);
@@ -3355,7 +3387,7 @@ if(bauhausdialog.isShowing()) {
 
                                     //LeveL2
 
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) < 50) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3366,14 +3398,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab3");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 1800);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab3");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3386,7 +3418,7 @@ if(bauhausdialog.isShowing()) {
 
                                 if (datafab3.getInt("Level", 0) == 2) {
 
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 500) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3397,14 +3429,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab3");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 3600);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab3");
                                         editor1.putBoolean("isLeveling", true);
 
                                         editor1.apply();
@@ -3416,7 +3448,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab3.getInt("Level", 0) == 3) {
 
                                     //LEVEL4
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                                     if ((prefs.getInt("POOL", 0)) <= 1500) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
@@ -3428,14 +3460,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab3");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 10800);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab3");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3447,7 +3479,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab3.getInt("Level", 0) == 4) {
 
                                     //LEVEL5
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 5000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3458,14 +3490,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab3");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 21600);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab3");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3477,7 +3509,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab3.getInt("Level", 0) == 5) {
 
                                     //LEVEL6
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 20000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3488,14 +3520,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab3");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 36000);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab3");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3508,7 +3540,7 @@ if(bauhausdialog.isShowing()) {
 
 
                                     //LEVEL7
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 35000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3519,14 +3551,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab3");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 43200);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab3");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3537,7 +3569,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab3.getInt("Level", 0) == 7) {
 
                                     //LEVEL8
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 70000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3548,14 +3580,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab3");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 86400);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab3");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3566,7 +3598,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab3.getInt("Level", 0) == 8) {
 
                                     //LEVEL9
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 110000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3577,14 +3609,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab3");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 129600);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab3");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3595,7 +3627,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab3.getInt("Level", 0) == 9) {
 
                                     //LEVEL10
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 150000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3606,7 +3638,7 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab3");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
 
@@ -3614,7 +3646,7 @@ if(bauhausdialog.isShowing()) {
                                         editor3.putInt("countdown", 172800);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab3", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab3");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3659,7 +3691,7 @@ if(bauhausdialog.isShowing()) {
             //ist ein upgrade am laufen?
 
 
-            datafab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
+            datafab4 = MyPreferences.getInstance(MainActivity.this,"datafab4");
             Boolean cdfab4 = (datafab4.getBoolean("isLeveling", false));
             if (cdfab4) {
 
@@ -3745,7 +3777,7 @@ if(bauhausdialog.isShowing()) {
 
 
                                 //Upgrade
-                                SharedPreferences prefs = getSharedPreferences("POOL", MODE_PRIVATE);
+                                MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                                 //bedingung erfüllt?
 
@@ -3760,7 +3792,7 @@ if(bauhausdialog.isShowing()) {
                                     if (bederfüllt) {
                                         //LeveL1
 
-                                        SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                        MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                         if ((prefs.getInt("POOL", 0)) < 10000) {
                                             Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3771,14 +3803,14 @@ if(bauhausdialog.isShowing()) {
                                             editor2.apply();
 
                                             //Countdown Starten
-                                            SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE).edit();
+                                            MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab4");
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                             //Countdownzeit definieren
                                             editor3.putInt("countdown", 60);
                                             editor3.apply();
 
-                                            SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
+                                            MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab4");
                                             editor1.putBoolean("isLeveling", true);
                                             //bedingungen nicht mehr erfüllt
                                             editor1.putBoolean("bedingungenerfüllt", false);
@@ -3792,7 +3824,7 @@ if(bauhausdialog.isShowing()) {
 
                                     //LeveL2
 
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) < 50) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3803,14 +3835,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab4");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 1800);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab4");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3823,7 +3855,7 @@ if(bauhausdialog.isShowing()) {
 
                                 if (datafab4.getInt("Level", 0) == 2) {
 
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 500) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3834,14 +3866,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab4");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 3600);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab4");
                                         editor1.putBoolean("isLeveling", true);
 
                                         editor1.apply();
@@ -3853,7 +3885,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab4.getInt("Level", 0) == 3) {
 
                                     //LEVEL4
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                                     if ((prefs.getInt("POOL", 0)) <= 1500) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
@@ -3865,14 +3897,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab4");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 10800);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab4");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3884,7 +3916,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab4.getInt("Level", 0) == 4) {
 
                                     //LEVEL5
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 5000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3895,14 +3927,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab4");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 21600);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab4");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3914,7 +3946,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab4.getInt("Level", 0) == 5) {
 
                                     //LEVEL6
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 20000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3925,14 +3957,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab4");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 36000);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab4");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3945,7 +3977,7 @@ if(bauhausdialog.isShowing()) {
 
 
                                     //LEVEL7
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 35000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3956,14 +3988,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab4");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 43200);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab4");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -3974,7 +4006,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab4.getInt("Level", 0) == 7) {
 
                                     //LEVEL8
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 70000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -3985,14 +4017,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab4");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 86400);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab4");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -4003,7 +4035,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab4.getInt("Level", 0) == 8) {
 
                                     //LEVEL9
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 110000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -4014,14 +4046,14 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab4");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
                                         //Countdownzeit definieren
                                         editor3.putInt("countdown", 129600);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab4");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -4032,7 +4064,7 @@ if(bauhausdialog.isShowing()) {
                                 if (datafab4.getInt("Level", 0) == 9) {
 
                                     //LEVEL10
-                                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                                     if ((prefs.getInt("POOL", 0)) <= 150000) {
                                         Toast.makeText(MainActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -4043,7 +4075,7 @@ if(bauhausdialog.isShowing()) {
                                         editor2.apply();
 
                                         //Countdown Starten
-                                        SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor3 = MyPreferences.getInstance(MainActivity.this,"startTimeUpgradeFab4");
                                         editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
 
 
@@ -4051,7 +4083,7 @@ if(bauhausdialog.isShowing()) {
                                         editor3.putInt("countdown", 172800);
                                         editor3.apply();
 
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("datafab4", MODE_PRIVATE).edit();
+                                        MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"datafab4");
                                         editor1.putBoolean("isLeveling", true);
                                         editor1.apply();
 
@@ -4103,7 +4135,7 @@ if(bauhausdialog.isShowing()) {
         closeBauhaus.setOnClickListener(this);
 
 
-        datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
+        datafab1 = MyPreferences.getInstance(MainActivity.this,"datafab1");
 
 
         countfab1 = (TextView) dialog.findViewById(R.id.countfab1);
@@ -4122,7 +4154,7 @@ if(bauhausdialog.isShowing()) {
                 //Jede sekunde sammler button aktualisieren
                 //wenn Long von gold über 1 dann visible, sammelbar machen.
 
-                SharedPreferences prefs = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE);
+                MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeit1");
                 int startTime = prefs.getInt("startTime", 0); //0 is the default value.
 
                 int endTime = ((int) System.currentTimeMillis() / 1000);
@@ -4170,7 +4202,7 @@ if(bauhausdialog.isShowing()) {
     public void sammelnfab1() {
 
 
-        SharedPreferences prefs = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE);
+        MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeit1");
 
         int startTime = prefs.getInt("startTime", 0); //0 is the default value.
 
@@ -4195,9 +4227,9 @@ if(bauhausdialog.isShowing()) {
         }
 
         //schauen, ist der pool schon auf maxStorage der bank?
-        SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
+        MyPreferences BankMax = MyPreferences.getInstance(MainActivity.this,"dataBank");
         int intBankmax = BankMax.getInt("maxGoldStorage", 1000);
-        SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
+        MyPreferences prefs1 = MyPreferences.getInstance(MainActivity.this,"POOL");
         if (intBankmax <= (prefs1.getInt("POOL", 0))) {
 
             Toast.makeText(MainActivity.this, getString(R.string.Bankisfull), Toast.LENGTH_SHORT).show();
@@ -4207,7 +4239,7 @@ if(bauhausdialog.isShowing()) {
         if (intBankmax > (prefs1.getInt("POOL", 0))) {
 
 
-            SharedPreferences doubler = getSharedPreferences("doublecoll", MODE_PRIVATE);
+            MyPreferences doubler = MyPreferences.getInstance(MainActivity.this,"doublecoll");
             Boolean doblegold = doubler.getBoolean("doublecoll", false);
 
 
@@ -4228,12 +4260,12 @@ if(bauhausdialog.isShowing()) {
                     int zeitabzug = (int) zeitabzugtemp;
 
                     //Timer Zurücksetzen
-                    SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
+                    MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeit1");
                     editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - zeitabzug);
                     editor1.apply();
 
                     //Das Gold zum pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                     editor2.putInt("POOL",intBankmax);
                     editor2.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (collect), Toast.LENGTH_SHORT).show();
@@ -4241,12 +4273,12 @@ if(bauhausdialog.isShowing()) {
                 //kein überlauf
                 if (vorhandenesgold <= intBankmax) {
                     //Timer Zurücksetzen
-                    SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
+                    MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeit1");
                     editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000));
                     editor1.apply();
 
                     //Das Gold zum pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                     editor2.putInt("POOL", goldint + (prefs1.getInt("POOL", 0)));
                     editor2.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
@@ -4268,17 +4300,17 @@ if(bauhausdialog.isShowing()) {
                 int zeitabzug = (int) zeitabzugtemp;
 
                 //Timer Zurücksetzen
-                SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
+                MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeit1");
                 editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - zeitabzug);
                 editor1.apply();
 
                 //gold dem pool hinzufügen
-                SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                 editor2.putInt("POOL",intBankmax);
                 editor2.apply();
 
-                SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                MyPreferences dedubler = MyPreferences.getInstance(MainActivity.this,"doublecoll");
                 dedubler.putBoolean("doublecoll", false);
                 dedubler.apply();
                 Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + collect, Toast.LENGTH_SHORT).show();
@@ -4288,17 +4320,17 @@ if(bauhausdialog.isShowing()) {
             if (vorhandenesgold <= intBankmax) {
 
                 //gold dem pool hinzufügen
-                SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                 editor2.putInt("POOL", (goldint * 2) + (prefs1.getInt("POOL", 0)));
                 editor2.apply();
 
-                SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                MyPreferences dedubler = MyPreferences.getInstance(MainActivity.this,"doublecoll");
                 dedubler.putBoolean("doublecoll", false);
                 dedubler.apply();
                 Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint * 2), Toast.LENGTH_SHORT).show();
                 //Timer Zurücksetzen
-                SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE).edit();
+                MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeit1");
                 editor1.putInt("startTime", (((int) System.currentTimeMillis()) / 1000) );
                 editor1.apply();
             }
@@ -4320,7 +4352,7 @@ if(bauhausdialog.isShowing()) {
         closeBauhaus = (Button) dialog.findViewById(R.id.closeBauhaus);
         closeBauhaus.setOnClickListener(this);
 
-        datafab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
+        datafab2 = MyPreferences.getInstance(MainActivity.this,"datafab2");
 
 
         countfab2 = (TextView) dialog.findViewById(R.id.countfab2);
@@ -4339,7 +4371,7 @@ if(bauhausdialog.isShowing()) {
                 //Jede sekunde sammler button aktualisieren
                 //wenn Long von gold über 1 dann visible, sammelbar machen.
 
-                SharedPreferences prefs = getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE);
+                MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab2");
                 int startTime = prefs.getInt("startTime", 0); //0 is the default value.
 
                 int endTime = ((int) System.currentTimeMillis() / 1000);
@@ -4386,7 +4418,7 @@ if(bauhausdialog.isShowing()) {
     public void sammelnfab2() {
 
 
-        SharedPreferences prefs = getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE);
+        MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab2");
 
         int startTime = prefs.getInt("startTime", 0); //0 is the default value.
 
@@ -4411,9 +4443,9 @@ if(bauhausdialog.isShowing()) {
         }
 
         //schauen, ist der pool schon auf maxStorage der bank?
-        SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
+        MyPreferences BankMax = MyPreferences.getInstance(MainActivity.this,"dataBank");
         int intBankmax = BankMax.getInt("maxGoldStorage", 1000);
-        SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
+        MyPreferences prefs1 = MyPreferences.getInstance(MainActivity.this,"POOL");
         if (intBankmax <= (prefs1.getInt("POOL", 0))) {
 
             Toast.makeText(MainActivity.this, getString(R.string.Bankisfull), Toast.LENGTH_SHORT).show();
@@ -4422,10 +4454,10 @@ if(bauhausdialog.isShowing()) {
 
         if (intBankmax > (prefs1.getInt("POOL", 0))) {
             //Timer Zurücksetzen
-            SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE).edit();
+            MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab2");
 
 
-            SharedPreferences doubler = getSharedPreferences("doublecoll", MODE_PRIVATE);
+            MyPreferences doubler = MyPreferences.getInstance(MainActivity.this,"doublecoll");
             Boolean doblegold = doubler.getBoolean("doublecoll", false);
 
 
@@ -4447,7 +4479,7 @@ if(bauhausdialog.isShowing()) {
                     editor1.apply();
 
                     //Das Gold zum pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                     editor2.putInt("POOL",intBankmax);
                     editor2.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (collect), Toast.LENGTH_SHORT).show();
@@ -4460,7 +4492,7 @@ if(bauhausdialog.isShowing()) {
 
 
                     //Das Gold zum pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                     editor2.putInt("POOL",goldint + (prefs1.getInt("POOL", 0)));
                     editor2.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
@@ -4486,12 +4518,12 @@ if(bauhausdialog.isShowing()) {
                     editor1.apply();
 
                     //gold dem pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                     editor2.putInt("POOL",intBankmax);
                     editor2.apply();
 
-                    SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                    MyPreferences dedubler = MyPreferences.getInstance(MainActivity.this,"doublecoll");
                     dedubler.putBoolean("doublecoll", false);
                     dedubler.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + collect, Toast.LENGTH_SHORT).show();
@@ -4501,12 +4533,12 @@ if(bauhausdialog.isShowing()) {
                 if (vorhandenesgold <= intBankmax) {
 
                     //gold dem pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                     editor2.putInt("POOL", (goldint * 2) + (prefs1.getInt("POOL", 0)));
                     editor2.apply();
 
-                    SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                    MyPreferences dedubler = MyPreferences.getInstance(MainActivity.this,"doublecoll");
                     dedubler.putBoolean("doublecoll", false);
                     dedubler.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint * 2), Toast.LENGTH_SHORT).show();
@@ -4530,7 +4562,7 @@ if(bauhausdialog.isShowing()) {
         closeBauhaus = (Button) dialog.findViewById(R.id.closeBauhaus);
         closeBauhaus.setOnClickListener(this);
 
-        datafab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
+        datafab3 = MyPreferences.getInstance(MainActivity.this,"datafab3");
 
 
         countfab3 = (TextView) dialog.findViewById(R.id.countfab3);
@@ -4549,7 +4581,7 @@ if(bauhausdialog.isShowing()) {
                 //Jede sekunde sammler button aktualisieren
                 //wenn Long von gold über 1 dann visible, sammelbar machen.
 
-                SharedPreferences prefs = getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE);
+                MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab3");
                 int startTime = prefs.getInt("startTime", 0); //0 is the default value.
 
                 int endTime = ((int) System.currentTimeMillis() / 1000);
@@ -4596,7 +4628,7 @@ if(bauhausdialog.isShowing()) {
     public void sammelnfab3() {
 
 
-        SharedPreferences prefs = getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE);
+        MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab3");
 
         int startTime = prefs.getInt("startTime", 0); //0 is the default value.
 
@@ -4621,9 +4653,9 @@ if(bauhausdialog.isShowing()) {
         }
 
         //schauen, ist der pool schon auf maxStorage der bank?
-        SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
+        MyPreferences BankMax = MyPreferences.getInstance(MainActivity.this,"dataBank");
         int intBankmax = BankMax.getInt("maxGoldStorage", 1000);
-        SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
+        MyPreferences prefs1 = MyPreferences.getInstance(MainActivity.this,"POOL");
         if (intBankmax <= (prefs1.getInt("POOL", 0))) {
 
             Toast.makeText(MainActivity.this, getString(R.string.Bankisfull), Toast.LENGTH_SHORT).show();
@@ -4632,9 +4664,9 @@ if(bauhausdialog.isShowing()) {
 
         if (intBankmax > (prefs1.getInt("POOL", 0))) {
             //Timer Zurücksetzen
-            SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE).edit();
+            MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab3");
 
-            SharedPreferences doubler = getSharedPreferences("doublecoll", MODE_PRIVATE);
+            MyPreferences doubler = MyPreferences.getInstance(MainActivity.this,"doublecoll");
             Boolean doblegold = doubler.getBoolean("doublecoll", false);
 
 
@@ -4657,7 +4689,7 @@ if(bauhausdialog.isShowing()) {
                     editor1.apply();
 
                     //Das Gold zum pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                     editor2.putInt("POOL",intBankmax);
                     editor2.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (collect), Toast.LENGTH_SHORT).show();
@@ -4670,7 +4702,7 @@ if(bauhausdialog.isShowing()) {
 
 
                     //Das Gold zum pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                     editor2.putInt("POOL",goldint + (prefs1.getInt("POOL", 0)));
                     editor2.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
@@ -4696,12 +4728,12 @@ if(bauhausdialog.isShowing()) {
                     editor1.apply();
 
                     //gold dem pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                     editor2.putInt("POOL",intBankmax);
                     editor2.apply();
 
-                    SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                    MyPreferences dedubler = MyPreferences.getInstance(MainActivity.this,"doublecoll");
                     dedubler.putBoolean("doublecoll", false);
                     dedubler.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + collect, Toast.LENGTH_SHORT).show();
@@ -4711,12 +4743,12 @@ if(bauhausdialog.isShowing()) {
                 if (vorhandenesgold <= intBankmax) {
 
                     //gold dem pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                     editor2.putInt("POOL", (goldint * 2) + (prefs1.getInt("POOL", 0)));
                     editor2.apply();
 
-                    SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                    MyPreferences dedubler = MyPreferences.getInstance(MainActivity.this,"doublecoll");
                     dedubler.putBoolean("doublecoll", false);
                     dedubler.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint * 2), Toast.LENGTH_SHORT).show();
@@ -4738,7 +4770,7 @@ if(bauhausdialog.isShowing()) {
         closeBauhaus = (Button) dialog.findViewById(R.id.closeBauhaus);
         closeBauhaus.setOnClickListener(this);
 
-        datafab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
+        datafab4 = MyPreferences.getInstance(MainActivity.this,"datafab4");
 
 
         countfab4 = (TextView) dialog.findViewById(R.id.countfab4);
@@ -4757,7 +4789,7 @@ if(bauhausdialog.isShowing()) {
                 //Jede sekunde sammler button aktualisieren
                 //wenn Long von gold über 1 dann visible, sammelbar machen.
 
-                SharedPreferences prefs = getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE);
+                MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab4");
                 int startTime = prefs.getInt("startTime", 0); //0 is the default value.
 
                 int endTime = ((int) System.currentTimeMillis() / 1000);
@@ -4804,7 +4836,7 @@ if(bauhausdialog.isShowing()) {
     public void sammelnfab4() {
 
 
-        SharedPreferences prefs = getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE);
+        MyPreferences prefs = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab4");
 
         int startTime = prefs.getInt("startTime", 0); //0 is the default value.
 
@@ -4829,9 +4861,9 @@ if(bauhausdialog.isShowing()) {
         }
 
         //schauen, ist der pool schon auf maxStorage der bank?
-        SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
+        MyPreferences BankMax = MyPreferences.getInstance(MainActivity.this,"dataBank");
         int intBankmax = BankMax.getInt("maxGoldStorage", 1000);
-        SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
+        MyPreferences prefs1 = MyPreferences.getInstance(MainActivity.this,"POOL");
         if (intBankmax <= (prefs1.getInt("POOL", 0))) {
 
             Toast.makeText(MainActivity.this, getString(R.string.Bankisfull), Toast.LENGTH_SHORT).show();
@@ -4840,9 +4872,9 @@ if(bauhausdialog.isShowing()) {
 
         if (intBankmax > (prefs1.getInt("POOL", 0))) {
             //Timer Zurücksetzen
-            SharedPreferences.Editor editor1 = getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE).edit();
+            MyPreferences editor1 = MyPreferences.getInstance(MainActivity.this,"speichervonstartzeitfab4");
 
-            SharedPreferences doubler = getSharedPreferences("doublecoll", MODE_PRIVATE);
+            MyPreferences doubler = MyPreferences.getInstance(MainActivity.this,"doublecoll");
             Boolean doblegold = doubler.getBoolean("doublecoll", false);
 
 
@@ -4864,7 +4896,7 @@ if(bauhausdialog.isShowing()) {
                     editor1.apply();
 
                     //Das Gold zum pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                     editor2.putInt("POOL",intBankmax);
                     editor2.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (collect), Toast.LENGTH_SHORT).show();
@@ -4877,7 +4909,7 @@ if(bauhausdialog.isShowing()) {
 
 
                     //Das Gold zum pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
                     editor2.putInt("POOL",goldint + (prefs1.getInt("POOL", 0)));
                     editor2.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
@@ -4903,12 +4935,12 @@ if(bauhausdialog.isShowing()) {
                     editor1.apply();
 
                     //gold dem pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                     editor2.putInt("POOL",intBankmax);
                     editor2.apply();
 
-                    SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                    MyPreferences dedubler = MyPreferences.getInstance(MainActivity.this,"doublecoll");
                     dedubler.putBoolean("doublecoll", false);
                     dedubler.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + collect, Toast.LENGTH_SHORT).show();
@@ -4918,12 +4950,12 @@ if(bauhausdialog.isShowing()) {
                 if (vorhandenesgold <= intBankmax) {
 
                     //gold dem pool hinzufügen
-                    SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                    MyPreferences editor2 = MyPreferences.getInstance(MainActivity.this,"POOL");
 
                     editor2.putInt("POOL", (goldint * 2) + (prefs1.getInt("POOL", 0)));
                     editor2.apply();
 
-                    SharedPreferences.Editor dedubler = context.getSharedPreferences("doublecoll", MODE_PRIVATE).edit();
+                    MyPreferences dedubler = MyPreferences.getInstance(MainActivity.this,"doublecoll");
                     dedubler.putBoolean("doublecoll", false);
                     dedubler.apply();
                     Toast.makeText(MainActivity.this, getString(R.string.doublegoldcollect) + (goldint * 2), Toast.LENGTH_SHORT).show();

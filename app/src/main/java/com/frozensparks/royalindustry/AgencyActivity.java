@@ -5,7 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import com.frozensparks.royalindustry.MyPreferences;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -148,23 +148,23 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
         h.postDelayed(new Runnable(){
             public void run(){
 
-                SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
+                MyPreferences prefs1 = MyPreferences.getInstance(AgencyActivity.this,"POOL");
                 String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
                 goldagency.setText(": " + Pooltext );
 
-                SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+                MyPreferences prefs3 = MyPreferences.getInstance(AgencyActivity.this,"DIAMONDS");
                 //Diapool text aktualisieren
                 String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
                 diapoolagency.setText(": " + diapooltext );
 
-                SharedPreferences deziit =getSharedPreferences("blockzeit", MODE_PRIVATE);
+                MyPreferences deziit =MyPreferences.getInstance(AgencyActivity.this,"blockzeit");
                 int endtime = (int) (System.currentTimeMillis()/1000) ;
                 int startzeit = deziit.getInt("startzeit", 31);
                 int datzeit = endtime - startzeit;
                  restzeit =  30 - datzeit;
 
                 if (datzeit >= 30){
-                    SharedPreferences.Editor deziit1 =getSharedPreferences("blockzeit", MODE_PRIVATE).edit();
+                    MyPreferences deziit1 =MyPreferences.getInstance(AgencyActivity.this,"blockzeit");
                     deziit1.putInt("startzeit", endtime);
                     deziit1.putBoolean("ad", true);
                     deziit1.apply();
@@ -203,7 +203,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
         if(id == R.id.diastogold){
 
-            SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+            MyPreferences prefs3 = MyPreferences.getInstance(AgencyActivity.this,"DIAMONDS");
             //Diapool text aktualisieren
             int dias = (prefs3.getInt("DIAMONDS", 0));
 
@@ -262,7 +262,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
                             diasCost.setText(getString(R.string.Costs) + " " + progressvalue  + getString(R.string.Diamonds));
 
                             //den progressvalue (wieviele dias) speichern
-                            SharedPreferences.Editor editor1 = getSharedPreferences("thatmanydiastogold", MODE_PRIVATE).edit();
+                            MyPreferences editor1 = MyPreferences.getInstance(AgencyActivity.this,"thatmanydiastogold");
                             editor1.putInt("thatmanydiastogold", progressvalue);
                             editor1.apply();
 
@@ -280,7 +280,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
         }
         if (id == R.id.confirmcashout) {
 
-            SharedPreferences datad = getSharedPreferences("blockzeit", MODE_PRIVATE);
+            MyPreferences datad = MyPreferences.getInstance(AgencyActivity.this,"blockzeit");
             ad =  datad.getBoolean("ad", true);
 
             if(!ad) {
@@ -295,19 +295,19 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
 
             if(ad) {
-                SharedPreferences.Editor deziit1 = getSharedPreferences("blockzeit", MODE_PRIVATE).edit();
+                MyPreferences deziit1 = MyPreferences.getInstance(AgencyActivity.this,"blockzeit");
                 deziit1.putBoolean("ad", false);
                 deziit1.apply();
 
 
                 //holen von wieviele diamanten erstellen
-                SharedPreferences prefs1 = getSharedPreferences("thatmanydiastogold", MODE_PRIVATE);
+                MyPreferences prefs1 = MyPreferences.getInstance(AgencyActivity.this,"thatmanydiastogold");
 
                 int diaweg = (prefs1.getInt("thatmanydiastogold", 0));
 
 
                 //Holen von Pool
-                SharedPreferences prefs2 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+                MyPreferences prefs2 = MyPreferences.getInstance(AgencyActivity.this,"DIAMONDS");
 
 
                 //checken obs genug gold für den convert hat
@@ -357,7 +357,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
                                         .build();
 
                                 //geld aktualisierung
-                                final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
+                                final MyPreferences google = MyPreferences.getInstance(AgencyActivity.this,"google");
                                 String type = "diasweg";
                                 String gid = google.getString("id", "0");
                                 bgworkerdias bgworker1 = new bgworkerdias(context);
@@ -389,7 +389,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
 
             if (id == R.id.doublegold) {
-            SharedPreferences doubler = getSharedPreferences("doublecoll", MODE_PRIVATE);
+                MyPreferences doubler = MyPreferences.getInstance(AgencyActivity.this,"doublecoll");
             Boolean doblegold = doubler.getBoolean("doublecoll", false);
 
             if (doblegold) {
@@ -415,7 +415,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
                             public void onClick(DialogInterface dialog, int id) {
                                 //geld aktualisierung
-                                final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
+                                final MyPreferences google = MyPreferences.getInstance(AgencyActivity.this,"google");
                                 String type = "diasweg";
                                 String dias = "2";
                                 String gid = google.getString("id", "0");
@@ -489,7 +489,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
 
             //fab1boost
-            SharedPreferences datafab1 = getSharedPreferences("datafab1", MODE_PRIVATE);
+            MyPreferences datafab1 = MyPreferences.getInstance(AgencyActivity.this,"datafab1");
             Boolean cdfab1 = (datafab1.getBoolean("isLeveling", false));
             if (cdfab1) {
                 fab1.setVisibility(View.VISIBLE);
@@ -499,7 +499,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
 
             //boostfab2
-            SharedPreferences datafab2 = getSharedPreferences("datafab2", MODE_PRIVATE);
+            MyPreferences datafab2 = MyPreferences.getInstance(AgencyActivity.this,"datafab2");
             Boolean cdfab2 = (datafab2.getBoolean("isLeveling", false));
             if (cdfab2) {
                 fab2.setVisibility(View.VISIBLE);
@@ -508,7 +508,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             //boostfab3
-            SharedPreferences datafab3 = getSharedPreferences("datafab3", MODE_PRIVATE);
+            MyPreferences datafab3 = MyPreferences.getInstance(AgencyActivity.this,"datafab3");
             Boolean cdfab3 = (datafab3.getBoolean("isLeveling", false));
             if (cdfab3) {
                 fab3.setVisibility(View.VISIBLE);
@@ -517,7 +517,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             //boostfab4
-            SharedPreferences datafab4 = getSharedPreferences("datafab4", MODE_PRIVATE);
+            MyPreferences datafab4 = MyPreferences.getInstance(AgencyActivity.this,"datafab4");
             Boolean cdfab4 = (datafab4.getBoolean("isLeveling", false));
             if (cdfab4) {
                 fab4.setVisibility(View.VISIBLE);
@@ -526,7 +526,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             //boostbank
-            SharedPreferences databank = getSharedPreferences("dataBank", MODE_PRIVATE);
+            MyPreferences databank = MyPreferences.getInstance(AgencyActivity.this,"dataBank");
             Boolean databanklvl = (databank.getBoolean("isLeveling", false));
             if (databanklvl) {
                 bank.setVisibility(View.VISIBLE);
@@ -544,7 +544,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
             selectedId = radioGroup.getCheckedRadioButtonId();
 
-            SharedPreferences datad = getSharedPreferences("blockzeit", MODE_PRIVATE);
+            MyPreferences datad = MyPreferences.getInstance(AgencyActivity.this,"blockzeit");
             ad =  datad.getBoolean("ad", true);
 
             if(!ad) {
@@ -559,7 +559,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
 
             if(ad) {
-                SharedPreferences.Editor deziit1 =getSharedPreferences("blockzeit", MODE_PRIVATE).edit();
+                MyPreferences deziit1 =MyPreferences.getInstance(AgencyActivity.this,"blockzeit");
                 deziit1.putBoolean("ad", false);
                 deziit1.apply();
 
@@ -595,18 +595,18 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
                             timerad = timerad + 1;
 
                             if (selectedId == fab1.getId()) {
-                                SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
+                                MyPreferences Fab1upgradeContdown = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab1");
                                 int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
-                                SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                                MyPreferences editor3 = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab1");
                                 editor3.putInt("startTime", startTimefab1 - boost);
                                 editor3.apply();
                                 Toast.makeText(AgencyActivity.this, "boost applied", Toast.LENGTH_SHORT).show();
                                 gebaeudeboost.dismiss();
                             }
                             if (selectedId == fab2.getId()) {
-                                SharedPreferences Fab2upgradeContdown = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE);
+                                MyPreferences Fab2upgradeContdown = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab2");
                                 int startTimefab2 = Fab2upgradeContdown.getInt("startTime", 0); //0 is the default value.
-                                SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE).edit();
+                                MyPreferences editor3 = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab2");
                                 editor3.putInt("startTime", startTimefab2 - boost);
                                 editor3.apply();
                                 Toast.makeText(AgencyActivity.this, "boost applied", Toast.LENGTH_SHORT).show();
@@ -616,9 +616,9 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
                             }
 
                             if (selectedId == fab3.getId()) {
-                                SharedPreferences Fab3upgradeContdown = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE);
+                                MyPreferences Fab3upgradeContdown = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab3");
                                 int startTimefab3 = Fab3upgradeContdown.getInt("startTime", 0); //0 is the default value.
-                                SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE).edit();
+                                MyPreferences editor3 = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab3");
                                 editor3.putInt("startTime", startTimefab3 - boost);
                                 editor3.apply();
                                 Toast.makeText(AgencyActivity.this, "boost applied", Toast.LENGTH_SHORT).show();
@@ -628,9 +628,9 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
                             if (selectedId == fab4.getId()) {
 
-                                SharedPreferences Fab4upgradeContdown = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE);
+                                MyPreferences Fab4upgradeContdown = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab4");
                                 int startTimefab4 = Fab4upgradeContdown.getInt("startTime", 0); //0 is the default value.
-                                SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE).edit();
+                                MyPreferences editor3 = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab4");
                                 editor3.putInt("startTime", startTimefab4 - boost);
                                 editor3.apply();
                                 Toast.makeText(AgencyActivity.this, "boost applied", Toast.LENGTH_SHORT).show();
@@ -640,9 +640,9 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
                             if (selectedId == bank.getId()) {
 
-                                SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE);
+                                MyPreferences Fab1upgradeContdown = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeBank");
                                 int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
-                                SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE).edit();
+                                MyPreferences editor3 = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeBank");
                                 editor3.putInt("startTime", startTimefab1 - boost);
                                 editor3.apply();
                                 Toast.makeText(AgencyActivity.this, "boost applied", Toast.LENGTH_SHORT).show();
@@ -677,8 +677,8 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
         if (id == R.id.payboostwithgold) {
             selectedId = radioGroup.getCheckedRadioButtonId();
 
-            SharedPreferences prefs = getSharedPreferences("POOL", MODE_PRIVATE);
-            SharedPreferences.Editor editor2 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+            MyPreferences prefs = MyPreferences.getInstance(AgencyActivity.this,"POOL");
+            MyPreferences editor2 = MyPreferences.getInstance(AgencyActivity.this,"POOL");
 
 
             if ((prefs.getInt("POOL", 0)) < 500) {
@@ -690,9 +690,9 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
 
                 if (selectedId == fab1.getId()) {
-                    SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE);
+                    MyPreferences Fab1upgradeContdown = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab1");
                     int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
-                    SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE).edit();
+                    MyPreferences editor3 = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab1");
                     editor3.putInt("startTime", startTimefab1 - boost);
                     editor3.apply();
                     Toast.makeText(AgencyActivity.this, "boost applied", Toast.LENGTH_SHORT).show();
@@ -702,9 +702,9 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
                     editor2.apply();
                 }
                 if (selectedId == fab2.getId()) {
-                    SharedPreferences Fab2upgradeContdown = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE);
+                    MyPreferences Fab2upgradeContdown = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab2");
                     int startTimefab2 = Fab2upgradeContdown.getInt("startTime", 0); //0 is the default value.
-                    SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE).edit();
+                    MyPreferences editor3 = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab2");
                     editor3.putInt("startTime", startTimefab2 - boost);
                     editor3.apply();
                     Toast.makeText(AgencyActivity.this, "boost applied", Toast.LENGTH_SHORT).show();
@@ -716,9 +716,9 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
                 }
 
                 if (selectedId == fab3.getId()) {
-                    SharedPreferences Fab3upgradeContdown = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE);
+                    MyPreferences Fab3upgradeContdown = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab3");
                     int startTimefab3 = Fab3upgradeContdown.getInt("startTime", 0); //0 is the default value.
-                    SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE).edit();
+                    MyPreferences editor3 = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab3");
                     editor3.putInt("startTime", startTimefab3 - boost);
                     editor3.apply();
                     Toast.makeText(AgencyActivity.this, "boost applied", Toast.LENGTH_SHORT).show();
@@ -730,9 +730,9 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
                 if (selectedId == fab4.getId()) {
 
-                    SharedPreferences Fab4upgradeContdown = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE);
+                    MyPreferences Fab4upgradeContdown = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab4");
                     int startTimefab4 = Fab4upgradeContdown.getInt("startTime", 0); //0 is the default value.
-                    SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE).edit();
+                    MyPreferences editor3 = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeFab4");
                     editor3.putInt("startTime", startTimefab4 - boost);
                     editor3.apply();
                     Toast.makeText(AgencyActivity.this, "boost applied", Toast.LENGTH_SHORT).show();
@@ -744,9 +744,9 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
                 if (selectedId == bank.getId()) {
 
-                    SharedPreferences Fab1upgradeContdown = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE);
+                    MyPreferences Fab1upgradeContdown = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeBank");
                     int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
-                    SharedPreferences.Editor editor3 = getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE).edit();
+                    MyPreferences editor3 = MyPreferences.getInstance(AgencyActivity.this,"startTimeUpgradeBank");
                     editor3.putInt("startTime", startTimefab1 - boost);
                     editor3.apply();
                     Toast.makeText(AgencyActivity.this, "boost applied", Toast.LENGTH_SHORT).show();

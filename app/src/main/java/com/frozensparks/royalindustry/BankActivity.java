@@ -8,7 +8,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -136,7 +135,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //geld aktualisierung
-        final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
+        final MyPreferences google = MyPreferences.getInstance(BankActivity.this,"google");
         String type = "convert";
         String dat = "request";
         String gid = google.getString("id", "0");
@@ -217,7 +216,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
         cashoutonwait = (TextView) findViewById(R.id.cashoutonwait);
 
-        SharedPreferences cashouttext = getSharedPreferences("cashout", MODE_PRIVATE);
+        MyPreferences cashouttext = MyPreferences.getInstance(BankActivity.this,"cashout");
         cashoutonwait.setText( String.valueOf(cashouttext.getFloat("cashout", 0)+"$"));
 
 
@@ -228,11 +227,11 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         diaconvertingtimeprogress.setMax(timerfürdias);
 
 
-        SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
+        final MyPreferences BankMax = MyPreferences.getInstance(BankActivity.this,"dataBank");
         String stringGoldmax = String.valueOf(BankMax.getInt("maxGoldStorage", 1000));
 
         //Aktualisiere den Kontostatus
-        SharedPreferences prefs1 = getSharedPreferences("POOL", MODE_PRIVATE);
+        MyPreferences prefs1 = MyPreferences.getInstance(BankActivity.this,"POOL");
         String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
         currentGoldBalance.setText(": " + Pooltext + "/" + stringGoldmax);
 
@@ -267,14 +266,14 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     ActionBar actionBar = getSupportActionBar();
                     actionBar.hide();
                 }
-                SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+                MyPreferences prefs3 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
                 //Diapool text aktualisieren
                 String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
                 diatext.setText(": " + diapooltext);
 
 
                 //startzeit holen
-                SharedPreferences DiamantConvertCountdown = getSharedPreferences("DiamantConvertCountdown", MODE_PRIVATE);
+                MyPreferences DiamantConvertCountdown = MyPreferences.getInstance(BankActivity.this,"DiamantConvertCountdown");
                 int startTime = DiamantConvertCountdown.getInt("startTime", 0); //0 is the default value.
 
 
@@ -312,7 +311,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
 
-                SharedPreferences prefs4 = getSharedPreferences("DiamantConvertCountdownOFF", MODE_PRIVATE);
+                MyPreferences prefs4 = MyPreferences.getInstance(BankActivity.this,"DiamantConvertCountdownOFF");
                 Boolean hatsdiaszumholen = (prefs4.getBoolean("trueorfalse", false));
 
                 if (hatsdiaszumholen) {
@@ -320,7 +319,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                         //request senden
 
-                        final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
+                        final MyPreferences google = MyPreferences.getInstance(BankActivity.this,"google");
 
                         if (inforeground) {
 
@@ -335,12 +334,12 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
                         //keine dias mehr zu holen also false
-                        SharedPreferences.Editor editor3 = getSharedPreferences("DiamantConvertCountdownOFF", MODE_PRIVATE).edit();
+                        MyPreferences editor3 = MyPreferences.getInstance(BankActivity.this,"DiamantConvertCountdownOFF");
                         editor3.putBoolean("trueorfalse", false);
                         editor3.apply();
 
                         //diaspeicher im seekbar löschen
-                        SharedPreferences.Editor editor1 = getSharedPreferences("thatmanydias", MODE_PRIVATE).edit();
+                        MyPreferences editor1 = MyPreferences.getInstance(BankActivity.this,"thatmanydias");
                         editor1.putInt("thatmanydias", 0);
                         editor1.apply();
 
@@ -387,7 +386,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
         if (id == R.id.cashout) {
 
-            SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+            MyPreferences prefs3 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
             //Diapool text aktualisieren
             int dias = (prefs3.getInt("DIAMONDS", 0));
 
@@ -444,7 +443,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                             diasCost.setText(getString(R.string.Costs) + " " + fück * 10 + getString(R.string.Diamonds));
 
                             //den progressvalue (wieviele dias) speichern
-                            SharedPreferences.Editor editor1 = getSharedPreferences("thatmanycash", MODE_PRIVATE).edit();
+                            MyPreferences editor1 = MyPreferences.getInstance(BankActivity.this,"thatmanycash");
                             editor1.putFloat("thatmanycash", progressvalue/100);
                             editor1.apply();
 
@@ -465,7 +464,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                 TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 final String imei = telephonyManager.getDeviceId();
-                final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
+                final MyPreferences google = MyPreferences.getInstance(BankActivity.this,"google");
                 String m_Text = coucod.getText().toString() + phnr.getText().toString();
                 String type = "verify";
                 String gid = google.getString("id", "0");
@@ -492,7 +491,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                 //holen von wieviele diamanten erstellen
-                                SharedPreferences prefs1 = getSharedPreferences("thatmanydias", MODE_PRIVATE);
+                        MyPreferences prefs1 = MyPreferences.getInstance(BankActivity.this,"thatmanydias");
 
                                 //wenn 0 diamanten gewählt, abbrechen
                                 if (prefs1.getInt("thatmanydias", 0) == 0) {
@@ -506,11 +505,11 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                                 if (prefs1.getInt("thatmanydias", 0) >= 1) {
 
                                     //CHECKEN OB ES DEN DIASPEICHER nicht überschreitet
-                                    SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
+                                    MyPreferences BankMax = MyPreferences.getInstance(BankActivity.this,"dataBank");
 
 
                                         //Holen von Pool
-                                        SharedPreferences prefs2 = getSharedPreferences("POOL", MODE_PRIVATE);
+                                    MyPreferences prefs2 = MyPreferences.getInstance(BankActivity.this,"POOL");
 
                                         //diamantenanzahl in gold umwandeln
                                         int goldweg = (prefs1.getInt("thatmanydias", 1)) * 200;
@@ -528,7 +527,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                             //Pool aktualisieren, gold abziehen
-                                            SharedPreferences.Editor editor1 = getSharedPreferences("POOL", MODE_PRIVATE).edit();
+                                            MyPreferences editor1 = MyPreferences.getInstance(BankActivity.this,"POOL");
                                             editor1.putInt("POOL", (prefs2.getInt("POOL", 0)) - goldweg);
                                             editor1.apply();
 
@@ -540,19 +539,19 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                             //Timer Starten
-                                            SharedPreferences.Editor editor3 = getSharedPreferences("DiamantConvertCountdown", MODE_PRIVATE).edit();
+                                            MyPreferences editor3 = MyPreferences.getInstance(BankActivity.this,"DiamantConvertCountdown");
                                             editor3.putInt("startTime", ((int) System.currentTimeMillis()) / 1000);
                                             editor3.apply();
 
 
                                             //es hat dias true
-                                            SharedPreferences.Editor editor4 = getSharedPreferences("DiamantConvertCountdownOFF", MODE_PRIVATE).edit();
+                                            MyPreferences editor4 = MyPreferences.getInstance(BankActivity.this,"DiamantConvertCountdownOFF");
                                             editor4.putBoolean("trueorfalse", true);
                                             editor4.apply();
 
                                             //es hat dias linken
 
-                                            final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
+                                            final MyPreferences google = MyPreferences.getInstance(BankActivity.this,"google");
 
                                             int dias_int = prefs1.getInt("thatmanydias", 0);
                                             String dias = Integer.toString(dias_int);
@@ -623,7 +622,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                 //holen von wieviele diamanten erstellen
-                                SharedPreferences prefs1 = getSharedPreferences("thatmanycash", MODE_PRIVATE);
+            MyPreferences prefs1 = MyPreferences.getInstance(BankActivity.this,"thatmanycash");
 
                                 float diaweg = (prefs1.getFloat("thatmanycash", 0)*1000);
 
@@ -639,12 +638,10 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                                 if (diaweg >= 10) {
 
-                                    //CHECKEN OB ES DEN DIASPEICHER nicht überschreitet
-                                    SharedPreferences BankMax = getSharedPreferences("dataBank", MODE_PRIVATE);
 
 
                                     //Holen von Pool
-                                    SharedPreferences prefs2 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+                                    MyPreferences prefs2 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
 
 
 
@@ -662,7 +659,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                                         //es hat dias linken
 
-                                        final SharedPreferences google = getSharedPreferences("google", MODE_PRIVATE);
+                                        final MyPreferences google = MyPreferences.getInstance(BankActivity.this,"google");
 
                                         int dias_int = prefs1.getInt("thatmanydias", 0);
                                         int loldiasfuck = (int)diaweg;
@@ -744,7 +741,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         diasCost.setText(getString(R.string.Costs) + progressvalue * 200 + getString(R.string.Gold));
 
                         //den progressvalue (wieviele dias) speichern
-                        SharedPreferences.Editor editor1 = getSharedPreferences("thatmanydias", MODE_PRIVATE).edit();
+                        MyPreferences editor1 = MyPreferences.getInstance(BankActivity.this,"thatmanydias");
                         editor1.putInt("thatmanydias", progressvalue);
                         editor1.apply();
 
@@ -1001,18 +998,18 @@ class bgworker extends AsyncTask<String, Void, String> {
 
             if (connectcode >= 0) {
 
-                SharedPreferences prefs1 = getSharedPreferences("thatmanycash", MODE_PRIVATE);
-                SharedPreferences prefs2 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+                MyPreferences prefs1 = MyPreferences.getInstance(BankActivity.this,"thatmanycash");
+                MyPreferences prefs2 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
 
                 float diaweg = prefs1.getFloat("thatmanycash", 0)*1000;
 
                 //Pool aktualisieren, gold abziehen
-                SharedPreferences.Editor editor1 = getSharedPreferences("DIAMONDS", MODE_PRIVATE).edit();
+                MyPreferences editor1 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
                 editor1.putInt("DIAMONDS", (prefs2.getInt("DIAMONDS", 0)) - (int)diaweg);
                 editor1.apply();
 
                 //Pooltext aktualisieren
-                SharedPreferences prefs3 = getSharedPreferences("DIAMONDS", MODE_PRIVATE);
+                MyPreferences prefs3 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
                 String Pooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
                 diatext.setText(": " + Pooltext);
 
@@ -1028,10 +1025,10 @@ class bgworker extends AsyncTask<String, Void, String> {
 
                 Toast.makeText(BankActivity.this, rpstr, Toast.LENGTH_SHORT).show();
 
-                SharedPreferences.Editor editor2 = getSharedPreferences("cashout", MODE_PRIVATE).edit();
+                MyPreferences editor2 = MyPreferences.getInstance(BankActivity.this,"cashout");
                 editor2.putFloat("cashout", rtrdrp);
                 editor2.commit();
-                SharedPreferences cashouttext = getSharedPreferences("cashout", MODE_PRIVATE);
+                MyPreferences cashouttext = MyPreferences.getInstance(BankActivity.this,"cashout");
 
                 cashoutonwait.setText( String.valueOf(cashouttext.getFloat("cashout", 0) + "$"));
 
@@ -1104,9 +1101,9 @@ class bgworker extends AsyncTask<String, Void, String> {
                 diatext.setText((": " + connectcode));
 
                 //databank aktualisieren
-                SharedPreferences.Editor editor1 = getSharedPreferences("DIAMONDS", MODE_PRIVATE).edit();
+                MyPreferences editor1 = MyPreferences.getInstance(BankActivity.this,"DIAMONDS");
                 editor1.putInt("DIAMONDS", connectcode);
-                editor1.commit();
+                editor1.apply();
                 if(mInterstitialAd.isLoaded()){
                     mInterstitialAd.show();
 

@@ -85,7 +85,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
     EditText coucod;
 
     Handler h = new Handler();
-    int delay = 100; //milliseconds
+    int delay = 1500; //milliseconds
 
     ProgressBar diaconvertingtimeprogress;
 

@@ -34,6 +34,8 @@ dependencies {
     compile 'com.android.support:design:23.4.0'
 
     compile files(project(':mainLibProj').buildDir.absolutePath + "/libs/mainLibProj.jar")
+    compile files('/libs/play-games-plugin-support.jar')
+
     compile 'com.google.android.gms:play-services-games:9.0.2'
     compile 'com.google.android.gms:play-services-nearby:9.0.2'
     compile 'com.google.android.gms:play-services-drive:9.0.2'

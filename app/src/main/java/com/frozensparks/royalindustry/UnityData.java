@@ -48,6 +48,7 @@ static Context uncon;
         bgworkerdias lol = new bgworkerdias(c);
         lol.execute(dat, gid, "diacollect");
 
+        Log.d("android","diacheck  is called");
 
         if (data==34){
             SharedPreferences diasckeck  = new ObscuredSharedPreferences(c,c.getSharedPreferences("DIAMONDS",MODE_PRIVATE));
@@ -60,6 +61,7 @@ static Context uncon;
                 UnityPlayer.UnitySendMessage("menuObject", "diacheckok", "1");
 
             }
+            Log.d("android","diacheck  is called"+diascheckgint);
 
 
         }
@@ -80,8 +82,7 @@ static Context uncon;
         bgworkerdias bgworker1 =new bgworkerdias(c);
         bgworker1.execute(type, gid,opponentID , "inputOpponentplayerID");
 
-        Log.d(opponentID+"      "+gid, "dis is de oppid and gid"
-        );
+        Log.d(opponentID+"      "+gid, "dis is de oppid and gid");
 
     }
     public static void winorloose(int winloose, String myID,String oppid, Context c){

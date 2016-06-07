@@ -1,6 +1,8 @@
 include ':app', ':BaseGameUtils'
 
-
 include ':mainLibProj'
 include ':planeCrasher'
-
+include ':mainLibProj'
+include ':planeCrasher'
+include ':mainLibProj'
+include ':planeCrasher'

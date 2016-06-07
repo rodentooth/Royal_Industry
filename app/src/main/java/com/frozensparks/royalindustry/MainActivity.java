@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Aktualisator
     Handler h = new Handler();
-    int delay = 100; //milliseconds
+    int delay = 1000; //milliseconds
 
     //Bauhaus
     Button bauhaus;
@@ -368,32 +368,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         datafab2 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab2", MODE_PRIVATE));
         datafab3 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab3", MODE_PRIVATE));
         datafab4 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab4", MODE_PRIVATE));
-        if (datafab1.getInt("Level", 1) == 2) {
-            Fabrik1.setBackgroundResource(R.drawable.fablvl2);
-        }
+
+        int fabbild1 = datafab1.getInt("Level", 1);
+        int fabbild1id= getResources().getIdentifier("fablvl"+fabbild1, "drawable", getPackageName());
+        Fabrik1.setBackgroundResource(fabbild1id);
+
         if (datafab2.getInt("Level", 0) == 0) {
             Fabrik2.setVisibility(View.INVISIBLE);
             SammelnFabrik2.setVisibility(View.INVISIBLE);
 
         }
-        if (datafab2.getInt("Level", 1) == 2) {
-            Fabrik2.setBackgroundResource(R.drawable.fablvl2);
+        if (datafab2.getInt("Level", 0) >= 1) {
+            int fabbild2 = datafab2.getInt("Level", 1);
+            int fabbild2id= getResources().getIdentifier("fablvl"+fabbild2, "drawable", getPackageName());
+            Fabrik2.setBackgroundResource(fabbild2id);
         }
         if (datafab3.getInt("Level", 0) == 0) {
             Fabrik3.setVisibility(View.INVISIBLE);
             SammelnFabrik3.setVisibility(View.INVISIBLE);
 
         }
-        if (datafab3.getInt("Level", 1) == 2) {
-            Fabrik3.setBackgroundResource(R.drawable.fablvl2);
+        if (datafab3.getInt("Level", 0) >= 1) {
+            int fabbild3 = datafab3.getInt("Level", 1);
+            int fabbild3id= getResources().getIdentifier("fablvl"+fabbild3, "drawable", getPackageName());
+            Fabrik3.setBackgroundResource(fabbild3id);
         }
         if (datafab4.getInt("Level", 0) == 0) {
             Fabrik4.setVisibility(View.INVISIBLE);
             SammelnFabrik4.setVisibility(View.INVISIBLE);
 
         }
-        if (datafab4.getInt("Level", 1) == 2) {
-            Fabrik4.setBackgroundResource(R.drawable.fablvl2);
+        if (datafab4.getInt("Level", 0) >= 1) {
+            int fabbild4 = datafab4.getInt("Level", 1);
+            int fabbild4id= getResources().getIdentifier("fablvl"+fabbild4, "drawable", getPackageName());
+            Fabrik4.setBackgroundResource(fabbild4id);
         }
         h.postDelayed(new Runnable() {
             public void run() {
@@ -445,10 +453,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (gold >= prefs1.getInt("minfabrik1", 1)) {
                     SammelnFabrik1.setVisibility(View.VISIBLE);
                 }
-                if (datafab1.getInt("Level", 1) == 2) {
-                    Fabrik1.setBackgroundResource(R.drawable.fablvl2);
-                }
-
                 //Gold check Fabrik2
                 SharedPreferences prefsfab2 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE));
                 SharedPreferences prefs1fab2 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab2", MODE_PRIVATE));
@@ -474,9 +478,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Fabrik2.setVisibility(View.VISIBLE);
                 }
 
-                if (datafab2.getInt("Level", 1) == 2) {
-                    Fabrik2.setBackgroundResource(R.drawable.fablvl2);
-                }
                 //Gold check Fabrik3
                 SharedPreferences prefsfab3 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE));
                 SharedPreferences prefs1fab3 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab3", MODE_PRIVATE));
@@ -503,9 +504,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (datafab3.getInt("Level", 0) >= 1) {
                     Fabrik3.setVisibility(View.VISIBLE);
                 }
-                if (datafab3.getInt("Level", 1) == 2) {
-                    Fabrik3.setBackgroundResource(R.drawable.fablvl2);
-                }
 
 
                 //Gold check Fabrik4
@@ -531,9 +529,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 if (datafab4.getInt("Level", 0) >= 1) {
                     Fabrik4.setVisibility(View.VISIBLE);
-                }
-                if (datafab4.getInt("Level", 1) == 2) {
-                    Fabrik4.setBackgroundResource(R.drawable.fablvl2);
                 }
 
 
@@ -652,7 +647,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                 //definition level3
-                                editorBank.edit().putInt("maxGoldStorage", 75000);
+                                editorBank.edit().putInt("maxGoldStorage", 75000).apply();
                                 editorBank.edit().putString("leveltext", getString(R.string.bank) + " " + getString(R.string.level3)).apply();
                                 editorBank.edit().putBoolean("isLeveling", false).apply();
                                 cdBank = false;
@@ -684,9 +679,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                 //definition level4
-                                editorBank.edit().putInt("maxGoldStorage", 150000);
+                                editorBank.edit().putInt("maxGoldStorage", 150000).apply();
                                 editorBank.edit().putString("leveltext", getString(R.string.bank) + " " + getString(R.string.level4)).apply();
-                                editorBank.edit().putBoolean("isLeveling", false);
+                                editorBank.edit().putBoolean("isLeveling", false).apply();
                                 // bei weitere.apply(); lvl aktivieren cdBank = false;
                                 progressBarUpgradeBank.setVisibility(View.INVISIBLE);
                                 editorBank.edit().putInt("Level", dataBank.getInt("Level", 1) + 1).apply();
@@ -764,7 +759,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 editor1.edit().putInt("minfabrik1", 3).apply();
                                 editor1.edit().putFloat("goldphfab1", (float) 0.16667).apply();
                                 editor1.edit().putString("leveltextfab1", getString(R.string.factory_1) + " " + getString(R.string.level3)).apply();
-                                editor1.edit().putBoolean("isLeveling", false);
+                                editor1.edit().putBoolean("isLeveling", false).apply();
                                 cdfab1 = false;
                                 progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                                 SammelnFabrik1.setVisibility(View.VISIBLE);
@@ -800,7 +795,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 editor1.edit().putInt("minfabrik1", 5).apply();
                                 editor1.edit().putFloat("goldphfab1", (float) 0.277777777778).apply();
                                 editor1.edit().putString("leveltextfab1", getString(R.string.factory_1) + " " + getString(R.string.level5)).apply();
-                                editor1.edit().putBoolean("isLeveling", false);
+                                editor1.edit().putBoolean("isLeveling", false).apply();
                                 cdfab1 = false;
                                 progressBarUpgradefab1.setVisibility(View.INVISIBLE);
                                 SammelnFabrik1.setVisibility(View.VISIBLE);
@@ -814,7 +809,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 //lvl6
                                 editor1.edit().putInt("maxfabrik1", 10000).apply();
                                 editor1.edit().putInt("minfabrik1", 6).apply();
-                                editor1.edit().putFloat("goldphfab1", (float) 0.3333333333);
+                                editor1.edit().putFloat("goldphfab1", (float) 0.3333333333).apply();
                                 editor1.edit().putString("leveltextfab1", getString(R.string.factory_1) + " " + getString(R.string.level6)).apply();
                                 editor1.edit().putBoolean("isLeveling", false).apply();
                                 cdfab1 = false;
@@ -1238,7 +1233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 //lvl6
                                 editor1.edit().putInt("maxfabrik3", 10000).apply();
                                 editor1.edit().putInt("minfabrik3", 6).apply();
-                                editor1.edit().putFloat("goldphfab3", (float) 0.3333333333);
+                                editor1.edit().putFloat("goldphfab3", (float) 0.3333333333).apply();
                                 editor1.edit().putString("leveltextfab3", getString(R.string.factory_3) + " " + getString(R.string.level6)).apply();
                                 editor1.edit().putBoolean("isLeveling", false).apply();
                                 cdfab3 = false;
@@ -1426,11 +1421,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if (datafab4.getInt("Level", 0) == 4) {
 
                                 //Lvl5
-                                editor1.edit().putInt("maxfabrik4", 5000);
-                                editor1.edit().putInt("minfabrik4", 5);
-                                editor1.edit().putFloat("goldphfab4", (float) 0.277777777778);
-                                editor1.edit().putString("leveltextfab4", getString(R.string.factory_4) + " " + getString(R.string.level5));
-                                editor1.edit().putBoolean("isLeveling", false);
+                                editor1.edit().putInt("maxfabrik4", 5000).apply();
+                                editor1.edit().putInt("minfabrik4", 5).apply();
+                                editor1.edit().putFloat("goldphfab4", (float) 0.277777777778).apply();
+                                editor1.edit().putString("leveltextfab4", getString(R.string.factory_4) + " " + getString(R.string.level5)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
                                 cdfab4 = false;
                                 progressBarUpgradefab4.setVisibility(View.INVISIBLE);
                                 SammelnFabrik4.setVisibility(View.VISIBLE);
@@ -2109,7 +2104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                             SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataAgency", MODE_PRIVATE));
-                                            editor1.edit().putBoolean("isLeveling", true);
+                                            editor1.edit().putBoolean("isLeveling", true).apply();
                                             editor1.edit().putBoolean("bedingungenerfüllt", false).apply();
 
 
@@ -2276,8 +2271,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                                 SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataBank", MODE_PRIVATE));
-                                                editor1.edit().putBoolean("isLeveling", true);
-                                                editor1.edit().putBoolean("bedingungen2erfüllt", false);
+                                                editor1.edit().putBoolean("isLeveling", true).apply();
+                                                editor1.edit().putBoolean("bedingungen2erfüllt", false).apply();
                                                 editor1.edit().putBoolean("bedingungenerfüllt", false).apply();
 
 
@@ -2486,7 +2481,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                         SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab1", MODE_PRIVATE));
-                                        editor1.edit().putBoolean("isLeveling", true);
+                                        editor1.edit().putBoolean("isLeveling", true).apply();
                                         //bedingung.apply();ist nicht mehr erfüllt für die kommenden lvl
 
 
@@ -2525,7 +2520,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                             SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab1", MODE_PRIVATE));
-                                            editor1.edit().putBoolean("isLeveling", true);
+                                            editor1.edit().putBoolean("isLeveling", true).apply();
                                             editor1.edit().putBoolean("bedingungenerfüllt", false).apply();
 
 
@@ -2877,7 +2872,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                             SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab2", MODE_PRIVATE));
-                                            editor1.edit().putBoolean("isLeveling", true);
+                                            editor1.edit().putBoolean("isLeveling", true).apply();
                                             //bedingung.apply();n nicht mehr erfüllt
                                             editor1.edit().putBoolean("bedingungenerfüllt", false).apply();
 
@@ -3313,7 +3308,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                             SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab3", MODE_PRIVATE));
-                                            editor1.edit().putBoolean("isLeveling", true);
+                                            editor1.edit().putBoolean("isLeveling", true).apply();
                                             //bedingung.apply();n nicht mehr erfüllt
                                             editor1.edit().putBoolean("bedingungenerfüllt", false).apply();
 
@@ -3750,7 +3745,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                             SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab4", MODE_PRIVATE));
-                                            editor1.edit().putBoolean("isLeveling", true);
+                                            editor1.edit().putBoolean("isLeveling", true).apply();
                                             //bedingung.apply();n nicht mehr erfüllt
                                             editor1.edit().putBoolean("bedingungenerfüllt", false).apply();
 

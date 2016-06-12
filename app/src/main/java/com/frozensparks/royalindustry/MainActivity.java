@@ -16,7 +16,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,6 +24,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,6 +33,7 @@ import com.unity3d.player.UnityPlayer;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
 
 
 /**
@@ -129,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button Agency;
     SharedPreferences dataAgency;
     ProgressBar progressBarUpgradeAgency;
+    private Tracker mTracker;
 
 
     Typeface typeface;
@@ -139,6 +142,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private GoogleApiClient client;
     //FULLSCREEN
 
+    //Unity
+    public UnityPlayer mUnityPlayer;
 
     //Google sign in
 
@@ -166,7 +171,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_main);
 
+        // [START shared_tracker]
+        // Obtain the shared Tracker instance.
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+        // [END shared_tracker]
+        // Set screen name.
 
+        mTracker.setScreenName("MainActivity");
+
+        // Send a screen view.
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
+        mTracker.enableAutoActivityTracking(true);
+if (mUnityPlayer!=null) {
+    mUnityPlayer.quit();
+}
 
 /*
         SharedPreferences coins = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("coins", MODE_PRIVATE));
@@ -191,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             assert actionBar != null;
             actionBar.hide();
         }
+        //
 
         //agency
         Agency = (Button) findViewById(R.id.openagency);
@@ -1597,6 +1618,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
+
         //Bank
         SharedPreferences dataBank = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataBank", MODE_PRIVATE));
         if (id == R.id.Bank) {
@@ -1740,6 +1762,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (dataBank.getInt("Level", 1) == 4) {
                 upgradeBank.setBackgroundResource(R.mipmap.nolevelupbtn);
             }
+            if(dataBank.getInt("Level",1)==1){
+                if ((!dataBank.getBoolean("bedingungenerfüllt", false))) {
+                    upgradeBank.setBackgroundResource(R.mipmap.nolevelupbtn);
+
+                }
+                if ((dataBank.getBoolean("bedingungenerfüllt", false))) {
+                    upgradeBank.setBackgroundResource(R.mipmap.levelupbtn);
+
+                }
+
+            }
+
 
             //Agency
             upgradeAgency = (Button) bauhausdialog.findViewById(R.id.upgradeAgentur);
@@ -2013,6 +2047,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             Intent intent = new Intent(this, multiplayer.class);
             startActivity(intent);
+
         }
         //agency
         if (id == R.id.openagency) {
@@ -2050,7 +2085,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 if (dataAgency.getInt("Level", 0) == 0) {
                     //text Agency lvl1
-                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level1), ": \n\n", getString(R.string.agencybenefits), "\n\n", getString(R.string.Costs), "200", getString(R.string.Gold), " \n \n", getString(R.string.time), "5:00:00"));
+                    alertDialogBuilder.setMessage(TextUtils.concat(getString(R.string.level1), ": \n\n", getString(R.string.agencybenefits), "\n\n", getString(R.string.Costs), "200", getString(R.string.Gold), " \n \n", getString(R.string.time), "1:00:00"));
                 }
 
 
@@ -2099,8 +2134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             editor3.edit().putInt("startTime", ((int) System.currentTimeMillis()) / 1000).apply();
 
                                             //Countdownzeit definieren
-                                            //// TODO: 3600
-                                            editor3.edit().putInt("countdown", 36).apply();
+                                            editor3.edit().putInt("countdown", 3600).apply();
 
 
                                             SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataAgency", MODE_PRIVATE));
@@ -2221,8 +2255,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             editor3.edit().putInt("startTime", ((int) System.currentTimeMillis()) / 1000).apply();
 
                                             //Countdownzeit definieren
-                                            //TODO 3600
-                                            editor3.edit().putInt("countdown", 36).apply();
+                                            editor3.edit().putInt("countdown", 3600).apply();
 
 
                                             SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataBank", MODE_PRIVATE));
@@ -2441,8 +2474,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         editor3.edit().putInt("startTime", ((int) System.currentTimeMillis()) / 1000).apply();
 
                                         //Countdownzeit definieren
-                                        //TODO 120
-                                        editor3.edit().putInt("countdown", 10).apply();
+                                        editor3.edit().putInt("countdown", 120).apply();
 
 
                                         SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab1", MODE_PRIVATE));
@@ -4210,10 +4242,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE));
                     editor1.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000)).apply();
 
-//todo 10000
                     //Das Gold zum pool hinzufügen
                     SharedPreferences editor2 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("POOL", MODE_PRIVATE));
-                    editor2.edit().putInt("POOL",100000+ goldint + (prefs1.getInt("POOL", 0))).apply();
+                    editor2.edit().putInt("POOL", goldint + (prefs1.getInt("POOL", 0))).apply();
 
                     Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
 
@@ -4941,6 +4972,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.disconnect();
     }
+@Override
+    public void onResume(){
+    super.onResume();
 
+
+
+
+}
 
 }

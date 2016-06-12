@@ -2,6 +2,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- pressed -->
     <!-- default -->
-    <item android:state_pressed="true" android:drawable="@mipmap/diastogoldbtn_pressed" />
-    <item android:drawable="@mipmap/diastogoldbtn" />
+    <item android:state_pressed="true" android:drawable="@mipmap/b10000gold_pressed" />
+    <item android:drawable="@mipmap/b10000gold" />
 </selector>

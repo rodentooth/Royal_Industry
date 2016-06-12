@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#aa000000">
+        android:background="#5bffffff">
 
         <Button
             android:layout_width="100dp"
@@ -30,12 +30,13 @@
         android:layout_height="50dp"
             android:id="@+id/samtutfab"
             android:textAllCaps="false"
-            android:layout_above="@+id/tutfab"
-            android:layout_alignRight="@+id/tutfab"
-            android:layout_alignEnd="@+id/tutfab"
             android:visibility="invisible"
             android:background="@drawable/sammelbtns"
-            />
+            android:layout_above="@+id/tutfab"
+            android:layout_toRightOf="@+id/gold"
+            android:layout_toEndOf="@+id/gold"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp" />
 
 
         <TextView
@@ -43,11 +44,11 @@
             android:layout_height="wrap_content"
             android:text="@string/welcome"
             android:id="@+id/welcome"
-            android:textColor="#ffffff"
             android:textSize="30dp"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/cont"
-            android:layout_toStartOf="@+id/cont" />
+            android:layout_toStartOf="@+id/cont"
+            android:textColor="#000000" />
 
         <Button
             android:layout_width="120dp"
@@ -86,7 +87,7 @@
             android:text="@string/facproduce"
             android:id="@+id/facprod"
             android:textSize="25dp"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:visibility="invisible"
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@+id/tutfab"
@@ -102,7 +103,7 @@
             android:layout_alignEnd="@+id/facprod"
             android:visibility="invisible"
             android:textSize="25dp"
-            android:textColor="#ffffff" />
+            android:textColor="#000000" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -111,7 +112,7 @@
             android:id="@+id/insidebank"
             android:layout_above="@+id/tutbank"
             android:layout_centerHorizontal="true"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="15dp"
             android:visibility="invisible" />
     </RelativeLayout>

@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -14,13 +13,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.INotificationSideChannel;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -34,9 +32,10 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -46,7 +45,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Locale;
@@ -85,7 +83,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
     EditText coucod;
 
     Handler h = new Handler();
-    int delay = 1500; //milliseconds
+    int delay = 1000; //milliseconds
 
     ProgressBar diaconvertingtimeprogress;
 
@@ -102,17 +100,26 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
     Button confirmcashout;
     public static TextView cashoutonwait;
 
-    int timerfürdias = 123;
+    int timerfürdias = 1800;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
     private int mId;
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-5669148825390630~9003934904");
+
+        // Obtain the shared Tracker instance.
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+
+        mTracker.enableAutoActivityTracking(true);
 
         //Fullscreen
         if (Build.VERSION.SDK_INT < 16) { //ye olde method
@@ -180,10 +187,10 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
         //ad
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdUnitId("ca-app-pub-5669148825390630/4434134509");
         //ad laden
         AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("16201-16201")
+                //.addTestDevice("E414DE4FE2ADD841904A5328B51C1195")
                 .build();
 
         mInterstitialAd.loadAd(adRequest);
@@ -409,7 +416,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
             float progressvalue = 0;
             howmanygoldtodias.setText(getString(R.string.Create) + " " + progressvalue/100 + "$");
-            diasCost.setText(getString(R.string.Costs) + " " + progressvalue * 10 + getString(R.string.Diamonds));
+            diasCost.setText(getString(R.string.Costs) + " " + progressvalue * 10+ " " + getString(R.string.Diamonds));
 
 
             seekbar.setOnSeekBarChangeListener(
@@ -432,7 +439,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void onStartTrackingTouch(SeekBar seekBar) {
                             howmanygoldtodias.setText(getString(R.string.Create) + " " + progressvalue/100 + "$");
-                            diasCost.setText(getString(R.string.Costs) + " " + fück * 10 + getString(R.string.Diamonds));
+                            diasCost.setText(getString(R.string.Costs) + " " + fück * 10 + " "+ getString(R.string.Diamonds));
 
                         }
 
@@ -440,7 +447,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         public void onStopTrackingTouch(SeekBar seekBar) {
 
                             howmanygoldtodias.setText(getString(R.string.Create) + " " + progressvalue/100 + "$");
-                            diasCost.setText(getString(R.string.Costs) + " " + fück * 10 + getString(R.string.Diamonds));
+                            diasCost.setText(getString(R.string.Costs) + " " + fück * 10 + " "+ getString(R.string.Diamonds));
 
                             //den progressvalue (wieviele dias) speichern
                             SharedPreferences editor1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanycash", MODE_PRIVATE));
@@ -577,7 +584,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(BankActivity.this, "we're so sorry. please try again", Toast.LENGTH_SHORT).show();
                         dialogconvertdias.dismiss();
                         AdRequest adRequest = new AdRequest.Builder()
-                                .addTestDevice("16201-16201")
+                                //.addTestDevice("16201-16201")
                                 .build();
 
                         mInterstitialAd.loadAd(adRequest);                            }
@@ -588,7 +595,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
                         dialogconvertdias.dismiss();
                         AdRequest adRequest = new AdRequest.Builder()
-                                .addTestDevice("16201-16201")
+                                //.addTestDevice("16201-16201")
                                 .build();
 
                         mInterstitialAd.loadAd(adRequest);
@@ -599,7 +606,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             else {
                 Toast.makeText(BankActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
                 AdRequest adRequest = new AdRequest.Builder()
-                        .addTestDevice("16201-16201")
+                        //.addTestDevice("16201-16201")
                         .build();
 
                 mInterstitialAd.loadAd(adRequest);
@@ -702,8 +709,8 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             seekbar.setMax(1);
         }
         int progressvalue = 0;
-        howmanygoldtodias.setText(getString(R.string.Create) + " " + progressvalue + getString(R.string.Diamonds));
-        diasCost.setText(getString(R.string.Costs) + " " + progressvalue * 200 + getString(R.string.Gold));
+        howmanygoldtodias.setText(getString(R.string.Create) + " " + progressvalue + " "+ getString(R.string.Diamonds));
+        diasCost.setText(getString(R.string.Costs) + " " + progressvalue * 200 + " "+ getString(R.string.Gold));
 
 
         seekbar.setOnSeekBarChangeListener(
@@ -717,23 +724,23 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
                         progressvalue = progress;
-                        howmanygoldtodias.setText(getString(R.string.Create) + progressvalue + getString(R.string.Diamonds));
-                        diasCost.setText(getString(R.string.Costs) + progressvalue * 200 + getString(R.string.Gold));
+                        howmanygoldtodias.setText(getString(R.string.Create) + " "+ progressvalue + " "+ getString(R.string.Diamonds));
+                        diasCost.setText(getString(R.string.Costs) + " "+ progressvalue * 200 + " "+ getString(R.string.Gold));
                     }
 
                     @Override
                     public void onStartTrackingTouch(SeekBar seekBar) {
 
-                        howmanygoldtodias.setText(getString(R.string.Create) + progressvalue + getString(R.string.Diamonds));
-                        diasCost.setText(getString(R.string.Costs) + progressvalue * 200 + getString(R.string.Gold));
+                        howmanygoldtodias.setText(getString(R.string.Create)+ " " + progressvalue + " "+ getString(R.string.Diamonds));
+                        diasCost.setText(getString(R.string.Costs) + " "+ progressvalue * 200 + " "+ getString(R.string.Gold));
 
                     }
 
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
 
-                        howmanygoldtodias.setText(getString(R.string.Create) + progressvalue + getString(R.string.Diamonds));
-                        diasCost.setText(getString(R.string.Costs) + progressvalue * 200 + getString(R.string.Gold));
+                        howmanygoldtodias.setText(getString(R.string.Create)+ " " + progressvalue + " "+ getString(R.string.Diamonds));
+                        diasCost.setText(getString(R.string.Costs)+ " " + progressvalue * 200 + " "+ getString(R.string.Gold));
 
                         //den progressvalue (wieviele dias) speichern
                         SharedPreferences editor1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanydias", MODE_PRIVATE));
@@ -746,32 +753,30 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         );
         dialogconvertdias.show();
     }
-
-
+    @Override public void onWindowFocusChanged(boolean hasFocus)
+    {
+        inforeground=hasFocus;
+    }
     @Override
     public void onStart () {
         super.onStart();
-        inforeground = true;
 
 
     }
     @Override
     public void onStop () {
         super.onStop();
-        inforeground = false;
 
 
     }
     @Override
     protected void onResume() {
         super.onResume();
-        inforeground = true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        inforeground = false;
     }
 
 
@@ -832,6 +837,9 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     String post_data = URLEncoder.encode("googleID", "UTF-8")+"="+URLEncoder.encode(googleID, "UTF-8")+"&"
                             +URLEncoder.encode("diamonds", "UTF-8")+"="+URLEncoder.encode(diamonds, "UTF-8");
 
+                    Log.d("diamantanzahl ist " ,diamonds);
+
+
                     bufferedWriter.write(post_data);
                     bufferedWriter.flush();
                     bufferedWriter.close();
@@ -875,6 +883,9 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
                     String post_data = URLEncoder.encode("googleID", "UTF-8")+"="+URLEncoder.encode(googleID, "UTF-8")+"&"
                             +URLEncoder.encode("diamonds", "UTF-8")+"="+URLEncoder.encode(diamonds, "UTF-8");
+
+
+
 
                     bufferedWriter.write(post_data);
                     bufferedWriter.flush();
@@ -1034,7 +1045,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void onAdFailedToLoad(int errorCode) {
                                 AdRequest adRequest = new AdRequest.Builder()
-                                        .addTestDevice("16201-16201")
+                                        //.addTestDevice("16201-16201")
                                         .build();
 
                                 mInterstitialAd.loadAd(adRequest);
@@ -1045,7 +1056,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                                 Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
                                 dialogconvertdias.dismiss();
                                 AdRequest adRequest = new AdRequest.Builder()
-                                        .addTestDevice("16201-16201")
+                                        //.addTestDevice("16201-16201")
                                         .build();
 
                                 mInterstitialAd.loadAd(adRequest);
@@ -1057,7 +1068,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     else {
                         Toast.makeText(BankActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
                         AdRequest adRequest = new AdRequest.Builder()
-                                .addTestDevice("16201-16201")
+                                //.addTestDevice("16201-16201")
                                 .build();
 
                         mInterstitialAd.loadAd(adRequest);
@@ -1106,7 +1117,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void onAdFailedToLoad(int errorCode) {
                                 AdRequest adRequest = new AdRequest.Builder()
-                                        .addTestDevice("16201-16201")
+                                        //.addTestDevice("16201-16201")
                                         .build();
 
                                 mInterstitialAd.loadAd(adRequest);                        }
@@ -1120,7 +1131,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                                     }
                                 }
                                 AdRequest adRequest = new AdRequest.Builder()
-                                        .addTestDevice("16201-16201")
+                                        //.addTestDevice("16201-16201")
                                         .build();
 
                                 mInterstitialAd.loadAd(adRequest);
@@ -1129,10 +1140,22 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
 
+                    //fabriklevelstunde 2.7
+                    //fabriklevelstunde 2.7
+                    //fabriklevelstunde 2.5
+                    //fabriklevelstunde 2.5
+                    //fabriklevelstunde 2.5
+                    //fabriklevelstunde 8.3
+                    //fabriklevelstunde 10.7
+                    //fabriklevelstunde 12.5
+                    //fabriklevelstunde 13.8
+                    //fabriklevelstunde 15
+
+
                     else {
                         Toast.makeText(BankActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
                         AdRequest adRequest = new AdRequest.Builder()
-                                .addTestDevice("16201-16201")
+                                //.addTestDevice("16201-16201")
                                 .build();
 
                         mInterstitialAd.loadAd(adRequest);
@@ -1163,6 +1186,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     //übertrag ok
                     Toast.makeText(BankActivity.this, "Timer started", Toast.LENGTH_SHORT).show();
                 }
+                Log.d("serverantwort ist: " ,result);
 
             }
 

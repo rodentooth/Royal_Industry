@@ -113,6 +113,8 @@ public class ObscuredSharedPreferences implements SharedPreferences {
 
         @Override
         public Editor putInt(String key, int value) {
+            Log.d("android","putint callled"+value);
+
             delegate.putString(key, encrypt(Integer.toString(value)));
             return this;
         }
@@ -201,6 +203,7 @@ public class ObscuredSharedPreferences implements SharedPreferences {
 
     @Override
     public int getInt(String key, int defValue) {
+
         String v;
         try {
             v = delegate.getString(key, null);
@@ -208,6 +211,8 @@ public class ObscuredSharedPreferences implements SharedPreferences {
             return delegate.getInt(key, defValue);
         }
         try {
+           // Log.d("android","getint callled"+Integer.parseInt(decrypt(v)));
+
             return Integer.parseInt(decrypt(v));
         } catch (NumberFormatException e) {
             //could not decrypt the number.  Maybe we are using the wrong key?

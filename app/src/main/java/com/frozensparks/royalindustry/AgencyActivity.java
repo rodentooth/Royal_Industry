@@ -2,15 +2,17 @@ package com.frozensparks.royalindustry;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -28,6 +30,8 @@ import com.billingUtils.util.IabResult;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.analytics.Tracker;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +41,8 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
     Button buildboost;
     Dialog gebaeudeboost;
     Button closegebaeudeboost;
+    Button freedias;
+    Button freegold;
     TextView platzhalterboost;
     RadioGroup radioGroup;
     RadioButton fab1, fab2, fab3, fab4, bank;
@@ -45,13 +51,14 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
     int restzeit;
     boolean ad;
     String dias;
-
-
-
+    Button closefreedias;
+    TextView link20dias;
+    Button sharefreedias;
+    Button ratebtn;
     ImageView das;
+    Button likeView;
 
-    //TODO boost auf 1800 ändern
-    int boost = 120000;
+    int boost = 1800;
 
 
     Button doublegold;
@@ -65,7 +72,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
     TextView howmanygoldtodias;
     TextView diasCost;
     Button confirmcashout;
-
+    String derefeerallink;
     Handler h = new Handler();
 
     InterstitialAd mInterstitialAd;
@@ -75,7 +82,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
     // The helper object
     IabHelper mHelper;
 
-
+private Tracker mTracker;
 
 
 
@@ -83,8 +90,16 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-5669148825390630~9003934904");
+        // Obtain the shared Tracker instance.
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+
+
+        mTracker.enableAutoActivityTracking(true);
+
         setContentView(R.layout.activity_agency);
-        String base64EncodedPublicKey = getString(R.string.pubkey);
+
 
         //Fullscreen
         if (Build.VERSION.SDK_INT < 16) { //ye olde method
@@ -102,16 +117,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
             actionBar.hide();
         }
 
-        mHelper = new IabHelper(this, base64EncodedPublicKey);
-        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-            public void onIabSetupFinished(IabResult result) {
-                if (!result.isSuccess()) {
-                    // Oh noes, there was a problem.
-                    Log.d(TAG, "Problem setting up In-app Billing: " + result);
-                }
-                // Hooray, IAB is fully set up!
-            }
-        });
+
 
         closeAgency = (Button) findViewById(R.id.closeAgency);
         assert closeAgency != null;
@@ -125,6 +131,11 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
         diastogold = (Button) findViewById(R.id.diastogold);
         diastogold.setOnClickListener(this);
 
+        freedias = (Button) findViewById(R.id.freedias);
+        freedias.setOnClickListener(this);
+        freegold = (Button) findViewById(R.id.freegold);
+        freegold.setOnClickListener(this);
+
 
         doublegold = (Button) findViewById(R.id.doublegold);
         assert doublegold != null;
@@ -136,10 +147,10 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
         //ad
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdUnitId("ca-app-pub-5669148825390630/8864334107");
         //ad laden
         AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("16201-16201")
+                //.addTestDevice("E414DE4FE2ADD841904A5328B51C1195")
                 .build();
 
         mInterstitialAd.loadAd(adRequest);
@@ -189,9 +200,9 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
                 }
 
 
-                h.postDelayed(this, 500);
+                h.postDelayed(this, 1000);
             }
-        }, 500);
+        }, 1000);
 
 
     }
@@ -340,7 +351,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
                             @Override
                             public void onAdFailedToLoad(int errorCode) {
                                 AdRequest adRequest = new AdRequest.Builder()
-                                        .addTestDevice("16201-16201")
+                                        //.addTestDevice("16201-16201")
                                         .build();
 
                                 mInterstitialAd.loadAd(adRequest);
@@ -352,7 +363,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
                                 Toast.makeText(AgencyActivity.this, "thank you", Toast.LENGTH_SHORT).show();
                                 dialogconvertdias.dismiss();
                                 AdRequest adRequest = new AdRequest.Builder()
-                                        .addTestDevice("16201-16201")
+                                        //.addTestDevice("16201-16201")
                                         .build();
 
                                 //geld aktualisierung
@@ -370,7 +381,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
                     } else {
                         Toast.makeText(AgencyActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
                         AdRequest adRequest = new AdRequest.Builder()
-                                .addTestDevice("16201-16201")
+                                //.addTestDevice("16201-16201")
                                 .build();
 
                         mInterstitialAd.loadAd(adRequest);
@@ -409,7 +420,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
 
                 alertDialogBuilder.setCancelable(false);
-                alertDialogBuilder.setPositiveButton("buy", new DialogInterface.OnClickListener() {
+                alertDialogBuilder.setPositiveButton(R.string.buy, new DialogInterface.OnClickListener() {
 
 
                             public void onClick(DialogInterface dialog, int id) {
@@ -581,7 +592,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
                             Toast.makeText(AgencyActivity.this, "we're so sorry. please try again", Toast.LENGTH_SHORT).show();
                             gebaeudeboost.dismiss();
                             AdRequest adRequest = new AdRequest.Builder()
-                                    .addTestDevice("16201-16201")
+                                    //.addTestDevice("16201-16201")
                                     .build();
 
                             mInterstitialAd.loadAd(adRequest);
@@ -647,7 +658,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
 
 
                             AdRequest adRequest = new AdRequest.Builder()
-                                    .addTestDevice("16201-16201")
+                                    //.addTestDevice("16201-16201")
                                     .build();
 
                             mInterstitialAd.loadAd(adRequest);
@@ -657,7 +668,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
                 } else {
                     Toast.makeText(AgencyActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
                     AdRequest adRequest = new AdRequest.Builder()
-                            .addTestDevice("16201-16201")
+                            //.addTestDevice("16201-16201")
                             .build();
 
                     mInterstitialAd.loadAd(adRequest);
@@ -767,8 +778,123 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
             finish();
 
         }
+        if (id == R.id.freedias){
+
+            View gebaeudeboostdia = View.inflate(this, R.layout.freedias, null);
+            gebaeudeboost = new Dialog(v.getContext());
+            gebaeudeboost.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            gebaeudeboost.setContentView(gebaeudeboostdia);
+
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(gebaeudeboost.getWindow().getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+
+            closefreedias = (Button)gebaeudeboost.findViewById(R.id.closefreedias);
+            closefreedias.setOnClickListener(this);
+
+            sharefreedias = (Button)gebaeudeboost.findViewById(R.id.sharefreedias);
+            sharefreedias.setOnClickListener(this);
+
+
+            final SharedPreferences google = new ObscuredSharedPreferences(context,context.getSharedPreferences("google", Context.MODE_PRIVATE));
+            String gid = google.getString("id", "0");
+            final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+
+            derefeerallink ="https://play.google.com/store/apps/details?id="+ appPackageName+"&referrer="+gid;
+            link20dias = (TextView)gebaeudeboost.findViewById(R.id.link20dias);
+            link20dias.setText(derefeerallink);
+            ((ClipboardManager) getSystemService(CLIPBOARD_SERVICE)).setText(link20dias.getText());
+
+
+            gebaeudeboost.show();
+
+        }
+        if (id == R.id.freegold){
+
+            View gebaeudeboostdia = View.inflate(this, R.layout.freegold, null);
+            gebaeudeboost = new Dialog(v.getContext());
+            gebaeudeboost.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            gebaeudeboost.setContentView(gebaeudeboostdia);
+
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(gebaeudeboost.getWindow().getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+
+            closefreedias = (Button)gebaeudeboost.findViewById(R.id.closefreedias);
+            closefreedias.setOnClickListener(this);
+            ratebtn = (Button)gebaeudeboost.findViewById(R.id.ratebtn);
+            ratebtn.setOnClickListener(this);
+
+             likeView = (Button) gebaeudeboost.findViewById(R.id.like_view);
+            likeView.setOnClickListener(this);
+
+
+            gebaeudeboost.show();
+
+        }
+        if (id == R.id.like_view){
+            SharedPreferences editor3 = new ObscuredSharedPreferences(AgencyActivity.this, AgencyActivity.this.getSharedPreferences("freegold", MODE_PRIVATE));
+            int likefs = editor3.getInt("rate",0);
+            if (likefs!=1) {
+                try {
+                    context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/304593896391711")));
+                } catch (Exception e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/FrozenSparks.ch")));
+                }
+                SharedPreferences editor2 = new ObscuredSharedPreferences(AgencyActivity.this, AgencyActivity.this.getSharedPreferences("POOL", MODE_PRIVATE));
+                editor2.edit().putInt("POOL", (editor2.getInt("POOL", 0) + 500)).apply();
+
+                editor3.edit().putInt("likefs", 1).apply();
+
+            }
+            if (likefs==1) {
+                Toast.makeText(AgencyActivity.this, "thanks!", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        if (id == R.id.ratebtn){
+            SharedPreferences editor3 = new ObscuredSharedPreferences(AgencyActivity.this, AgencyActivity.this.getSharedPreferences("freegold", MODE_PRIVATE));
+            int rate = editor3.getInt("rate",0);
+            if (rate!=1) {
+
+
+                final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
+                SharedPreferences editor2 = new ObscuredSharedPreferences(AgencyActivity.this, AgencyActivity.this.getSharedPreferences("POOL", MODE_PRIVATE));
+                editor2.edit().putInt("POOL", (editor2.getInt("POOL", 0) + 500)).apply();
+
+                editor3.edit().putInt("rate", 1).apply();
+            }
+            if (rate==1) {
+                Toast.makeText(AgencyActivity.this, "thanks!", Toast.LENGTH_SHORT).show();
+            }
+
+
+            }
+        if (id == R.id.sharefreedias){
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "hey!\nI found a cool game! get 20 free diamonds with my link: \n "+derefeerallink);
+            sendIntent.setType("text/plain");
+            startActivity(Intent.createChooser(sendIntent, ""));
+        }
+
+        if (id == R.id.closefreedias){
+            if (gebaeudeboost.isShowing()){
+                gebaeudeboost.dismiss();
+            }
+
+        }
     }
-    // We're being destroyed. It's important to dispose of the helper here!
+
+
+     // We're being destroyed. It's important to dispose of the helper here!
     @Override
     public void onDestroy() {
         super.onDestroy();

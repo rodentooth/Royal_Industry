@@ -33,6 +33,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -76,7 +77,8 @@ public class IntroActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
-
+        // Obtain the FirebaseAnalytics instance.
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         //inet check
         connectivity  = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -261,7 +263,7 @@ public class IntroActivity extends AppCompatActivity implements
 
 
                 String dat = "request";
-                String gid =personId;
+                String gid = personId;
                 bgworkerdias lol = new bgworkerdias(context);
                 lol.execute(dat, gid, "diacollect");
             } catch (InterruptedException e) {
@@ -269,8 +271,8 @@ public class IntroActivity extends AppCompatActivity implements
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            if(str_result!=null)
-                if(!str_result.toLowerCase().contains("-")) {
+            if (str_result != null)
+                if (!str_result.toLowerCase().contains("-")) {
 
                     connectcode = Integer.parseInt(str_result);
                 }
@@ -290,8 +292,8 @@ public class IntroActivity extends AppCompatActivity implements
             }
             if (connectcode == 11) {
 
-                Toast.makeText(this, "login success", Toast.LENGTH_SHORT).show();
-                SharedPreferences editor1 = new ObscuredSharedPreferences(IntroActivity.this,IntroActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+                //Toast.makeText(this, "login success", Toast.LENGTH_SHORT).show();
+                SharedPreferences editor1 = new ObscuredSharedPreferences(IntroActivity.this, IntroActivity.this.getSharedPreferences("google", MODE_PRIVATE));
                 editor1.edit().putString("id", personId).apply();
 
             }
@@ -299,14 +301,27 @@ public class IntroActivity extends AppCompatActivity implements
             if (connectcode == 121) {
 
                 Toast.makeText(this, "new account created", Toast.LENGTH_SHORT).show();
-                SharedPreferences editor1 = new ObscuredSharedPreferences(IntroActivity.this,IntroActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+                SharedPreferences editor1 = new ObscuredSharedPreferences(IntroActivity.this, IntroActivity.this.getSharedPreferences("google", MODE_PRIVATE));
                 editor1.edit().putString("id", personId).apply();
-            }
 
-            if (str_result.toLowerCase().contains("error")) {
-                Toast.makeText(this, str_result, Toast.LENGTH_SHORT).show();
-            }
+                SharedPreferences editorfab3 = new ObscuredSharedPreferences(context, context.getSharedPreferences("referrer", context.MODE_PRIVATE));
+                String referrer = editorfab3.getString("gid", "0");
+                int done = editorfab3.getInt("done", 0);
 
+                if (!referrer.equals("0")) {
+                    if (done == 0) {
+                        editorfab3.edit().putInt("done", 1).apply();
+                        bgworkerdias2 lol = new bgworkerdias2(context);
+                        lol.execute("referrer", personId, referrer, "diacollect");
+                    }
+                }
+            }
+            if (str_result!=null) {
+
+                if (str_result.toLowerCase().contains("error")) {
+                    Toast.makeText(this, str_result, Toast.LENGTH_SHORT).show();
+                }
+            }
 
             new Handler().postDelayed(new Runnable() {
                 @Override

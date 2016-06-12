@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.frozensparks.royalindustry.planecrasher.*;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -51,12 +52,16 @@ public class multiplayer extends AppCompatActivity implements
 
     protected UnityPlayer mUnityPlayer; // don't change the name of this variable; referenced from native code
 
-
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        // Obtain the shared Tracker instance.
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+
 
         setContentView(R.layout.activity_intro);
         //Fullscreen
@@ -71,6 +76,7 @@ public class multiplayer extends AppCompatActivity implements
             // Remember that you should never show the action bar if the
             // status bar is hidden, so hide that too if necessary.
             ActionBar actionBar = getSupportActionBar();
+            assert actionBar != null;
             actionBar.hide();
 
 
@@ -109,11 +115,6 @@ public class multiplayer extends AppCompatActivity implements
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-
-            String personName = acct.getDisplayName();
-            String personEmail = acct.getEmail();
-            // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
 
         } else {
             // Signed out, show unauthenticated UI.
@@ -157,31 +158,18 @@ public class multiplayer extends AppCompatActivity implements
             Log.w(TAG,
                     "GameHelper: client was already connected on onStart()");
         } else {
-            Log.d(TAG,"Connecting client.");
+            Log.d(TAG, "Connecting client.");
             // mGoogleApiClient.connect();
         }
         super.onStart();
 
-        if (!mInSignInFlow) {
-            // auto sign in
-        //    mGoogleApiClient.connect();
-        }
-        if (redonodo) {
-         //   redo();
-        }
-    }
-public void redo(){
-    mGoogleApiClient.connect();
 
-     redonodo = false;
-}
+    }
 
     @Override
     public void onConnected(Bundle connectionHint) {
 
         String playerid = Games.Players.getCurrentPlayerId(mGoogleApiClient);
-
-
 
         Toast.makeText(multiplayer.this, playerid, Toast.LENGTH_SHORT).show();
 
@@ -230,12 +218,30 @@ public void redo(){
         super.onConfigurationChanged(newConfig);
         mUnityPlayer.configurationChanged(newConfig);
     }
+    public static void activitystarted(){
+            new multiplayer().hello();
 
+
+
+
+    }
+
+    public void hello(){
+        Log.d(TAG,"hello is called");
+
+        if (mUnityPlayer != null) {
+            mUnityPlayer.quit();
+        }
+    }
     // Notify Unity of the focus change.
     @Override public void onWindowFocusChanged(boolean hasFocus)
     {
         super.onWindowFocusChanged(hasFocus);
         mUnityPlayer.windowFocusChanged(hasFocus);
+        if(!hasFocus){
+           // mUnityPlayer.quit();
+
+        }
     }
 
     // For some reason the multiple keyevent type is not supported by the ndk.

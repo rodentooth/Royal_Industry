@@ -294,7 +294,7 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
         }
 
 
-        if (doafter == "diacollect") {
+        if (doafter.equals("diacollect")) {
             if (connectcode >= 1) {
                 //
 
@@ -307,7 +307,7 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
 
 
         }
-        if (doafter == "diasweg") {
+        if (doafter.equals("diasweg")) {
 
                 //
 
@@ -322,7 +322,7 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
 
 
         }
-        if (doafter == "diastogold") {
+        if (doafter.equals("diastogold")) {
 
                     //databank aktualisieren
                     SharedPreferences editor1 = new ObscuredSharedPreferences(context,context.getSharedPreferences("DIAMONDS",Context.MODE_PRIVATE));
@@ -344,7 +344,7 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
 
             }
 
-            if (doafter == "convert") {
+            if (doafter.equals("convert")) {
 
 
                 if (connectcode >= 1) {
@@ -364,7 +364,7 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
 
 
             }
-        if (doafter == "afterwinner") {
+        if (doafter.equals("afterwinner")) {
 
             //databank aktualisieren
             SharedPreferences editor1 = new ObscuredSharedPreferences(context,context.getSharedPreferences("DIAMONDS",Context.MODE_PRIVATE));

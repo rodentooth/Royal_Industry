@@ -30,7 +30,7 @@ Button hangar;
         if (id == R.id.werkstatt) {
             Intent intent = new Intent(this, multiplayer.class);
             startActivity(intent);
-
+            finish();
         }
     }
 }

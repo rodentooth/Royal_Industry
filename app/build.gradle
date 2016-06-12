@@ -13,12 +13,16 @@ android {
         applicationId "com.frozensparks.royalindustry"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.01"
+
+
     }
 
 }
-
+repositories {
+    mavenCentral()
+}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -32,13 +36,14 @@ dependencies {
     compile 'com.google.android.gms:play-services-appindexing:9.0.2'
     compile 'com.google.android.gms:play-services-ads:9.0.2'
     compile 'com.android.support:design:23.4.0'
-
-    compile files(project(':mainLibProj').buildDir.absolutePath + "/libs/mainLibProj.jar")
+    compile 'com.google.firebase:firebase-ads:9.0.2'
+    compile 'com.google.android.gms:play-services-appindexing:9.0.2'
+    compile 'com.google.android.gms:play-services-analytics:9.0.2'
+    compile 'com.google.firebase:firebase-crash:9.0.2'
+    compile 'com.google.firebase:firebase-core:9.0.2'
     compile files('/libs/play-games-plugin-support.jar')
-
     compile 'com.google.android.gms:play-services-games:9.0.2'
     compile 'com.google.android.gms:play-services-nearby:9.0.2'
     compile 'com.google.android.gms:play-services-drive:9.0.2'
-
 }
 apply plugin: 'com.google.gms.google-services'

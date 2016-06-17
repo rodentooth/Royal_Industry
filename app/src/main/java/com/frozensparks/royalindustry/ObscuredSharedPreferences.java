@@ -61,8 +61,8 @@ public class ObscuredSharedPreferences implements SharedPreferences {
     public ObscuredSharedPreferences(Context context, SharedPreferences delegate) {
         this.delegate = delegate;
         this.context = context;
-        //SEKRIT = Settings.Secure.ANDROID_ID.toCharArray();
-        SEKRIT = "kjf87gfbksi7JHV".toCharArray();
+        SEKRIT = Settings.Secure.ANDROID_ID.toCharArray();
+        //SEKRIT = "kjf87gfbksi7JHV".toCharArray();
     }
 
     /**
@@ -101,19 +101,23 @@ public class ObscuredSharedPreferences implements SharedPreferences {
 
         @Override
         public Editor putBoolean(String key, boolean value) {
+            Log.d("osp",key+" as bool is adding"+value);
+
             delegate.putString(key, encrypt(Boolean.toString(value)));
             return this;
         }
 
         @Override
         public Editor putFloat(String key, float value) {
+            Log.d("osp",key+" as float is adding"+value);
+
             delegate.putString(key, encrypt(Float.toString(value)));
             return this;
         }
 
         @Override
         public Editor putInt(String key, int value) {
-            Log.d("android","putint callled"+value);
+            Log.d("osp",key+" as int is adding"+value);
 
             delegate.putString(key, encrypt(Integer.toString(value)));
             return this;
@@ -121,12 +125,16 @@ public class ObscuredSharedPreferences implements SharedPreferences {
 
         @Override
         public Editor putLong(String key, long value) {
+            Log.d("osp",key+" as long is adding"+value);
+
             delegate.putString(key, encrypt(Long.toString(value)));
             return this;
         }
 
         @Override
         public Editor putString(String key, String value) {
+            Log.d("osp",key+" as string is adding"+value);
+
             delegate.putString(key, encrypt(value));
             return this;
         }
@@ -196,7 +204,7 @@ public class ObscuredSharedPreferences implements SharedPreferences {
         } catch (NumberFormatException e) {
             //could not decrypt the number.  Maybe we are using the wrong key?
             decryptionErrorFlag = true;
-           // Log.e(this.getClass().getName(), "Warning, could not decrypt the value.  Possible incorrect key.  "+e.getMessage()+" at key: "+key+" with value: "+defValue);
+            // Log.e(this.getClass().getName(), "Warning, could not decrypt the value.  Possible incorrect key.  "+e.getMessage()+" at key: "+key+" with value: "+defValue);
         }
         return defValue;
     }
@@ -291,8 +299,8 @@ public class ObscuredSharedPreferences implements SharedPreferences {
             pbeCipher.init(Cipher.DECRYPT_MODE, key, new PBEParameterSpec(Settings.Secure.getString(context.getContentResolver(), Secure.ANDROID_ID).getBytes(UTF8), 20));
             return new String(pbeCipher.doFinal(bytes),UTF8);
         } catch( Exception e) {
-           // Log.e(this.getClass().getName(), "Warning, could not decrypt the value.  It may be stored in plaintext.  "+e.getMessage()+" value: "+value);
-            return value;
+            //Log.e(this.getClass().getName(), "Warning, could not decrypt the value.  It may be stored in plaintext.  "+e.getMessage()+" value: "+value);
+            return null;
         }
     }
 }

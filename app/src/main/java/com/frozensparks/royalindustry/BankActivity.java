@@ -65,7 +65,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
     SeekBar seekbar;
     Button confirmconvert;
     Dialog dialogconvertdias;
-
+    float thatmanycashoutinfloat;
     InterstitialAd mInterstitialAd;
 
     Button GoldToDias;
@@ -450,9 +450,9 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                             diasCost.setText(getString(R.string.Costs) + " " + fück * 10 + " "+ getString(R.string.Diamonds));
 
                             //den progressvalue (wieviele dias) speichern
-                            SharedPreferences editor1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanycash", MODE_PRIVATE));
-                            editor1.edit().putFloat("thatmanycash", progressvalue/100).apply();
-
+                            //SharedPreferences editor1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanycash", MODE_PRIVATE));
+                            //editor1.edit().putFloat("thatmanycash", progressvalue/100).apply();
+                             thatmanycashoutinfloat = progressvalue / 100;
 
                         }
                     }
@@ -493,6 +493,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             // Nur wenn die ad geladen hat, das converten erlauben
             if (mInterstitialAd.isLoaded()) {
                 mInterstitialAd.show();
+                Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
 
 
 
@@ -522,7 +523,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
                     //checken obs genug gold für den convert hat
-                    if (goldweg >= prefs2.getInt("POOL", 0)) {
+                    if (goldweg > prefs2.getInt("POOL", 0)) {
 
                         Toast.makeText(BankActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -625,11 +626,13 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
             //holen von wieviele diamanten erstellen
-            SharedPreferences prefs1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanycash", MODE_PRIVATE));
+            //SharedPreferences prefs1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanycash", MODE_PRIVATE));
 
-            float diaweg = (prefs1.getFloat("thatmanycash", 0)*1000);
+            int diaweg=0;
 
-            //wenn 0 diamanten gewählt, abbrechen
+             diaweg = (int)(thatmanycashoutinfloat * 1000);
+
+                    //wenn 0 diamanten gewählt, abbrechen
             if (diaweg < 10) {
 
                 Toast.makeText(BankActivity.this, "minimum 10 diamonds", Toast.LENGTH_SHORT).show();
@@ -649,7 +652,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 //checken obs genug gold für den convert hat
-                if (diaweg >= prefs2.getInt("DIAMONDS", 0)) {
+                if (diaweg > prefs2.getInt("DIAMONDS", 0)) {
 
                     Toast.makeText(BankActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
 
@@ -664,7 +667,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                     final SharedPreferences google = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("google", MODE_PRIVATE));
 
-                    int loldiasfuck = (int)diaweg;
+                    int loldiasfuck = diaweg;
                     String dias = Integer.toString(loldiasfuck);
 
                     String type = "convert";
@@ -1000,16 +1003,15 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     SharedPreferences prefs1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanycash", MODE_PRIVATE));
                     SharedPreferences prefs2 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DIAMONDS", MODE_PRIVATE));
 
-                    float diaweg = prefs1.getFloat("thatmanycash", 0)*1000;
+                    //float diaweg = prefs1.getFloat("thatmanycash", 0)*1000;
 
                     //Pool aktualisieren, gold abziehen
                     SharedPreferences editor1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DIAMONDS", MODE_PRIVATE));
-                    editor1.edit().putInt("DIAMONDS", (prefs2.getInt("DIAMONDS", 0)) - (int)diaweg).apply();
+                    editor1.edit().putInt("DIAMONDS", (prefs2.getInt("DIAMONDS", 0)) - (int)thatmanycashoutinfloat).apply();
 
 
                     //Pooltext aktualisieren
-                    SharedPreferences prefs3 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("DIAMONDS", MODE_PRIVATE));
-                    String Pooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
+                    String Pooltext = String.valueOf((prefs2.getInt("DIAMONDS", 0)) - (int)thatmanycashoutinfloat);
                     diatext.setText(": " + Pooltext);
 
 
@@ -1022,7 +1024,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     float rtrdrp = rappen/100;
                     String rpstr = Float.toString(rtrdrp);
 
-                    Toast.makeText(BankActivity.this, rpstr, Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(BankActivity.this, rpstr, Toast.LENGTH_SHORT).show();
 
                     SharedPreferences editor2 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("cashout", MODE_PRIVATE));
                     editor2.edit().putFloat("cashout", rtrdrp).apply();
@@ -1034,6 +1036,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     if(mInterstitialAd.isLoaded()){
                         mInterstitialAd.show();
 
+                        Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
 
                         mInterstitialAd.setAdListener(new AdListener() {
 
@@ -1060,6 +1063,11 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                                         .build();
 
                                 mInterstitialAd.loadAd(adRequest);
+                                final SharedPreferences google = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+                                String dat = "request";
+                                String gid = google.getString("id", "0");
+                                bgworkerdias2 lol = new bgworkerdias2(context);
+                                lol.execute(dat, gid, "diacollect");
                             }
                         });
 
@@ -1105,6 +1113,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                     if(mInterstitialAd.isLoaded()){
                         mInterstitialAd.show();
+                        Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
 
 
                         mInterstitialAd.setAdListener(new AdListener() {
@@ -1184,7 +1193,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 if (connectcode == 1111) {
                     //übertrag ok
-                    Toast.makeText(BankActivity.this, "Timer started", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
                 }
                 Log.d("serverantwort ist: " ,result);
 

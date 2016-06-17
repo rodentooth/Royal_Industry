@@ -43,6 +43,7 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
         String diasweg_url = "http://frozensparks.com/diasweg.php";
         String inputOppPlayerId_url = "http://frozensparks.com/inputOppPlayerId.php";
         String looserorwinner_url = "http://frozensparks.com/looserorwinner.php";
+        String goldnlvls_url = "http://frozensparks.com/goldnlvls.php";
 
 
 
@@ -90,7 +91,69 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
 
 
         }
-        if (type.equals("convert")) {
+        if (type.equals("goldnlevels")) {
+            try {
+                doafter="goldnlvlupdate";
+                String googleID = params[1];
+                String levelfab1 = params[2];
+                String levelfab2 = params[3];
+                String levelfab3 = params[4];
+                String levelfab4 = params[5];
+                String levelbank = params[6];
+                String levelagency = params[7];
+                String pool = params[8];
+                String lastseen = params[9];
+
+
+
+
+
+
+
+                URL url = new URL(goldnlvls_url);
+                HttpURLConnection httpurlconn = (HttpURLConnection) url.openConnection();
+                httpurlconn.setRequestMethod("POST");
+                httpurlconn.setDoOutput(true);
+                httpurlconn.setDoInput(true);
+                OutputStream outputStream = httpurlconn.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                String post_data = URLEncoder.encode("googleID", "UTF-8") + "=" + URLEncoder.encode(googleID, "UTF-8") + "&"
+                        + URLEncoder.encode("levelfab1", "UTF-8") + "=" + URLEncoder.encode(levelfab1, "UTF-8") + "&"
+                        + URLEncoder.encode("levelfab2", "UTF-8") + "=" + URLEncoder.encode(levelfab2, "UTF-8") + "&"
+                        + URLEncoder.encode("levelfab3", "UTF-8") + "=" + URLEncoder.encode(levelfab3, "UTF-8") + "&"
+                        + URLEncoder.encode("levelfab4", "UTF-8") + "=" + URLEncoder.encode(levelfab4, "UTF-8") + "&"
+                        + URLEncoder.encode("levelbank", "UTF-8") + "=" + URLEncoder.encode(levelbank, "UTF-8") + "&"
+                        + URLEncoder.encode("levelagency", "UTF-8") + "=" + URLEncoder.encode(levelagency, "UTF-8") + "&"
+                        + URLEncoder.encode("pool", "UTF-8") + "=" + URLEncoder.encode(pool, "UTF-8")+ "&"
+                        + URLEncoder.encode("lastseen", "UTF-8") + "=" + URLEncoder.encode(lastseen, "UTF-8");
+
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+
+                InputStream inputStream = httpurlconn.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                String result = "";
+                String line;
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line;
+
+
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpurlconn.disconnect();
+
+                return result;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        } if (type.equals("convert")) {
             try {
                 doafter = params[3];
                 String googleID = params[1];
@@ -295,7 +358,7 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
 
 
         if (doafter.equals("diacollect")) {
-            if (connectcode >= 1) {
+            if (connectcode >= 0) {
                 //
 
                 //databank aktualisieren
@@ -309,17 +372,21 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
         }
         if (doafter.equals("diasweg")) {
 
-                //
+            if (connectcode == -1) {
+                Toast.makeText(context, "not enough diamonds", Toast.LENGTH_SHORT).show();
 
-                //databank aktualisieren
-                SharedPreferences editor1 = new ObscuredSharedPreferences(context,context.getSharedPreferences("DIAMONDS",Context.MODE_PRIVATE));
-                editor1.edit().putInt("DIAMONDS", connectcode).apply();
+            }
+                if (connectcode >= 0) {
 
-                SharedPreferences editor2 = new ObscuredSharedPreferences(context,context.getSharedPreferences("doublecoll",Context.MODE_PRIVATE));
-                editor2.edit().putBoolean("doublecoll", true).apply();
-                Toast.makeText(context, "buy successful", Toast.LENGTH_SHORT).show();
+                    //databank aktualisieren
+                    SharedPreferences editor1 = new ObscuredSharedPreferences(context, context.getSharedPreferences("DIAMONDS", Context.MODE_PRIVATE));
+                    editor1.edit().putInt("DIAMONDS", connectcode).apply();
 
+                    SharedPreferences editor2 = new ObscuredSharedPreferences(context, context.getSharedPreferences("doublecoll", Context.MODE_PRIVATE));
+                    editor2.edit().putBoolean("doublecoll", true).apply();
+                    Toast.makeText(context, "buy successful", Toast.LENGTH_SHORT).show();
 
+                }
 
         }
         if (doafter.equals("diastogold")) {

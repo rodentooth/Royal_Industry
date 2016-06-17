@@ -37,6 +37,13 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class AgencyActivity extends AppCompatActivity implements View.OnClickListener {
+
+    // TODO: false
+    Boolean godmode = false;
+
+
+    Boolean runner =true;
+
     Context context = this;
     Button buildboost;
     Dialog gebaeudeboost;
@@ -57,6 +64,7 @@ public class AgencyActivity extends AppCompatActivity implements View.OnClickLis
     Button ratebtn;
     ImageView das;
     Button likeView;
+
 
     int boost = 1800;
 
@@ -100,7 +108,9 @@ private Tracker mTracker;
 
         setContentView(R.layout.activity_agency);
 
-
+        if(godmode){
+    boost=10000000;
+        }
         //Fullscreen
         if (Build.VERSION.SDK_INT < 16) { //ye olde method
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -156,53 +166,56 @@ private Tracker mTracker;
         mInterstitialAd.loadAd(adRequest);
 
 
-        h.postDelayed(new Runnable(){
-            public void run(){
+        h.postDelayed(new Runnable() {
 
-                SharedPreferences prefs1 = new ObscuredSharedPreferences(AgencyActivity.this,AgencyActivity.this.getSharedPreferences("POOL", MODE_PRIVATE));
-                String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
-                goldagency.setText(": " + Pooltext );
+            public void run() {
+                if(runner) {
 
-                SharedPreferences prefs3 = new ObscuredSharedPreferences(AgencyActivity.this,AgencyActivity.this.getSharedPreferences("DIAMONDS", MODE_PRIVATE));
-                //Diapool text aktualisieren
-                String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
-                diapoolagency.setText(": " + diapooltext );
+                    SharedPreferences prefs1 = new ObscuredSharedPreferences(AgencyActivity.this, AgencyActivity.this.getSharedPreferences("POOL", MODE_PRIVATE));
+                    String Pooltext = String.valueOf(prefs1.getInt("POOL", 0));
+                    goldagency.setText(": " + Pooltext);
 
-                SharedPreferences deziit =new ObscuredSharedPreferences(AgencyActivity.this,AgencyActivity.this.getSharedPreferences("blockzeit", MODE_PRIVATE));
-                int endtime = (int) (System.currentTimeMillis()/1000) ;
-                int startzeit = deziit.getInt("startzeit", 31);
-                int datzeit = endtime - startzeit;
-                restzeit =  30 - datzeit;
+                    SharedPreferences prefs3 = new ObscuredSharedPreferences(AgencyActivity.this, AgencyActivity.this.getSharedPreferences("DIAMONDS", MODE_PRIVATE));
+                    //Diapool text aktualisieren
+                    String diapooltext = String.valueOf(prefs3.getInt("DIAMONDS", 0));
+                    diapoolagency.setText(": " + diapooltext);
 
-                if (datzeit >= 30){
-                    SharedPreferences deziit1 =new ObscuredSharedPreferences(AgencyActivity.this,AgencyActivity.this.getSharedPreferences("blockzeit", MODE_PRIVATE));
-                    deziit1.edit().putInt("startzeit", endtime);
-                    deziit1.edit().putBoolean("ad", true).apply();
+                    SharedPreferences deziit = new ObscuredSharedPreferences(AgencyActivity.this, AgencyActivity.this.getSharedPreferences("blockzeit", MODE_PRIVATE));
+                    int endtime = (int) (System.currentTimeMillis() / 1000);
+                    int startzeit = deziit.getInt("startzeit", 31);
+                    int datzeit = endtime - startzeit;
+                    restzeit = 30 - datzeit;
+
+                    if (datzeit >= 30) {
+                        SharedPreferences deziit1 = new ObscuredSharedPreferences(AgencyActivity.this, AgencyActivity.this.getSharedPreferences("blockzeit", MODE_PRIVATE));
+                        deziit1.edit().putInt("startzeit", endtime);
+                        deziit1.edit().putBoolean("ad", true).apply();
 
 
+                    }
+
+
+                    //Fullscreen
+                    if (Build.VERSION.SDK_INT < 16) { //ye olde method
+                        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                    } else { // Jellybean and up, new hotness
+                        View decorView = getWindow().getDecorView();
+                        // Hide the status bar.
+                        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+                        decorView.setSystemUiVisibility(uiOptions);
+                        // Remember that you should never show the action bar if the
+                        // status bar is hidden, so hide that too if necessary.
+                        ActionBar actionBar = getSupportActionBar();
+                        actionBar.hide();
+                    }
 
                 }
+                h.postDelayed(this, 2000);
 
-
-                //Fullscreen
-                if (Build.VERSION.SDK_INT < 16) { //ye olde method
-                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                            WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                } else { // Jellybean and up, new hotness
-                    View decorView = getWindow().getDecorView();
-                    // Hide the status bar.
-                    int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-                    decorView.setSystemUiVisibility(uiOptions);
-                    // Remember that you should never show the action bar if the
-                    // status bar is hidden, so hide that too if necessary.
-                    ActionBar actionBar = getSupportActionBar();
-                    actionBar.hide();
-                }
-
-
-                h.postDelayed(this, 1000);
             }
-        }, 1000);
+
+        }, 1);
 
 
     }
@@ -320,10 +333,10 @@ private Tracker mTracker;
                 SharedPreferences prefs2 = new ObscuredSharedPreferences(AgencyActivity.this,AgencyActivity.this.getSharedPreferences("DIAMONDS", MODE_PRIVATE));
 
 
-                //checken obs genug gold für den convert hat
-                if (diaweg >= prefs2.getInt("DIAMONDS", 0)) {
+                //checken obs genug diamanten für den convert hat
+                if (diaweg > prefs2.getInt("DIAMONDS", 0)) {
 
-                    Toast.makeText(AgencyActivity.this, getString(R.string.Cantafford), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AgencyActivity.this, R.string.not_enough_diamonds, Toast.LENGTH_SHORT).show();
 
 
                 }
@@ -903,7 +916,7 @@ private Tracker mTracker;
       /*  if (mBroadcastReceiver != null) {
          unregisterReceiver(mBroadcastReceiver);
        }*/
-
+            runner=false;
         // very important:
         Log.d(TAG, "Destroying helper.");
         if (mHelper != null) {

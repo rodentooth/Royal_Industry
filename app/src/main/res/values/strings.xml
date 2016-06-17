@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Royal Industry</string>
     <string name="server_client_id" translatable="false">1039988370556-volihaa3qsfffm4pjcbhihjb6uitrhle.apps.googleusercontent.com</string>
-
+    <string name="facebook_app_id" translatable="false">803777856424882</string>
     <string name="app_id" translatable="false">1039988370556</string>
     <string name="title_activity_bank">BankActivity</string>
     <string name="Gold">gold </string>
@@ -94,6 +94,12 @@
     <string name="skiptime">skip 30 minutes building time</string>
     <string name="choosebui">choose a building</string>
     <string name="noupatmom">no upgrades going on</string>
+    <string name="pay_with">pay with:</string>
+    <string name="not_enough_diamonds">not enough diamonds!</string>
+    <string name="click_on_ad">click on the ad to continue!</string>
+    <string name="gotit">got it! </string>
+    <string name="hintad">short hint: </string>
+    <string name="hintexpad">if you just\n\n 2,3 times click on the ads,\n\n you can help\n\n keep the project going!</string>
 
 
 </resources>

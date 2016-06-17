@@ -12,10 +12,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.renderscript.Sampler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,6 +26,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.appindexing.Action;
@@ -31,7 +35,9 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.unity3d.player.UnityPlayer;
 
+import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 
@@ -41,6 +47,10 @@ import java.util.concurrent.TimeUnit;
  * status bar and navigation/system bar) with user interaction.
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    // TODO: false
+    Boolean godmode = false;
+
 
     //fabrikdialoge
     Dialog dialog;
@@ -131,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button Agency;
     SharedPreferences dataAgency;
     ProgressBar progressBarUpgradeAgency;
-    private Tracker mTracker;
 
 
     Typeface typeface;
@@ -165,6 +174,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FontsOverride.setDefaultFont(this, "DEFAULT_ITALIC", "fonts/OldGlyphs.ttf");
         AssetManager am = context.getApplicationContext().getAssets();
 
+        //app auf fb aktivieren
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(MainActivity.this);
+
+
         typeface = Typeface.createFromAsset(am,
                 String.format(Locale.US, "fonts/%2s", "OldGlyphs.ttf"));
 
@@ -174,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // [START shared_tracker]
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
+        Tracker mTracker = application.getDefaultTracker();
         // [END shared_tracker]
         // Set screen name.
 
@@ -383,51 +397,1086 @@ if (mUnityPlayer!=null) {
             }
         }
 
-
-        //Aktualisator
-
         datafab2 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab2", MODE_PRIVATE));
         datafab3 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab3", MODE_PRIVATE));
         datafab4 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab4", MODE_PRIVATE));
 
-        int fabbild1 = datafab1.getInt("Level", 1);
-        int fabbild1id= getResources().getIdentifier("fablvl"+fabbild1, "drawable", getPackageName());
-        Fabrik1.setBackgroundResource(fabbild1id);
-
-        if (datafab2.getInt("Level", 0) == 0) {
-            Fabrik2.setVisibility(View.INVISIBLE);
-            SammelnFabrik2.setVisibility(View.INVISIBLE);
-
-        }
-        if (datafab2.getInt("Level", 0) >= 1) {
-            int fabbild2 = datafab2.getInt("Level", 1);
-            int fabbild2id= getResources().getIdentifier("fablvl"+fabbild2, "drawable", getPackageName());
-            Fabrik2.setBackgroundResource(fabbild2id);
-        }
-        if (datafab3.getInt("Level", 0) == 0) {
-            Fabrik3.setVisibility(View.INVISIBLE);
-            SammelnFabrik3.setVisibility(View.INVISIBLE);
-
-        }
-        if (datafab3.getInt("Level", 0) >= 1) {
-            int fabbild3 = datafab3.getInt("Level", 1);
-            int fabbild3id= getResources().getIdentifier("fablvl"+fabbild3, "drawable", getPackageName());
-            Fabrik3.setBackgroundResource(fabbild3id);
-        }
-        if (datafab4.getInt("Level", 0) == 0) {
-            Fabrik4.setVisibility(View.INVISIBLE);
-            SammelnFabrik4.setVisibility(View.INVISIBLE);
-
-        }
-        if (datafab4.getInt("Level", 0) >= 1) {
-            int fabbild4 = datafab4.getInt("Level", 1);
-            int fabbild4id= getResources().getIdentifier("fablvl"+fabbild4, "drawable", getPackageName());
-            Fabrik4.setBackgroundResource(fabbild4id);
-        }
         h.postDelayed(new Runnable() {
             public void run() {
 
 
+
+                //Aktualisator
+
+                datafab2 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab2", MODE_PRIVATE));
+                datafab3 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab3", MODE_PRIVATE));
+                datafab4 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab4", MODE_PRIVATE));
+
+                int fabbild1 = datafab1.getInt("Level", 1);
+                int fabbild1id= getResources().getIdentifier("fablvl"+fabbild1, "drawable", getPackageName());
+                Fabrik1.setBackgroundResource(fabbild1id);
+
+                if (datafab2.getInt("Level", 0) == 0) {
+                    Fabrik2.setVisibility(View.INVISIBLE);
+                    SammelnFabrik2.setVisibility(View.INVISIBLE);
+
+                }
+                if (datafab2.getInt("Level", 0) >= 1) {
+                    int fabbild2 = datafab2.getInt("Level", 1);
+                    int fabbild2id= getResources().getIdentifier("fablvl"+fabbild2, "drawable", getPackageName());
+                    Fabrik2.setBackgroundResource(fabbild2id);
+                }
+                if (datafab3.getInt("Level", 0) == 0) {
+                    Fabrik3.setVisibility(View.INVISIBLE);
+                    SammelnFabrik3.setVisibility(View.INVISIBLE);
+
+                }
+                if (datafab3.getInt("Level", 0) >= 1) {
+                    int fabbild3 = datafab3.getInt("Level", 1);
+                    int fabbild3id= getResources().getIdentifier("fablvl"+fabbild3, "drawable", getPackageName());
+                    Fabrik3.setBackgroundResource(fabbild3id);
+                }
+                if (datafab4.getInt("Level", 0) == 0) {
+                    Fabrik4.setVisibility(View.INVISIBLE);
+                    SammelnFabrik4.setVisibility(View.INVISIBLE);
+
+                }
+                if (datafab4.getInt("Level", 0) >= 1) {
+                    int fabbild4 = datafab4.getInt("Level", 1);
+                    int fabbild4id= getResources().getIdentifier("fablvl"+fabbild4, "drawable", getPackageName());
+                    Fabrik4.setBackgroundResource(fabbild4id);
+                }
+                SharedPreferences dataAgency = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataAgency", MODE_PRIVATE));
+
+                if (dataAgency.getInt("Level", 0) >= 1) {
+
+                    Fabrik4.setBackgroundResource(R.drawable.agencylvl1);
+                }
+
+
+
+
+
+                //upgrades
+
+
+                //Agency
+                Boolean cdAgency = (dataAgency.getBoolean("isLeveling", false));
+                if (cdAgency) {
+
+                    progressBarUpgradeAgency.setVisibility(View.VISIBLE);
+                    //startzeit holen
+                    SharedPreferences AgencyupgradeContdown = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("startTimeUpgradeAgency", MODE_PRIVATE));
+                    int startTimeAgency = AgencyupgradeContdown.getInt("startTime", 0); //0 is the default value.
+                    //endzeit als jetzt definieren
+                    int endTimeAgency = ((int) System.currentTimeMillis() / 1000);
+                    int elapsedSecondsAgency = endTimeAgency - startTimeAgency;
+
+                    //progressbar updaten
+                    progressBarUpgradeAgency.setMax(AgencyupgradeContdown.getInt("countdown", 0));
+                    progressBarUpgradeAgency.setProgress(elapsedSecondsAgency);
+
+
+                    if (elapsedSecondsAgency > AgencyupgradeContdown.getInt("countdown", 0)) {
+
+
+                        SharedPreferences editorAgency = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataAgency", MODE_PRIVATE));
+                        dataAgency = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataAgency", MODE_PRIVATE));
+
+                        if (dataAgency.getInt("Level", 0) == 0) {
+                            Agency.setVisibility(View.VISIBLE);
+
+                            //definition level1
+                            editorAgency.edit().putString("leveltext", getString(R.string.agency) + " " + getString(R.string.level1)).apply();
+                            editorAgency.edit().putBoolean("isLeveling", false).apply();
+                            //cdAgency = false;
+                            progressBarUpgradeAgency.setVisibility(View.INVISIBLE);
+                            Agency.setBackgroundResource(R.drawable.agencylvl1);
+                            editorAgency.edit().putInt("Level", dataAgency.getInt("Level", 0) + 1).apply();
+
+
+                        }
+
+
+
+                    }
+
+                }
+
+                //Bank
+                SharedPreferences dataBank = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataBank", MODE_PRIVATE));
+                Boolean cdBank = (dataBank.getBoolean("isLeveling", false));
+                if (cdBank) {
+
+                    progressBarUpgradeBank.setVisibility(View.VISIBLE);
+                    //startzeit holen
+                    SharedPreferences BankupgradeContdown = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("startTimeUpgradeBank", MODE_PRIVATE));
+                    int startTimeBank = BankupgradeContdown.getInt("startTime", 0); //0 is the default value.
+                    //endzeit als jetzt definieren
+                    int endTimeBank = ((int) System.currentTimeMillis() / 1000);
+                    int elapsedSecondsBank = endTimeBank - startTimeBank;
+
+                    //progressbar updaten
+                    progressBarUpgradeBank.setMax(BankupgradeContdown.getInt("countdown", 0));
+                    progressBarUpgradeBank.setProgress(elapsedSecondsBank);
+
+
+                    if (elapsedSecondsBank > BankupgradeContdown.getInt("countdown", 0)) {
+
+
+                        dataBank = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataBank", MODE_PRIVATE));
+
+
+                        SharedPreferences editorBank = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataBank", MODE_PRIVATE));
+
+                        if (dataBank.getInt("Level", 1) == 1) {
+                            Bank.setBackgroundResource(R.drawable.banklvl2);
+
+                            //definition level2
+                            editorBank.edit().putInt("maxGoldStorage", 20000).apply();
+                            editorBank.edit().putString("leveltext", getString(R.string.bank) + " " + getString(R.string.level2)).apply();
+                            editorBank.edit().putBoolean("isLeveling", false).apply();
+                            cdBank = false;
+                            progressBarUpgradeBank.setVisibility(View.INVISIBLE);
+                            Bank.setBackgroundResource(R.drawable.banklvl2);
+                            editorBank.edit().putInt("Level", dataBank.getInt("Level", 1) + 1).apply();
+
+
+
+
+
+
+
+                            //gebäude auf Bank level 2 freischalten:
+
+                            //Fabrik 1 level4
+
+                            SharedPreferences Levelbedingungfab1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab1", MODE_PRIVATE));
+                            Levelbedingungfab1.edit().putBoolean("bedingungenerfüllt", true).apply();
+
+                            //Fabrik 2
+
+                            SharedPreferences Levelbedingungfab2 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab2", MODE_PRIVATE));
+                            Levelbedingungfab2.edit().putBoolean("bedingungenerfüllt", true).apply();
+
+                            //Agentur
+
+                            SharedPreferences lvlbedagency = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataAgency", MODE_PRIVATE));
+                            lvlbedagency.edit().putBoolean("bedingungenerfüllt", true).apply();
+
+
+                        }
+
+                        if (cdBank) {
+                            if (dataBank.getInt("Level", 1) == 2) {
+
+
+                                //definition level3
+                                editorBank.edit().putInt("maxGoldStorage", 75000).apply();
+                                editorBank.edit().putString("leveltext", getString(R.string.bank) + " " + getString(R.string.level3)).apply();
+                                editorBank.edit().putBoolean("isLeveling", false).apply();
+                                cdBank = false;
+                                Bank.setBackgroundResource(R.drawable.banklvl3);
+
+                                progressBarUpgradeBank.setVisibility(View.INVISIBLE);
+                                editorBank.edit().putInt("Level", dataBank.getInt("Level", 1) + 1).apply();
+
+                                //gebäude auf Bank level 3 freischalten:
+                                //fabrik3
+                                SharedPreferences Levelbedingungfab3 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab3", MODE_PRIVATE));
+                                Levelbedingungfab3.edit().putBoolean("bedingungenerfüllt", true).apply();
+
+                                //Fabriken auf lvl 7
+                                SharedPreferences Levelbedingungfab1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab1", MODE_PRIVATE));
+                                Levelbedingungfab1.edit().putBoolean("bedingungenerfüllt", true).apply();
+
+
+                                SharedPreferences Levelbedingungfab2 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab2", MODE_PRIVATE));
+                                Levelbedingungfab2.edit().putBoolean("bedingungenerfüllt", true).apply();
+
+                                //Agentur lvl2
+
+                            }
+                        }
+
+                        if (cdBank) {
+                            if (dataBank.getInt("Level", 1) == 3) {
+
+
+                                //definition level4
+                                editorBank.edit().putInt("maxGoldStorage", 150000).apply();
+                                editorBank.edit().putString("leveltext", getString(R.string.bank) + " " + getString(R.string.level4)).apply();
+                                editorBank.edit().putBoolean("isLeveling", false).apply();
+                                // bei weitere.apply(); lvl aktivieren cdBank = false;
+                                progressBarUpgradeBank.setVisibility(View.INVISIBLE);
+                                editorBank.edit().putInt("Level", dataBank.getInt("Level", 1) + 1).apply();
+                                Bank.setBackgroundResource(R.drawable.banklvl4);
+
+                                //gebäude auf Bank level 4 freischalten:
+                                //fabrik4
+                                SharedPreferences Levelbedingungfab4 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab4", MODE_PRIVATE));
+                                Levelbedingungfab4.edit().putBoolean("bedingungenerfüllt", true).apply();
+
+                            }
+
+                        }
+
+
+                    }
+                }
+
+
+                //Fabrik1
+                datafab1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab1", MODE_PRIVATE));
+                Boolean cdfab1 = (datafab1.getBoolean("isLeveling", false));
+                if (cdfab1) {
+
+                    progressBarUpgradefab1.setVisibility(View.VISIBLE);
+                    SammelnFabrik1.setVisibility(View.INVISIBLE);
+                    //startzeit holen
+                    SharedPreferences Fab1upgradeContdown = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("startTimeUpgradeFab1", MODE_PRIVATE));
+                    int startTimefab1 = Fab1upgradeContdown.getInt("startTime", 0); //0 is the default value.
+                    //endzeit als jetzt definieren
+                    int endTimefab1 = ((int) System.currentTimeMillis() / 1000);
+                    int elapsedSecondsfab1 = endTimefab1 - startTimefab1;
+
+                    //progressbar updaten
+                    progressBarUpgradefab1.setMax(Fab1upgradeContdown.getInt("countdown", 0));
+                    progressBarUpgradefab1.setProgress(elapsedSecondsfab1);
+
+                    //goldprod.während des lvlns stoppen
+
+                    SharedPreferences editor = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE));
+                    editor.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000)).apply();
+
+                    if (elapsedSecondsfab1 > Fab1upgradeContdown.getInt("countdown", 0)) {
+
+
+                        SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab1", MODE_PRIVATE));
+
+                        if (datafab1.getInt("Level", 1) == 1) {
+
+
+                            //definition level2
+                            editor1.edit().putInt("maxfabrik1", 1000).apply();
+                            editor1.edit().putInt("minfabrik1", 2).apply();
+                            editor1.edit().putFloat("goldphfab1", (float) 0.1).apply();
+                            editor1.edit().putString("leveltextfab1", getString(R.string.factory_1) + " " + getString(R.string.level2)).apply();
+                            editor1.edit().putBoolean("isLeveling", false).apply();
+                            cdfab1 = false;
+                            progressBarUpgradefab1.setVisibility(View.INVISIBLE);
+                            SammelnFabrik1.setVisibility(View.VISIBLE);
+                            editor1.edit().putInt("Level", datafab1.getInt("Level", 1) + 1).apply();
+
+
+
+                            //gebäude auf lvl 2 freischalten:
+
+                            //bank lvl 2
+                            SharedPreferences LevelbedingungBank = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataBank", MODE_PRIVATE));
+                            LevelbedingungBank.edit().putBoolean("bedingungenerfüllt", true).apply();
+                        }
+
+                        if (cdfab1) {
+                            if (datafab1.getInt("Level", 1) == 2) {
+
+                                //LEVEL3
+                                editor1.edit().putInt("maxfabrik1", 1500).apply();
+                                editor1.edit().putInt("minfabrik1", 3).apply();
+                                editor1.edit().putFloat("goldphfab1", (float) 0.16667).apply();
+                                editor1.edit().putString("leveltextfab1", getString(R.string.factory_1) + " " + getString(R.string.level3)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab1 = false;
+                                progressBarUpgradefab1.setVisibility(View.INVISIBLE);
+                                SammelnFabrik1.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab1.getInt("Level", 1) + 1).apply();
+
+
+
+
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                        context);
+                                AlertDialog alertDialog;
+
+                                // set title
+                                alertDialogBuilder.setTitle(R.string.hintad);
+
+                                // set dialog message
+                                alertDialogBuilder.setMessage(R.string.hintexpad);
+
+                                alertDialogBuilder.setCancelable(false);
+
+                                alertDialogBuilder.setPositiveButton(getString(R.string.gotit), new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        dialog.cancel();
+                                    }
+                                });
+                                // create alert dialog
+                                alertDialog = alertDialogBuilder.create();
+
+                                // show it
+                                alertDialog.show();
+
+                            }
+                        }
+
+                        if (cdfab1) {
+                            if (datafab1.getInt("Level", 1) == 3) {
+
+                                //LvL4
+
+                                editor1.edit().putInt("maxfabrik1", 2000).apply();
+                                editor1.edit().putInt("minfabrik1", 4).apply();
+                                editor1.edit().putFloat("goldphfab1", (float) 0.222222222222).apply();
+                                editor1.edit().putString("leveltextfab1", getString(R.string.factory_1) + " " + getString(R.string.level4)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab1 = false;
+                                progressBarUpgradefab1.setVisibility(View.INVISIBLE);
+                                SammelnFabrik1.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab1.getInt("Level", 1) + 1).apply();
+
+                            }
+                        }
+
+                        if (cdfab1) {
+                            if (datafab1.getInt("Level", 1) == 4) {
+
+                                //Lvl5
+                                editor1.edit().putInt("maxfabrik1", 5000).apply();
+                                editor1.edit().putInt("minfabrik1", 5).apply();
+                                editor1.edit().putFloat("goldphfab1", (float) 0.277777777778).apply();
+                                editor1.edit().putString("leveltextfab1", getString(R.string.factory_1) + " " + getString(R.string.level5)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab1 = false;
+                                progressBarUpgradefab1.setVisibility(View.INVISIBLE);
+                                SammelnFabrik1.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab1.getInt("Level", 1) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab1) {
+                            if (datafab1.getInt("Level", 1) == 5) {
+
+                                //lvl6
+                                editor1.edit().putInt("maxfabrik1", 10000).apply();
+                                editor1.edit().putInt("minfabrik1", 6).apply();
+                                editor1.edit().putFloat("goldphfab1", (float) 0.3333333333).apply();
+                                editor1.edit().putString("leveltextfab1", getString(R.string.factory_1) + " " + getString(R.string.level6)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab1 = false;
+                                progressBarUpgradefab1.setVisibility(View.INVISIBLE);
+                                SammelnFabrik1.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab1.getInt("Level", 1) + 1).apply();
+
+
+
+                                //bedingung 1 für bank lvl 3 ok
+                                SharedPreferences LevelbedingungBank = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataBank", MODE_PRIVATE));
+                                LevelbedingungBank.edit().putBoolean("bedingungenerfüllt", true).apply();
+
+
+                            }
+                        }
+                        if (cdfab1) {
+                            if (datafab1.getInt("Level", 1) == 6) {
+
+                                //lvl7
+                                editor1.edit().putInt("maxfabrik1", 15000).apply();
+                                editor1.edit().putInt("minfabrik1", 7).apply();
+                                editor1.edit().putFloat("goldphfab1", (float) 0.388888888).apply();
+                                editor1.edit().putString("leveltextfab1", getString(R.string.factory_1) + " " + getString(R.string.level7)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab1 = false;
+                                progressBarUpgradefab1.setVisibility(View.INVISIBLE);
+                                SammelnFabrik1.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab1.getInt("Level", 1) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab1) {
+                            if (datafab1.getInt("Level", 1) == 7) {
+
+                                //lvl8
+                                editor1.edit().putInt("maxfabrik1", 20000).apply();
+                                editor1.edit().putInt("minfabrik1", 8).apply();
+                                editor1.edit().putFloat("goldphfab1", (float) 0.44444444444444).apply();
+                                editor1.edit().putString("leveltextfab1", getString(R.string.factory_1) + " " + getString(R.string.level8)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab1 = false;
+                                progressBarUpgradefab1.setVisibility(View.INVISIBLE);
+                                SammelnFabrik1.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab1.getInt("Level", 1) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab1) {
+                            if (datafab1.getInt("Level", 1) == 8) {
+
+                                //lvl9
+                                editor1.edit().putInt("maxfabrik1", 25000).apply();
+                                editor1.edit().putInt("minfabrik1", 9).apply();
+                                editor1.edit().putFloat("goldphfab1", (float) 0.5).apply();
+                                editor1.edit().putString("leveltextfab1", getString(R.string.factory_1) + " " + getString(R.string.level9)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab1 = false;
+                                progressBarUpgradefab1.setVisibility(View.INVISIBLE);
+                                SammelnFabrik1.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab1.getInt("Level", 1) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab1) {
+                            if (datafab1.getInt("Level", 1) == 9) {
+
+                                //lvl10
+                                editor1.edit().putInt("maxfabrik1", 30000).apply();
+                                editor1.edit().putInt("minfabrik1", 10).apply();
+                                editor1.edit().putFloat("goldphfab1", (float) 0.5555555555555556).apply();
+                                editor1.edit().putString("leveltextfab1", getString(R.string.factory_1) + " " + getString(R.string.level10)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                // bei weit.apply();ren lvl aktivieren cdfab1 = false;
+                                progressBarUpgradefab1.setVisibility(View.INVISIBLE);
+                                SammelnFabrik1.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab1.getInt("Level", 1) + 1).apply();
+
+                            }
+                        }
+
+
+                    }
+                }
+
+                //Fabrik2
+                datafab2 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab2", MODE_PRIVATE));
+                Boolean cdfab2 = (datafab2.getBoolean("isLeveling", false));
+                if (cdfab2) {
+
+                    progressBarUpgradefab2.setVisibility(View.VISIBLE);
+                    SammelnFabrik2.setVisibility(View.INVISIBLE);
+                    //startzeit holen
+                    SharedPreferences Fab2upgradeContdown = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("startTimeUpgradeFab2", MODE_PRIVATE));
+                    int startTimeupgradefab2 = Fab2upgradeContdown.getInt("startTime", 0); //0 is the default value.
+                    //endzeit als jetzt definieren
+                    int endTimeupgradefab2 = ((int) System.currentTimeMillis() / 1000);
+                    int elapsedSecondsfab2 = endTimeupgradefab2 - startTimeupgradefab2;
+
+                    //progressbar updaten
+                    progressBarUpgradefab2.setMax(Fab2upgradeContdown.getInt("countdown", 0));
+                    progressBarUpgradefab2.setProgress(elapsedSecondsfab2);
+
+                    //goldprod.während des lvlns stoppen
+
+                    SharedPreferences editor = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE));
+                    editor.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000)).apply();
+
+                    if (elapsedSecondsfab2 > Fab2upgradeContdown.getInt("countdown", 0)) {
+
+
+                        SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab2", MODE_PRIVATE));
+
+                        if (datafab2.getInt("Level", 0) == 0) {
+
+                            editor1.edit().putInt("maxfabrik2", 500).apply();
+                            editor1.edit().putInt("minfabrik2", 1).apply();
+                            editor1.edit().putFloat("goldphfab2", (float) 0.05).apply();
+                            editor1.edit().putString("leveltextfab2", getString(R.string.factory_2) + " " + getString(R.string.level1)).apply();
+                            editor1.edit().putInt("Level", datafab2.getInt("Level", 0) + 1).apply();
+                            editor1.edit().putBoolean("isLeveling", false).apply();
+
+                            cdfab2 = false;
+                            progressBarUpgradefab2.setVisibility(View.INVISIBLE);
+                            SammelnFabrik2.setVisibility(View.VISIBLE);
+                            //fabrik 2 sichtbar machen
+                            Fabrik2.setVisibility(View.VISIBLE);
+
+                            //Startzeit als jetzt definieren
+                            SharedPreferences editor3 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE));
+                            editor3.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000)).apply();
+
+
+                        }
+                        if (cdfab2) {
+
+                            if (datafab2.getInt("Level", 0) == 1) {
+
+
+                                //definition level2
+                                editor1.edit().putInt("maxfabrik2", 1000).apply();
+                                editor1.edit().putInt("minfabrik2", 2).apply();
+                                editor1.edit().putFloat("goldphfab2", (float) 0.1).apply();
+                                editor1.edit().putString("leveltextfab2", getString(R.string.factory_2) + " " + getString(R.string.level2)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab2 = false;
+                                progressBarUpgradefab2.setVisibility(View.INVISIBLE);
+                                SammelnFabrik2.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab2.getInt("Level", 0) + 1).apply();
+
+
+
+                            }
+                        }
+
+                        if (cdfab2) {
+                            if (datafab2.getInt("Level", 0) == 2) {
+
+                                //LEVEL3
+                                editor1.edit().putInt("maxfabrik2", 1500).apply();
+                                editor1.edit().putInt("minfabrik2", 3).apply();
+                                editor1.edit().putFloat("goldphfab2", (float) 0.16667).apply();
+                                editor1.edit().putString("leveltextfab2", getString(R.string.factory_2) + " " + getString(R.string.level3)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab2 = false;
+                                progressBarUpgradefab2.setVisibility(View.INVISIBLE);
+                                SammelnFabrik2.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab2.getInt("Level", 0) + 1).apply();
+
+
+                            }
+                        }
+
+                        if (cdfab2) {
+                            if (datafab2.getInt("Level", 0) == 3) {
+
+                                //LvL4
+
+                                editor1.edit().putInt("maxfabrik2", 2000).apply();
+                                editor1.edit().putInt("minfabrik2", 4).apply();
+                                editor1.edit().putFloat("goldphfab2", (float) 0.222222222222).apply();
+                                editor1.edit().putString("leveltextfab2", getString(R.string.factory_2) + " " + getString(R.string.level4)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab2 = false;
+                                progressBarUpgradefab2.setVisibility(View.INVISIBLE);
+                                SammelnFabrik2.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab2.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+
+                        if (cdfab2) {
+                            if (datafab2.getInt("Level", 0) == 4) {
+
+                                //Lvl5
+                                editor1.edit().putInt("maxfabrik2", 5000).apply();
+                                editor1.edit().putInt("minfabrik2", 5).apply();
+                                editor1.edit().putFloat("goldphfab2", (float) 0.277777777778).apply();
+                                editor1.edit().putString("leveltextfab2", getString(R.string.factory_2) + " " + getString(R.string.level5)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab2 = false;
+                                progressBarUpgradefab2.setVisibility(View.INVISIBLE);
+                                SammelnFabrik2.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab2.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab2) {
+                            if (datafab2.getInt("Level", 0) == 5) {
+
+                                //lvl6
+                                editor1.edit().putInt("maxfabrik2", 10000).apply();
+                                editor1.edit().putInt("minfabrik2", 6).apply();
+                                editor1.edit().putFloat("goldphfab2", (float) 0.3333333333).apply();
+                                editor1.edit().putString("leveltextfab2", getString(R.string.factory_2) + " " + getString(R.string.level6)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab2 = false;
+                                progressBarUpgradefab2.setVisibility(View.INVISIBLE);
+                                SammelnFabrik2.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab2.getInt("Level", 0) + 1).apply();
+
+
+
+                                //bedingung 2 für bank lvl 3 ok
+                                SharedPreferences LevelbedingungBank = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataBank", MODE_PRIVATE));
+                                LevelbedingungBank.edit().putBoolean("bedingungen2erfüllt", true).apply();
+
+                            }
+                        }
+                        if (cdfab2) {
+                            if (datafab2.getInt("Level", 0) == 6) {
+
+                                //lvl7
+                                editor1.edit().putInt("maxfabrik2", 15000).apply();
+                                editor1.edit().putInt("minfabrik2", 7).apply();
+                                editor1.edit().putFloat("goldphfab2", (float) 0.388888888).apply();
+                                editor1.edit().putString("leveltextfab2", getString(R.string.factory_2) + " " + getString(R.string.level7)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab2 = false;
+                                progressBarUpgradefab2.setVisibility(View.INVISIBLE);
+                                SammelnFabrik2.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab2.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab2) {
+                            if (datafab2.getInt("Level", 0) == 7) {
+
+                                //lvl8
+                                editor1.edit().putInt("maxfabrik2", 20000).apply();
+                                editor1.edit().putInt("minfabrik2", 8).apply();
+                                editor1.edit().putFloat("goldphfab2", (float) 0.44444444444444).apply();
+                                editor1.edit().putString("leveltextfab2", getString(R.string.factory_2) + " " + getString(R.string.level8)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab2 = false;
+                                progressBarUpgradefab2.setVisibility(View.INVISIBLE);
+                                SammelnFabrik2.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab2.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab2) {
+                            if (datafab2.getInt("Level", 0) == 8) {
+
+                                //lvl9
+                                editor1.edit().putInt("maxfabrik2", 25000).apply();
+                                editor1.edit().putInt("minfabrik2", 9).apply();
+                                editor1.edit().putFloat("goldphfab2", (float) 0.5).apply();
+                                editor1.edit().putString("leveltextfab2", getString(R.string.factory_2) + " " + getString(R.string.level9)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab2 = false;
+                                progressBarUpgradefab2.setVisibility(View.INVISIBLE);
+                                SammelnFabrik2.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab2.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab2) {
+                            if (datafab2.getInt("Level", 0) == 9) {
+
+                                //lvl10
+                                editor1.edit().putInt("maxfabrik2", 30000).apply();
+                                editor1.edit().putInt("minfabrik2", 10).apply();
+                                editor1.edit().putFloat("goldphfab2", (float) 0.5555555555555556).apply();
+                                editor1.edit().putString("leveltextfab2", getString(R.string.factory_2) + " " + getString(R.string.level10)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                // bei weit.apply();ren lvl aktivieren cdfab2 = false;
+                                progressBarUpgradefab2.setVisibility(View.INVISIBLE);
+                                SammelnFabrik2.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab2.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+
+
+                    }
+                }
+
+                //Fabrik3
+                datafab3 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab3", MODE_PRIVATE));
+                Boolean cdfab3 = (datafab3.getBoolean("isLeveling", false));
+                if (cdfab3) {
+
+                    progressBarUpgradefab3.setVisibility(View.VISIBLE);
+                    SammelnFabrik3.setVisibility(View.INVISIBLE);
+                    //startzeit holen
+                    SharedPreferences Fab3upgradeContdown = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("startTimeUpgradeFab3", MODE_PRIVATE));
+                    int startTimeupgradefab3 = Fab3upgradeContdown.getInt("startTime", 0); //0 is the default value.
+                    //endzeit als jetzt definieren
+                    int endTimeupgradefab3 = ((int) System.currentTimeMillis() / 1000);
+                    int elapsedSecondsfab3 = endTimeupgradefab3 - startTimeupgradefab3;
+
+                    //progressbar updaten
+                    progressBarUpgradefab3.setMax(Fab3upgradeContdown.getInt("countdown", 0));
+                    progressBarUpgradefab3.setProgress(elapsedSecondsfab3);
+
+                    //goldprod.während des lvlns stoppen
+
+                    SharedPreferences editor = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE));
+                    editor.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000)).apply();
+
+                    if (elapsedSecondsfab3 > Fab3upgradeContdown.getInt("countdown", 0)) {
+
+
+                        SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab3", MODE_PRIVATE));
+
+                        if (datafab3.getInt("Level", 0) == 0) {
+                            //Level1
+                            editor1.edit().putInt("maxfabrik3", 500).apply();
+                            editor1.edit().putInt("minfabrik3", 1).apply();
+                            editor1.edit().putFloat("goldphfab3", (float) 0.05).apply();
+                            editor1.edit().putString("leveltextfab3", getString(R.string.factory_3) + " " + getString(R.string.level1)).apply();
+                            editor1.edit().putInt("Level", datafab3.getInt("Level", 0) + 1).apply();
+                            editor1.edit().putBoolean("isLeveling", false).apply();
+
+                            cdfab3 = false;
+                            progressBarUpgradefab3.setVisibility(View.INVISIBLE);
+                            //fabrik 3 sichtbar machen
+                            Fabrik3.setVisibility(View.VISIBLE);
+                            //Startzeit als jetzt definieren
+                            SharedPreferences editor3 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE));
+                            editor3.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - 20).apply();
+
+
+                        }
+                        if (cdfab3) {
+
+                            if (datafab3.getInt("Level", 0) == 1) {
+
+                                //definition level2
+                                editor1.edit().putInt("maxfabrik3", 1000).apply();
+                                editor1.edit().putInt("minfabrik3", 2).apply();
+                                editor1.edit().putFloat("goldphfab3", (float) 0.1).apply();
+                                editor1.edit().putString("leveltextfab3", getString(R.string.factory_3) + " " + getString(R.string.level2)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab3 = false;
+                                progressBarUpgradefab3.setVisibility(View.INVISIBLE);
+                                SammelnFabrik3.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab3.getInt("Level", 0) + 1).apply();
+
+
+
+                            }
+                        }
+
+                        if (cdfab3) {
+                            if (datafab3.getInt("Level", 0) == 2) {
+
+                                //LEVEL3
+                                editor1.edit().putInt("maxfabrik3", 1500).apply();
+                                editor1.edit().putInt("minfabrik3", 3).apply();
+                                editor1.edit().putFloat("goldphfab3", (float) 0.16667).apply();
+                                editor1.edit().putString("leveltextfab3", getString(R.string.factory_3) + " " + getString(R.string.level3)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab3 = false;
+                                progressBarUpgradefab3.setVisibility(View.INVISIBLE);
+                                SammelnFabrik3.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab3.getInt("Level", 0) + 1).apply();
+
+
+                            }
+                        }
+
+                        if (cdfab3) {
+                            if (datafab3.getInt("Level", 0) == 3) {
+
+                                //LvL4
+
+                                editor1.edit().putInt("maxfabrik3", 2000).apply();
+                                editor1.edit().putInt("minfabrik3", 4).apply();
+                                editor1.edit().putFloat("goldphfab3", (float) 0.222222222222).apply();
+                                editor1.edit().putString("leveltextfab3", getString(R.string.factory_3) + " " + getString(R.string.level4)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab3 = false;
+                                progressBarUpgradefab3.setVisibility(View.INVISIBLE);
+                                SammelnFabrik3.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab3.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+
+                        if (cdfab3) {
+                            if (datafab3.getInt("Level", 0) == 4) {
+
+                                //Lvl5
+                                editor1.edit().putInt("maxfabrik3", 5000).apply();
+                                editor1.edit().putInt("minfabrik3", 5).apply();
+                                editor1.edit().putFloat("goldphfab3", (float) 0.277777777778).apply();
+                                editor1.edit().putString("leveltextfab3", getString(R.string.factory_3) + " " + getString(R.string.level5)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab3 = false;
+                                progressBarUpgradefab3.setVisibility(View.INVISIBLE);
+                                SammelnFabrik3.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab3.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab3) {
+                            if (datafab3.getInt("Level", 0) == 5) {
+
+                                //lvl6
+                                editor1.edit().putInt("maxfabrik3", 10000).apply();
+                                editor1.edit().putInt("minfabrik3", 6).apply();
+                                editor1.edit().putFloat("goldphfab3", (float) 0.3333333333).apply();
+                                editor1.edit().putString("leveltextfab3", getString(R.string.factory_3) + " " + getString(R.string.level6)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab3 = false;
+                                progressBarUpgradefab3.setVisibility(View.INVISIBLE);
+                                SammelnFabrik3.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab3.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab3) {
+                            if (datafab3.getInt("Level", 0) == 6) {
+
+                                //lvl7
+                                editor1.edit().putInt("maxfabrik3", 15000).apply();
+                                editor1.edit().putInt("minfabrik3", 7).apply();
+                                editor1.edit().putFloat("goldphfab3", (float) 0.388888888).apply();
+                                editor1.edit().putString("leveltextfab3", getString(R.string.factory_3) + " " + getString(R.string.level7)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab3 = false;
+                                progressBarUpgradefab3.setVisibility(View.INVISIBLE);
+                                SammelnFabrik3.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab3.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab3) {
+                            if (datafab3.getInt("Level", 0) == 7) {
+
+                                //lvl8
+                                editor1.edit().putInt("maxfabrik3", 20000).apply();
+                                editor1.edit().putInt("minfabrik3", 8).apply();
+                                editor1.edit().putFloat("goldphfab3", (float) 0.44444444444444).apply();
+                                editor1.edit().putString("leveltextfab3", getString(R.string.factory_3) + " " + getString(R.string.level8)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab3 = false;
+                                progressBarUpgradefab3.setVisibility(View.INVISIBLE);
+                                SammelnFabrik3.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab3.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab3) {
+                            if (datafab3.getInt("Level", 0) == 8) {
+
+                                //lvl9
+                                editor1.edit().putInt("maxfabrik3", 25000).apply();
+                                editor1.edit().putInt("minfabrik3", 9).apply();
+                                editor1.edit().putFloat("goldphfab3", (float) 0.5).apply();
+                                editor1.edit().putString("leveltextfab3", getString(R.string.factory_3) + " " + getString(R.string.level9)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab3 = false;
+                                progressBarUpgradefab3.setVisibility(View.INVISIBLE);
+                                SammelnFabrik3.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab3.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab3) {
+                            if (datafab3.getInt("Level", 0) == 9) {
+
+                                //lvl10
+                                editor1.edit().putInt("maxfabrik3", 30000).apply();
+                                editor1.edit().putInt("minfabrik3", 10).apply();
+                                editor1.edit().putFloat("goldphfab3", (float) 0.5555555555555556).apply();
+                                editor1.edit().putString("leveltextfab3", getString(R.string.factory_3) + " " + getString(R.string.level10)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                // bei weit.apply();ren lvl aktivieren cdfab3 = false;
+                                progressBarUpgradefab3.setVisibility(View.INVISIBLE);
+                                SammelnFabrik3.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab3.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+
+
+                    }
+                }
+
+                //Fabrik4
+                datafab4 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab4", MODE_PRIVATE));
+                Boolean cdfab4 = (datafab4.getBoolean("isLeveling", false));
+                if (cdfab4) {
+
+                    progressBarUpgradefab4.setVisibility(View.VISIBLE);
+                    SammelnFabrik4.setVisibility(View.INVISIBLE);
+                    //startzeit holen
+                    SharedPreferences Fab4upgradeContdown = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("startTimeUpgradeFab4", MODE_PRIVATE));
+                    int startTimeupgradefab4 = Fab4upgradeContdown.getInt("startTime", 0); //0 is the default value.
+                    //endzeit als jetzt definieren
+                    int endTimeupgradefab4 = ((int) System.currentTimeMillis() / 1000);
+                    int elapsedSecondsfab4 = endTimeupgradefab4 - startTimeupgradefab4;
+
+                    //progressbar updaten
+                    progressBarUpgradefab4.setMax(Fab4upgradeContdown.getInt("countdown", 0));
+                    progressBarUpgradefab4.setProgress(elapsedSecondsfab4);
+
+                    //goldprod.während des lvlns stoppen
+
+                    SharedPreferences editor = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE));
+                    editor.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000)).apply();
+
+                    if (elapsedSecondsfab4 > Fab4upgradeContdown.getInt("countdown", 0)) {
+
+
+                        SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab4", MODE_PRIVATE));
+
+                        if (datafab4.getInt("Level", 0) == 0) {
+
+                            editor1.edit().putInt("maxfabrik4", 500).apply();
+                            editor1.edit().putInt("minfabrik4", 1).apply();
+                            editor1.edit().putFloat("goldphfab4", (float) 0.05).apply();
+                            editor1.edit().putString("leveltextfab4", getString(R.string.factory_4) + " " + getString(R.string.level1)).apply();
+                            editor1.edit().putInt("Level", datafab4.getInt("Level", 0) + 1).apply();
+                            editor1.edit().putBoolean("isLeveling", false).apply();
+
+                            cdfab4 = false;
+                            progressBarUpgradefab4.setVisibility(View.INVISIBLE);
+                            //fabrik 4 sichtbar machen
+                            Fabrik4.setVisibility(View.VISIBLE);
+
+                            //Startzeit als jetzt definieren
+                            SharedPreferences editor4 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE));
+                            editor4.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - 20).apply();
+
+
+                        }
+                        if (cdfab4) {
+
+                            if (datafab4.getInt("Level", 0) == 1) {
+
+
+                                //definition level2
+                                editor1.edit().putInt("maxfabrik4", 1000).apply();
+                                editor1.edit().putInt("minfabrik4", 2).apply();
+                                editor1.edit().putFloat("goldphfab4", (float) 0.1).apply();
+                                editor1.edit().putString("leveltextfab4", getString(R.string.factory_4) + " " + getString(R.string.level2)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab4 = false;
+                                progressBarUpgradefab4.setVisibility(View.INVISIBLE);
+                                SammelnFabrik4.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab4.getInt("Level", 0) + 1).apply();
+
+
+                            }
+
+                        }
+
+                        if (cdfab4) {
+                            if (datafab4.getInt("Level", 0) == 2) {
+
+                                //LEVEL3
+                                editor1.edit().putInt("maxfabrik4", 1500).apply();
+                                editor1.edit().putInt("minfabrik4", 3).apply();
+                                editor1.edit().putFloat("goldphfab4", (float) 0.16667).apply();
+                                editor1.edit().putString("leveltextfab4", getString(R.string.factory_4) + " " + getString(R.string.level3)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab4 = false;
+                                progressBarUpgradefab4.setVisibility(View.INVISIBLE);
+                                SammelnFabrik4.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab4.getInt("Level", 0) + 1).apply();
+
+
+                            }
+                        }
+
+                        if (cdfab4) {
+                            if (datafab4.getInt("Level", 0) == 3) {
+
+                                //LvL4
+
+                                editor1.edit().putInt("maxfabrik4", 2000).apply();
+                                editor1.edit().putInt("minfabrik4", 4).apply();
+                                editor1.edit().putFloat("goldphfab4", (float) 0.222222222222).apply();
+                                editor1.edit().putString("leveltextfab4", getString(R.string.factory_4) + " " + getString(R.string.level4)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab4 = false;
+                                progressBarUpgradefab4.setVisibility(View.INVISIBLE);
+                                SammelnFabrik4.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab4.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+
+                        if (cdfab4) {
+                            if (datafab4.getInt("Level", 0) == 4) {
+
+                                //Lvl5
+                                editor1.edit().putInt("maxfabrik4", 5000).apply();
+                                editor1.edit().putInt("minfabrik4", 5).apply();
+                                editor1.edit().putFloat("goldphfab4", (float) 0.277777777778).apply();
+                                editor1.edit().putString("leveltextfab4", getString(R.string.factory_4) + " " + getString(R.string.level5)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab4 = false;
+                                progressBarUpgradefab4.setVisibility(View.INVISIBLE);
+                                SammelnFabrik4.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab4.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab4) {
+                            if (datafab4.getInt("Level", 0) == 5) {
+
+                                //lvl6
+                                editor1.edit().putInt("maxfabrik4", 10000).apply();
+                                editor1.edit().putInt("minfabrik4", 6).apply();
+                                editor1.edit().putFloat("goldphfab4", (float) 0.3333333333).apply();
+                                editor1.edit().putString("leveltextfab4", getString(R.string.factory_4) + " " + getString(R.string.level6)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab4 = false;
+                                progressBarUpgradefab4.setVisibility(View.INVISIBLE);
+                                SammelnFabrik4.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab4.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab4) {
+                            if (datafab4.getInt("Level", 0) == 6) {
+
+                                //lvl7
+                                editor1.edit().putInt("maxfabrik4", 15000).apply();
+                                editor1.edit().putInt("minfabrik4", 7).apply();
+                                editor1.edit().putFloat("goldphfab4", (float) 0.388888888).apply();
+                                editor1.edit().putString("leveltextfab4", getString(R.string.factory_4) + " " + getString(R.string.level7)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab4 = false;
+                                progressBarUpgradefab4.setVisibility(View.INVISIBLE);
+                                SammelnFabrik4.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab4.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab4) {
+                            if (datafab4.getInt("Level", 0) == 7) {
+
+                                //lvl8
+                                editor1.edit().putInt("maxfabrik4", 20000).apply();
+                                editor1.edit().putInt("minfabrik4", 8).apply();
+                                editor1.edit().putFloat("goldphfab4", (float) 0.44444444444444).apply();
+                                editor1.edit().putString("leveltextfab4", getString(R.string.factory_4) + " " + getString(R.string.level8)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab4 = false;
+                                progressBarUpgradefab4.setVisibility(View.INVISIBLE);
+                                SammelnFabrik4.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab4.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab4) {
+                            if (datafab4.getInt("Level", 0) == 8) {
+
+                                //lvl9
+                                editor1.edit().putInt("maxfabrik4", 25000).apply();
+                                editor1.edit().putInt("minfabrik4", 9).apply();
+                                editor1.edit().putFloat("goldphfab4", (float) 0.5).apply();
+                                editor1.edit().putString("leveltextfab4", getString(R.string.factory_4) + " " + getString(R.string.level9)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                cdfab4 = false;
+                                progressBarUpgradefab4.setVisibility(View.INVISIBLE);
+                                SammelnFabrik4.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab4.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                        if (cdfab4) {
+                            if (datafab4.getInt("Level", 0) == 9) {
+
+                                //lvl10
+                                editor1.edit().putInt("maxfabrik4", 30000).apply();
+                                editor1.edit().putInt("minfabrik4", 10).apply();
+                                editor1.edit().putFloat("goldphfab4", (float) 0.5555555555555556).apply();
+                                editor1.edit().putString("leveltextfab4", getString(R.string.factory_4) + " " + getString(R.string.level10)).apply();
+                                editor1.edit().putBoolean("isLeveling", false).apply();
+                                // bei weit.apply();ren lvl aktivieren cdfab4 = false;
+                                progressBarUpgradefab4.setVisibility(View.INVISIBLE);
+                                SammelnFabrik4.setVisibility(View.VISIBLE);
+                                editor1.edit().putInt("Level", datafab4.getInt("Level", 0) + 1).apply();
+
+                            }
+                        }
+                    }
+                }
+
+                h.postDelayed(this, 5000);
+            }
+        }, 5);
+
+        h.postDelayed(new Runnable() {
+            public void run() {
+//10sec
+Log.d("postd.","runner");
                 //Fullscreen
                 if (Build.VERSION.SDK_INT < 16) { //ye olde method
                     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -1537,9 +2586,9 @@ if (mUnityPlayer!=null) {
                     }
                 }
 
-                h.postDelayed(this, delay);
+                h.postDelayed(this, 10000);
             }
-        }, delay);
+        }, 1);
 
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -1811,6 +2860,7 @@ if (mUnityPlayer!=null) {
             bauhausdialog.getWindow().setAttributes(lp);
 
 
+
             //Aktualisator bauhaus
 
             h.postDelayed(new Runnable() {
@@ -1999,9 +3049,9 @@ if (mUnityPlayer!=null) {
                     }
 
 
-                    h.postDelayed(this, delay);
+                    h.postDelayed(this, 1000);
                 }
-            }, delay);
+            }, 1000);
 
         }
 
@@ -2041,7 +3091,7 @@ if (mUnityPlayer!=null) {
             //Dias sync
             final SharedPreferences google = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("google", MODE_PRIVATE));
             String dat = "request";
-            String gid =google.getString("id", "0");;
+            String gid =google.getString("id", "0");
             bgworkerdias lol = new bgworkerdias(context);
             lol.execute(dat, gid, "diacollect");
 
@@ -2135,6 +3185,10 @@ if (mUnityPlayer!=null) {
 
                                             //Countdownzeit definieren
                                             editor3.edit().putInt("countdown", 3600).apply();
+                                            if (godmode){
+                                                editor3.edit().putInt("countdown", 10).apply();
+
+                                            }
 
 
                                             SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataAgency", MODE_PRIVATE));
@@ -2256,6 +3310,10 @@ if (mUnityPlayer!=null) {
 
                                             //Countdownzeit definieren
                                             editor3.edit().putInt("countdown", 3600).apply();
+                                            if (godmode){
+                                                editor3.edit().putInt("countdown", 10).apply();
+
+                                            }
 
 
                                             SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataBank", MODE_PRIVATE));
@@ -2476,8 +3534,13 @@ if (mUnityPlayer!=null) {
                                         //Countdownzeit definieren
                                         editor3.edit().putInt("countdown", 120).apply();
 
+                                        if (godmode){
+                                            editor3.edit().putInt("countdown", 10).apply();
 
-                                        SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab1", MODE_PRIVATE));
+                                        }
+
+
+                                            SharedPreferences editor1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab1", MODE_PRIVATE));
                                         editor1.edit().putBoolean("isLeveling", true).apply();
 
 
@@ -4166,7 +5229,7 @@ if (mUnityPlayer!=null) {
     }
 
     public void sammelnfab1() {
-
+        SammelnFabrik1.setVisibility(View.GONE);
 
         SharedPreferences prefs = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE));
 
@@ -4245,7 +5308,10 @@ if (mUnityPlayer!=null) {
                     //Das Gold zum pool hinzufügen
                     SharedPreferences editor2 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("POOL", MODE_PRIVATE));
                     editor2.edit().putInt("POOL", goldint + (prefs1.getInt("POOL", 0))).apply();
+                    if (godmode){
+                        editor2.edit().putInt("POOL",1000000+ goldint + (prefs1.getInt("POOL", 0))).apply();
 
+                    }
                     Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
 
                 }
@@ -4379,7 +5445,7 @@ if (mUnityPlayer!=null) {
     }
 
     public void sammelnfab2() {
-
+        SammelnFabrik2.setVisibility(View.GONE);
 
         SharedPreferences prefs = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE));
 
@@ -4588,7 +5654,7 @@ if (mUnityPlayer!=null) {
 
     public void sammelnfab3() {
 
-
+        SammelnFabrik3.setVisibility(View.GONE);
         SharedPreferences prefs = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE));
 
         int startTime = prefs.getInt("startTime", 0); //0 is the default value.
@@ -4794,7 +5860,7 @@ if (mUnityPlayer!=null) {
 
     public void sammelnfab4() {
 
-
+        SammelnFabrik4.setVisibility(View.GONE);
         SharedPreferences prefs = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE));
 
         int startTime = prefs.getInt("startTime", 0); //0 is the default value.
@@ -4972,6 +6038,37 @@ if (mUnityPlayer!=null) {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.disconnect();
     }
+    @Override
+    public void onPause(){
+        super.onPause();
+        TimeZone tz = TimeZone.getTimeZone("GMT+02:00");
+        Calendar c = Calendar.getInstance(tz);
+        String time =    String.format("%02d" , c.get(Calendar.YEAR))+"."+
+                         String.format("%02d" , c.get(Calendar.MONTH)+1)+"." +
+                         String.format("%02d" , c.get(Calendar.DAY_OF_MONTH))+"-"+
+                         String.format("%02d" , c.get(Calendar.HOUR_OF_DAY))+":"+
+                         String.format("%02d" , c.get(Calendar.MINUTE));
+
+        final SharedPreferences google = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+        final SharedPreferences bankdata = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataBank", MODE_PRIVATE));
+        final SharedPreferences agencydata = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataAgency", MODE_PRIVATE));
+        final SharedPreferences pooldata = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("POOL", MODE_PRIVATE));
+
+        String dat = "goldnlevels";
+        String fab1datastring = Integer.toString(datafab1.getInt("Level", 1));
+        String fab2datastring = Integer.toString(datafab2.getInt("Level", 0));
+        String fab3datastring = Integer.toString(datafab3.getInt("Level", 0));
+        String fab4datastring = Integer.toString(datafab4.getInt("Level", 0));
+        String bankdatastring = Integer.toString(bankdata.getInt("Level", 1));
+        String agencydatastring = Integer.toString(agencydata.getInt("Level", 0));
+        String pooldatastring = Integer.toString(pooldata.getInt("POOL", 0));
+
+        String gid =google.getString("id", "0");
+        bgworkerdias lol = new bgworkerdias(context);
+        lol.execute(dat, gid, fab1datastring,fab2datastring,fab3datastring,fab4datastring,bankdatastring,agencydatastring,pooldatastring,time);
+
+    }
+
 @Override
     public void onResume(){
     super.onResume();

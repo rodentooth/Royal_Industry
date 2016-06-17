@@ -7,14 +7,14 @@ android {
         javaMaxHeapSize "4g"
     }
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '23.0.3'
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.frozensparks.royalindustry"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 2
-        versionName "1.01"
+        versionCode 9
+        versionName "1.06"
 
 
     }
@@ -29,7 +29,7 @@ dependencies {
     compile project(':BaseGameUtils')
     compile project(':planeCrasher')
     compile 'org.apache.httpcomponents:httpcore:4.4.1'
-    compile 'org.apache.httpcomponents:httpclient:4.5'
+    //compile 'org.apache.httpcomponents:httpclient:4.5'
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.google.android.gms:play-services-auth:9.0.2'
@@ -41,9 +41,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-analytics:9.0.2'
     compile 'com.google.firebase:firebase-crash:9.0.2'
     compile 'com.google.firebase:firebase-core:9.0.2'
-    compile files('/libs/play-games-plugin-support.jar')
+    //compile files('/libs/play-games-plugin-support.jar')
     compile 'com.google.android.gms:play-services-games:9.0.2'
     compile 'com.google.android.gms:play-services-nearby:9.0.2'
     compile 'com.google.android.gms:play-services-drive:9.0.2'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 }
 apply plugin: 'com.google.gms.google-services'

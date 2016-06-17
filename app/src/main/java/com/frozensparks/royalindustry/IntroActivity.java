@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -81,6 +83,7 @@ public class IntroActivity extends AppCompatActivity implements
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         //inet check
         connectivity  = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
 
 
 

@@ -202,7 +202,7 @@ public class bgworkerdias2 extends AsyncTask<String, Void, String> {
 
 
         if (doafter.equals("diacollect")) {
-            if (connectcode >= 1) {
+            if (connectcode >= 0) {
                 //
 
                 //databank aktualisieren

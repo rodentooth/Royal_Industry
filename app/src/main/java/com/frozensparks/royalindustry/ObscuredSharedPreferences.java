@@ -299,7 +299,11 @@ public class ObscuredSharedPreferences implements SharedPreferences {
             pbeCipher.init(Cipher.DECRYPT_MODE, key, new PBEParameterSpec(Settings.Secure.getString(context.getContentResolver(), Secure.ANDROID_ID).getBytes(UTF8), 20));
             return new String(pbeCipher.doFinal(bytes),UTF8);
         } catch( Exception e) {
+
+
             //Log.e(this.getClass().getName(), "Warning, could not decrypt the value.  It may be stored in plaintext.  "+e.getMessage()+" value: "+value);
+            //Log.e(this.getClass().getName(), "lol");
+
             return null;
         }
     }

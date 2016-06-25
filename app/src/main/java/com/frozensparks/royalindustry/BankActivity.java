@@ -329,16 +329,21 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                         //request senden
 
                         final SharedPreferences google = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+                        if (inforeground != null) {
+                            if (inforeground) {
 
-                        if (inforeground) {
-
-                            String type = "request";
-                            String gid = google.getString("id", "0");
-                            bgworker bgworker = new bgworker(BankActivity.this);
-                            bgworker.execute(type, gid, "diacollect");
+                                String type = "request";
+                                String gid = google.getString("id", "0");
+                                bgworker bgworker = new bgworker(BankActivity.this);
+                                bgworker.execute(type, gid, "diacollect");
+                            }
+                            if (!inforeground) {
+                                mNotificationManager.notify(mId, mBuilder.build());
+                            }
                         }
-                        if (!inforeground){
+                        if (inforeground == null) {
                             mNotificationManager.notify(mId, mBuilder.build());
+
                         }
 
 
@@ -493,7 +498,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             // Nur wenn die ad geladen hat, das converten erlauben
             if (mInterstitialAd.isLoaded()) {
                 mInterstitialAd.show();
-                Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+              //  Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
 
 
 
@@ -593,7 +598,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onAdClosed() {
                         //thanks
-                        Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BankActivity.this, R.string.thx, Toast.LENGTH_SHORT).show();
                         dialogconvertdias.dismiss();
                         AdRequest adRequest = new AdRequest.Builder()
                                 //.addTestDevice("16201-16201")
@@ -1036,7 +1041,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     if(mInterstitialAd.isLoaded()){
                         mInterstitialAd.show();
 
-                        Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+                  //      Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
 
                         mInterstitialAd.setAdListener(new AdListener() {
 
@@ -1056,7 +1061,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void onAdClosed() {
                                 //thanks
-                                Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(BankActivity.this, R.string.thx, Toast.LENGTH_SHORT).show();
                                 dialogconvertdias.dismiss();
                                 AdRequest adRequest = new AdRequest.Builder()
                                         //.addTestDevice("16201-16201")
@@ -1113,7 +1118,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                     if(mInterstitialAd.isLoaded()){
                         mInterstitialAd.show();
-                        Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+                      //  Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
 
 
                         mInterstitialAd.setAdListener(new AdListener() {
@@ -1133,7 +1138,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void onAdClosed() {
                                 //thanks
-                                Toast.makeText(BankActivity.this, "thank you", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(BankActivity.this, R.string.thx, Toast.LENGTH_SHORT).show();
                                 if (dialogconvertdias!= null) {
                                     if (dialogconvertdias.isShowing()) {
                                         dialogconvertdias.dismiss();

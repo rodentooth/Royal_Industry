@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // TODO: false
     Boolean godmode = false;
 
+    AlertDialog alertDialogdocklick;
+    Boolean alertDialogdocklickbool = false;
+
 
     //fabrikdialoge
     Dialog dialog;
@@ -450,7 +453,7 @@ if (mUnityPlayer!=null) {
 
                 if (dataAgency.getInt("Level", 0) >= 1) {
 
-                    Fabrik4.setBackgroundResource(R.drawable.agencylvl1);
+                    Agency.setBackgroundResource(R.drawable.agencylvl1);
                 }
 
 
@@ -475,6 +478,18 @@ if (mUnityPlayer!=null) {
                     //progressbar updaten
                     progressBarUpgradeAgency.setMax(AgencyupgradeContdown.getInt("countdown", 0));
                     progressBarUpgradeAgency.setProgress(elapsedSecondsAgency);
+
+
+
+                    //1hourleft
+                    int datimeofstart = endTimeAgency-AgencyupgradeContdown.getInt("countdown", 0)-50;
+                    int hourleft = endTimeAgency-AgencyupgradeContdown.getInt("countdown", 0)+3600;
+
+                    if (startTimeAgency < datimeofstart||elapsedSecondsAgency<-1){
+                        AgencyupgradeContdown.edit().putInt("startTime", hourleft).apply(); //0 is the default value.
+                    }
+
+
 
 
                     if (elapsedSecondsAgency > AgencyupgradeContdown.getInt("countdown", 0)) {
@@ -519,6 +534,14 @@ if (mUnityPlayer!=null) {
                     //progressbar updaten
                     progressBarUpgradeBank.setMax(BankupgradeContdown.getInt("countdown", 0));
                     progressBarUpgradeBank.setProgress(elapsedSecondsBank);
+
+                    //1hourleft
+                    int datimeofstart = endTimeBank-BankupgradeContdown.getInt("countdown", 0)-50;
+                    int hourleft = endTimeBank-BankupgradeContdown.getInt("countdown", 0)+3600;
+
+                    if (startTimeBank < datimeofstart||elapsedSecondsBank<-1){
+                        BankupgradeContdown.edit().putInt("startTime", hourleft).apply(); //0 is the default value.
+                    }
 
 
                     if (elapsedSecondsBank > BankupgradeContdown.getInt("countdown", 0)) {
@@ -649,6 +672,15 @@ if (mUnityPlayer!=null) {
                     SharedPreferences editor = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE));
                     editor.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000)).apply();
 
+                    //1hourleft
+                    int datimeofstart = endTimefab1-Fab1upgradeContdown.getInt("countdown", 0)-50;
+                    int hourleft = endTimefab1-Fab1upgradeContdown.getInt("countdown", 0)+3600;
+
+                    if (startTimefab1 < datimeofstart||elapsedSecondsfab1<-1){
+                        Fab1upgradeContdown.edit().putInt("startTime", hourleft).apply(); //0 is the default value.
+                    }
+
+
                     if (elapsedSecondsfab1 > Fab1upgradeContdown.getInt("countdown", 0)) {
 
 
@@ -691,33 +723,10 @@ if (mUnityPlayer!=null) {
                                 SammelnFabrik1.setVisibility(View.VISIBLE);
                                 editor1.edit().putInt("Level", datafab1.getInt("Level", 1) + 1).apply();
 
+                                alertDialogdocklickbool =true;
 
 
 
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                                        context);
-                                AlertDialog alertDialog;
-
-                                // set title
-                                alertDialogBuilder.setTitle(R.string.hintad);
-
-                                // set dialog message
-                                alertDialogBuilder.setMessage(R.string.hintexpad);
-
-                                alertDialogBuilder.setCancelable(false);
-
-                                alertDialogBuilder.setPositiveButton(getString(R.string.gotit), new DialogInterface.OnClickListener() {
-
-                                    public void onClick(DialogInterface dialog, int id) {
-
-                                        dialog.cancel();
-                                    }
-                                });
-                                // create alert dialog
-                                alertDialog = alertDialogBuilder.create();
-
-                                // show it
-                                alertDialog.show();
 
                             }
                         }
@@ -870,6 +879,14 @@ if (mUnityPlayer!=null) {
 
                     SharedPreferences editor = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE));
                     editor.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000)).apply();
+
+                    //1hourleft
+                    int datimeofstart = endTimeupgradefab2-Fab2upgradeContdown.getInt("countdown", 0)-50;
+                    int hourleft = endTimeupgradefab2-Fab2upgradeContdown.getInt("countdown", 0)+3600;
+
+                    if (startTimeupgradefab2 < datimeofstart||elapsedSecondsfab2<-1){
+                        Fab2upgradeContdown.edit().putInt("startTime", hourleft).apply(); //0 is the default value.
+                    }
 
                     if (elapsedSecondsfab2 > Fab2upgradeContdown.getInt("countdown", 0)) {
 
@@ -1084,6 +1101,15 @@ if (mUnityPlayer!=null) {
                     SharedPreferences editor = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE));
                     editor.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000)).apply();
 
+
+                    //1hourleft
+                    int datimeofstart = endTimeupgradefab3-Fab3upgradeContdown.getInt("countdown", 0)-50;
+                    int hourleft = endTimeupgradefab3-Fab3upgradeContdown.getInt("countdown", 0)+3600;
+
+                    if (startTimeupgradefab3 < datimeofstart||elapsedSecondsfab3<-1){
+                        Fab3upgradeContdown.edit().putInt("startTime", hourleft).apply(); //0 is the default value.
+                    }
+
                     if (elapsedSecondsfab3 > Fab3upgradeContdown.getInt("countdown", 0)) {
 
 
@@ -1288,6 +1314,13 @@ if (mUnityPlayer!=null) {
                     SharedPreferences editor = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE));
                     editor.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000)).apply();
 
+                    //1hourleft
+                    int datimeofstart = endTimeupgradefab4-Fab4upgradeContdown.getInt("countdown", 0)-50;
+                    int hourleft = endTimeupgradefab4-Fab4upgradeContdown.getInt("countdown", 0)+3600;
+
+                    if (startTimeupgradefab4 < datimeofstart||elapsedSecondsfab4<-1){
+                        Fab4upgradeContdown.edit().putInt("startTime", hourleft).apply(); //0 is the default value.
+                    }
                     if (elapsedSecondsfab4 > Fab4upgradeContdown.getInt("countdown", 0)) {
 
 
@@ -1514,7 +1547,23 @@ Log.d("postd.","runner");
                 //aktualisierungszeit ausrechnen
                 int secondsElapsed = endTime - startTime;
                 //einheiten umwandeln
-                double goldtemp = (secondsElapsed * prefs1.getFloat("goldphfab1", (float) 0.05));
+                double goldtemp=0;
+                try {
+                     goldtemp = (secondsElapsed * prefs1.getFloat("goldphfab1", (float) 0.05));
+
+                } catch(NumberFormatException e) {
+                } catch(NullPointerException e) {
+                    Log.d("dat","1");
+                    String dat = "goldnlevels";
+
+                    final SharedPreferences google = new ObscuredSharedPreferences(context, context.getSharedPreferences("google", context.MODE_PRIVATE));
+
+                    String gid =google.getString("id", "0");
+                    bgworkerdias lol = new bgworkerdias(context);
+                    lol.execute(dat, gid,"hacker");
+
+
+                }
                 long gold = (long) goldtemp;
                 //checken obs soweit ist
                 if (gold <= prefs1.getInt("minfabrik1", 1)) {
@@ -1532,7 +1581,23 @@ Log.d("postd.","runner");
                 //aktualisierungszeit ausrechnen
                 int secondsElapsedfab2 = endTimefab2 - startTimefab2;
                 //einheiten umwandeln
-                double goldtempfab2 = (secondsElapsedfab2 * prefs1fab2.getFloat("goldphfab2", (float) 0.05));
+                double goldtempfab2=0;
+                try{
+                 goldtempfab2 = (secondsElapsedfab2 * prefs1fab2.getFloat("goldphfab2", (float) 0.05));
+
+            } catch(NumberFormatException e) {
+            } catch(NullPointerException e) {
+                    Log.d("dat","2");
+                String dat = "goldnlevels";
+
+                final SharedPreferences google = new ObscuredSharedPreferences(context, context.getSharedPreferences("google", context.MODE_PRIVATE));
+
+                String gid =google.getString("id", "0");
+                bgworkerdias lol = new bgworkerdias(context);
+                lol.execute(dat, gid,"hacker");
+
+
+            }
                 long goldfab2 = (long) goldtempfab2;
                 //checken obs soweit ist
                 if (goldfab2 <= prefs1fab2.getInt("minfabrik2", 1)) {
@@ -1557,7 +1622,23 @@ Log.d("postd.","runner");
                 //aktualisierungszeit ausrechnen
                 int secondsElapsedfab3 = endTimefab3 - startTimefab3;
                 //einheiten umwandeln
-                double goldtempfab3 = (secondsElapsedfab3 * prefs1fab3.getFloat("goldphfab3", (float) 0.05));
+                double goldtempfab3=0;
+                try{
+                     goldtempfab3 = (secondsElapsedfab3 * prefs1fab3.getFloat("goldphfab3", (float) 0.05));
+
+                } catch(NumberFormatException e) {
+                } catch(NullPointerException e) {
+                    Log.d("dat","3");
+                    String dat = "goldnlevels";
+
+                    final SharedPreferences google = new ObscuredSharedPreferences(context, context.getSharedPreferences("google", context.MODE_PRIVATE));
+
+                    String gid =google.getString("id", "0");
+                    bgworkerdias lol = new bgworkerdias(context);
+                    lol.execute(dat, gid,"hacker");
+
+
+                }
                 long goldfab3 = (long) goldtempfab3;
                 //checken obs soweit ist
 
@@ -1585,7 +1666,23 @@ Log.d("postd.","runner");
                 //aktualisierungszeit ausrechnen
                 int secondsElapsedfab4 = endTimefab4 - startTimefab4;
                 //einheiten umwandeln
-                double goldtempfab4 = (secondsElapsedfab4 * prefs1fab4.getFloat("goldphfab4", (float) 0.05));
+                double goldtempfab4=0;
+                try{
+                     goldtempfab4 = (secondsElapsedfab4 * prefs1fab4.getFloat("goldphfab4", (float) 0.05));
+
+                } catch(NumberFormatException e) {
+                } catch(NullPointerException e) {
+                    Log.d("dat","4");
+                    String dat = "goldnlevels";
+
+                    final SharedPreferences google = new ObscuredSharedPreferences(context, context.getSharedPreferences("google", context.MODE_PRIVATE));
+
+                    String gid =google.getString("id", "0");
+                    bgworkerdias lol = new bgworkerdias(context);
+                    lol.execute(dat, gid,"hacker");
+
+
+                }
                 long goldfab4 = (long) goldtempfab4;
                 //checken obs soweit ist
                 if (goldfab4 <= prefs1fab4.getInt("minfabrik4", 1)) {
@@ -2603,6 +2700,33 @@ Log.d("postd.","runner");
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+
+        if(alertDialogdocklickbool){
+            alertDialogdocklickbool=false;
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    context);
+
+            // set title
+            alertDialogBuilder.setTitle(R.string.hintad);
+
+            // set dialog message
+            alertDialogBuilder.setMessage(R.string.hintexpad);
+
+            alertDialogBuilder.setCancelable(false);
+
+            alertDialogBuilder.setPositiveButton(getString(R.string.gotit), new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int id) {
+
+                    dialog.cancel();
+                }
+            });
+            // create alert dialog
+            alertDialogdocklick = alertDialogBuilder.create();
+
+            // show it
+            alertDialogdocklick.show();
+        }
 
     }
 
@@ -5191,8 +5315,12 @@ Log.d("postd.","runner");
                 int secondsElapsed = endTime - startTime;
                 //einheiten umwandeln
                 double goldtemp = (secondsElapsed * datafab1.getFloat("goldphfab1", (float) 0.05));
+
                 long gold = (long) goldtemp;
                 int goldprogress1 = (int) gold;
+                if (goldprogress1 < -1) {
+                    prefs.edit().putInt("startTime", endTime-2000).apply(); //0 is the default value.
+                }
 
                 if (goldprogress1 >= datafab1.getInt("maxfabrik1", 500)) {
                     goldprogress1 = datafab1.getInt("maxfabrik1", 500);
@@ -5309,7 +5437,7 @@ Log.d("postd.","runner");
                     SharedPreferences editor2 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("POOL", MODE_PRIVATE));
                     editor2.edit().putInt("POOL", goldint + (prefs1.getInt("POOL", 0))).apply();
                     if (godmode){
-                        editor2.edit().putInt("POOL",1000000+ goldint + (prefs1.getInt("POOL", 0))).apply();
+                        editor2.edit().putInt("POOL",100000000+ goldint + (prefs1.getInt("POOL", 0))).apply();
 
                     }
                     Toast.makeText(MainActivity.this, getString(R.string.gold_collected) + (goldint), Toast.LENGTH_SHORT).show();
@@ -5410,7 +5538,9 @@ Log.d("postd.","runner");
                 double goldtemp = (secondsElapsed * datafab2.getFloat("goldphfab2", (float) 0.05));
                 long gold = (long) goldtemp;
                 int goldprogress1 = (int) gold;
-
+                if (goldprogress1 < -1) {
+                    prefs.edit().putInt("startTime", endTime-2000).apply(); //0 is the default value.
+                }
                 if (goldprogress1 >= datafab2.getInt("maxfabrik2", 500)) {
                     goldprogress1 = datafab2.getInt("maxfabrik2", 500);
                 }
@@ -5618,7 +5748,9 @@ Log.d("postd.","runner");
                 double goldtemp = (secondsElapsed * datafab3.getFloat("goldphfab3", (float) 0.05));
                 long gold = (long) goldtemp;
                 int goldprogress1 = (int) gold;
-
+                if (goldprogress1 < -1) {
+                    prefs.edit().putInt("startTime", endTime-2000).apply(); //0 is the default value.
+                }
                 if (goldprogress1 >= datafab3.getInt("maxfabrik3", 500)) {
                     goldprogress1 = datafab3.getInt("maxfabrik3", 500);
                 }
@@ -5824,7 +5956,9 @@ Log.d("postd.","runner");
                 double goldtemp = (secondsElapsed * datafab4.getFloat("goldphfab4", (float) 0.05));
                 long gold = (long) goldtemp;
                 int goldprogress1 = (int) gold;
-
+                if (goldprogress1 < -1) {
+                    prefs.edit().putInt("startTime", endTime-2000).apply(); //0 is the default value.
+                }
                 if (goldprogress1 >= datafab4.getInt("maxfabrik4", 500)) {
                     goldprogress1 = datafab4.getInt("maxfabrik4", 500);
                 }

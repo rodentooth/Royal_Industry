@@ -86,7 +86,7 @@
     <string name="doublegoldcollect">double gold collected:</string>
     <string name="hangartutext">while waiting\n\n you can play a minigame\n\n to earn some extra gold</string>
     <string name="title_activity_test">Test</string>
-    <string name="freedias">send that link to a buddy. \n\nif he starts playing,\n\n both receive 20 dias</string>
+    <string name="freedias">for each person who starts\n\n playing with that link\n\n you and him receive 20 dias</string>
     <string name="freediastitle">20 free dias:</string>
     <string name="share_link">share link</string>
     <string name="free_gold">free gold</string>
@@ -96,10 +96,11 @@
     <string name="noupatmom">no upgrades going on</string>
     <string name="pay_with">pay with:</string>
     <string name="not_enough_diamonds">not enough diamonds!</string>
-    <string name="click_on_ad">click on the ad to continue!</string>
+    <string name="click_on_ad">click xto continue!</string>
     <string name="gotit">got it! </string>
     <string name="hintad">short hint: </string>
     <string name="hintexpad">if you just\n\n 2,3 times click on the ads,\n\n you can help\n\n keep the project going!</string>
+    <string name="thx">thank you for watching the ad</string>
 
 
 </resources>

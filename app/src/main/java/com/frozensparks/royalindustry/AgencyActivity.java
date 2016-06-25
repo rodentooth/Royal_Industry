@@ -373,7 +373,7 @@ private Tracker mTracker;
                             @Override
                             public void onAdClosed() {
                                 //thanks
-                                Toast.makeText(AgencyActivity.this, "thank you", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AgencyActivity.this, R.string.thx, Toast.LENGTH_SHORT).show();
                                 dialogconvertdias.dismiss();
                                 AdRequest adRequest = new AdRequest.Builder()
                                         //.addTestDevice("16201-16201")
@@ -614,7 +614,7 @@ private Tracker mTracker;
                         @Override
                         public void onAdClosed() {
                             //thanks
-                            Toast.makeText(AgencyActivity.this, "thank you", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AgencyActivity.this, R.string.thx, Toast.LENGTH_SHORT).show();
                             timerad = timerad + 1;
 
                             if (selectedId == fab1.getId()) {

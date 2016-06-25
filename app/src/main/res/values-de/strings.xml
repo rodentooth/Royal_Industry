@@ -91,10 +91,11 @@
     <string name="noupatmom">keine upgrades momentan</string>
     <string name="pay_with">bezahlen mit:</string>
     <string name="not_enough_diamonds">nicht genug diamanten!</string>
-    <string name="click_on_ad">drück auf die werbung um fortzufahren!</string>
+    <string name="click_on_ad">drück xum fortzufahren!</string>
     <string name="gotit">yup! </string>
     <string name="hintad">anmerkung: </string>
     <string name="hintexpad">wenn du 2,3 mal\n\n auf die werbung drückst ,\n\n kann durch dich\n\n das projekt weiter bestehen!</string>
+    <string name="thx">danke fürs anschauen der werbung!</string>
 
 
 </resources>

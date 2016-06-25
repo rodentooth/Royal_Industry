@@ -579,10 +579,46 @@ public class IntroActivity extends AppCompatActivity implements
 
 
             if (str_result != null) {
-
                 str_result = str_result.replace(" ", "");
-                connectcode = Integer.parseInt(str_result);
-            }
+
+                try {
+                    connectcode = Integer.parseInt(str_result);
+                } catch (NumberFormatException e) {
+
+                    AlphaAnimation fadeOutAnimation = new AlphaAnimation(0, 1); // start alpha, end alpha
+                    fadeOutAnimation.setDuration(5000); // time for animation in milliseconds
+                    fadeOutAnimation.setFillAfter(true); // make the transformation persist
+                    fadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            finish();
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                        }
+
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            splash.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+                    splash.setAnimation(fadeOutAnimation);
+
+
+                    Toast.makeText(IntroActivity.this, R.string.checkinet, Toast.LENGTH_LONG).show();
+
+
+                }                }
+
+
+
 
 
 

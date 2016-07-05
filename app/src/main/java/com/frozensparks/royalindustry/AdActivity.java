@@ -13,6 +13,8 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
+import java.util.Random;
+
 public class AdActivity extends AppCompatActivity {
     InterstitialAd mInterstitialAd;
     int i;
@@ -52,6 +54,13 @@ public class AdActivity extends AppCompatActivity {
 
                 public void onAdLoaded() {
                     mInterstitialAd.show();
+                    Random rand_2 = new Random();
+
+                    int randomNum1 = rand_2.nextInt((10 - 0) + 1) + 0;
+
+                    if (randomNum1==5) {
+                        Toast.makeText(AdActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+                    }
 
                 }
 

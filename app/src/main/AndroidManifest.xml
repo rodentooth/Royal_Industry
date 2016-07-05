@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <service
+            android:enabled="true"
+            android:name="com.frozensparks.royalindustry.bg_sound" />
         <activity
             android:name=".planecrasher.UnityPlayerActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />

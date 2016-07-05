@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -83,6 +84,8 @@ public class IntroActivity extends AppCompatActivity implements
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         //inet check
         connectivity  = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+
 
 
 

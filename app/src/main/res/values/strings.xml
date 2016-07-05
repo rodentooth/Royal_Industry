@@ -69,7 +69,7 @@
     <string name="signed_out">signed out!</string>
     <string name="signed_in_fmt">signed in</string>
     <string name="signin_other_error">other error</string>
-    <string name="welcome">welcome to royal industry!</string>
+    <string name="welcome">welcome</string>
     <string name="facproduce">factories produce gold for you</string>
     <string name="collect">collect your first gold:</string>
     <string name="goldcollectedtutorial">gold collected!</string>
@@ -96,11 +96,21 @@
     <string name="noupatmom">no upgrades going on</string>
     <string name="pay_with">pay with:</string>
     <string name="not_enough_diamonds">not enough diamonds!</string>
-    <string name="click_on_ad">click xto continue!</string>
+    <string name="click_on_ad">click on it to continue!</string>
     <string name="gotit">got it! </string>
     <string name="hintad">short hint: </string>
     <string name="hintexpad">if you just\n\n 2,3 times click on the ads,\n\n you can help\n\n keep the project going!</string>
     <string name="thx">thank you for watching the ad</string>
+    <string name="congratulation">CONGRATULATION</string>
+    <string name="teilen">SHARE</string>
+    <string name="dollar_text_dialog">YOU REACHED A DOLLAR! \n SHARE THIS MOMENT \n AND GET 20 FREE DIAS\n FOR EVERY NEW PERSON STARTS PLAYING</string>
+    <string name="another_dollar">hey!\nI just made another dollar with this game!\n get 20 free diamonds with my link: \n </string>
+    <string name="de50c_text">hey!\nI just made another 10 cents with this game!\n get 20 free diamonds with my link: \n</string>
+    <string name="yu_get_richer">YOU ARE GETTING RICHER! \n SHARE THIS MOMENT \n AND GET 20 FREE DIAS\n FOR EVERY NEW PERSON STARTS PLAYING</string>
+    <string name="getfreedias">GET FREE DIAMONDS IMMEDIATELY!</string>
+    <string name="tireddias">TIRED OF WAITING?</string>
+    <string name="to">to</string>
+    <string name="present_4_you_lt_3"><![CDATA[present 4 you <3]]></string>
 
 
 </resources>

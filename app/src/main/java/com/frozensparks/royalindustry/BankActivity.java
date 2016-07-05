@@ -6,8 +6,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -16,6 +18,7 @@ import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -29,6 +32,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fyber.Fyber;
+import com.fyber.ads.AdFormat;
+import com.fyber.requesters.OfferWallRequester;
+import com.fyber.requesters.RequestCallback;
+import com.fyber.requesters.RequestError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -48,6 +56,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -55,6 +64,7 @@ import java.util.concurrent.TimeUnit;
  * status bar and navigation/system bar) with user interaction.
  */
 public class BankActivity extends AppCompatActivity implements View.OnClickListener {
+
 
     Context context = this;
     int maxdias;
@@ -70,12 +80,15 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
     Button GoldToDias;
 
+
     //notification
     Boolean inforeground;
     NotificationCompat.Builder mBuilder;
     NotificationManager mNotificationManager;
+    Button freediasbank;
 
-
+    //sound
+    MediaPlayer close_bank_sound;
 
     //nrveri
     Button verify;
@@ -115,6 +128,40 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-5669148825390630~9003934904");
 
+        Fyber.with("45835", BankActivity.this)
+                .start();
+
+
+
+        MediaPlayer mp;
+        mp = MediaPlayer.create(this, R.raw.bank_open_sound);
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                // TODO Auto-generated method stub
+                mp.reset();
+                mp.release();
+                mp=null;
+            }
+
+        });
+        mp.start();
+
+
+
+        close_bank_sound = MediaPlayer.create(this, R.raw.bank_close_sound);
+        close_bank_sound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                // TODO Auto-generated method stub
+                close_bank_sound.reset();
+                close_bank_sound.release();
+                close_bank_sound=null;
+            }
+
+        });
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
         mTracker = application.getDefaultTracker();
@@ -209,6 +256,9 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         assert faqButton != null;
         faqButton.setOnClickListener(this);
 
+        Button freediasbank = (Button) findViewById(R.id.freediasbank);
+        assert freediasbank != null;
+        freediasbank.setOnClickListener(this);
 
         GoldToDias = (Button) findViewById(R.id.GoldToDias);
         assert GoldToDias != null;
@@ -377,11 +427,25 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.closeBank) {
+            close_bank_sound.start();
             Intent start = new Intent(BankActivity.this, MainActivity.class);
             BankActivity.this.startActivity(start);
             finish();
 
         }
+        if (id == R.id.freediasbank) {
+
+            final SharedPreferences google = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+
+            String gid = google.getString("id", "0");
+
+            OfferWallRequester.create(requestCallback)
+                  //  .closeOnRedirect(shouldCloseOfferwall)
+                    .addParameter("pub0", gid)
+                    .request(context);
+
+        }
+
         final EditText input;
         if (id == R.id.faqButton) {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.frozensparks.com/royalindustryfaq.html"));
@@ -498,9 +562,13 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             // Nur wenn die ad geladen hat, das converten erlauben
             if (mInterstitialAd.isLoaded()) {
                 mInterstitialAd.show();
-              //  Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+                Random rand_2 = new Random();
 
+                int randomNum1 = rand_2.nextInt((10 - 0) + 1) + 0;
 
+                if (randomNum1==5) {
+                    Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+                }
 
                 //holen von wieviele diamanten erstellen
                 SharedPreferences prefs1 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("thatmanydias", MODE_PRIVATE));
@@ -598,7 +666,57 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onAdClosed() {
                         //thanks
-                        Toast.makeText(BankActivity.this, R.string.thx, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(BankActivity.this, R.string.thx, Toast.LENGTH_SHORT).show();
+                        SharedPreferences firstopen = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("firstope", MODE_PRIVATE));
+                        int datopen = firstopen.getInt("diaskonvert", 0);
+                        firstopen.edit().putInt("diaskonvert", datopen+1).apply();
+
+                        if (datopen==1  ||datopen==3 ||datopen==5){
+
+
+
+
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                    context);
+
+                            // set title
+                            alertDialogBuilder.setTitle(getString(R.string.tireddias));
+
+                            // set dialog message
+                            alertDialogBuilder
+                                    .setMessage(getString(R.string.getfreedias))
+                                    .setCancelable(false)
+                                    .setPositiveButton("LET'S SEE", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+
+
+                                            final SharedPreferences google = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+
+                                            String gid = google.getString("id", "0");
+
+                                            OfferWallRequester.create(requestCallback)
+                                                    //  .closeOnRedirect(shouldCloseOfferwall)
+                                                    .addParameter("pub0", gid)
+                                                    .request(context);
+
+                                        }
+                                    })
+                                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            // if this button is clicked, just close
+                                            // the dialog box and do nothing
+                                            dialog.cancel();
+                                        }
+                                    });
+
+                            // create alert dialog
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+
+                            // show it
+                            alertDialog.show();
+
+
+                        }
                         dialogconvertdias.dismiss();
                         AdRequest adRequest = new AdRequest.Builder()
                                 //.addTestDevice("16201-16201")
@@ -610,7 +728,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
             }
             else {
-                Toast.makeText(BankActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BankActivity.this, "error. please try again", Toast.LENGTH_SHORT).show();
                 AdRequest adRequest = new AdRequest.Builder()
                         //.addTestDevice("16201-16201")
                         .build();
@@ -692,8 +810,38 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    RequestCallback requestCallback = new RequestCallback() {
+        @Override
+        public void onAdAvailable(Intent intent) {
+            AdFormat adFormat = AdFormat.fromIntent(intent);
+            startActivityForResult(intent, getRequestCode(adFormat));
+            //startActivityForResult(intent, OFFERWALL_REQUEST_CODE);
+        }
 
+        @Override
+        public void onAdNotAvailable(AdFormat adFormat) {
+            Log.d("Fyber", "No ads available for the ad format: " + adFormat);
+        }
 
+        @Override
+        public void onRequestError(RequestError requestError) {
+            Log.d("Fyber", "something went wrong with the request: " + requestError.getDescription() );
+        }
+    };
+    public int getRequestCode(AdFormat adFormat){
+
+        return 12345;
+        /*switch (type) {
+            case OFFER_WALL:
+                return OFFER_WALL_REQUEST_CODE;
+            case REWARDED_VIDEO:
+                return REWARDED_VIDEO_REQUEST_CODE;
+            case INTERSTITIAL:
+                return INTERSTITIAL_REQUEST_CODE;
+            default:
+                return -1;
+        }*/
+    }
     public void diaconverter(){
         View converter = View.inflate(this, R.layout.converter, null);
         dialogconvertdias = new Dialog(BankActivity.this);
@@ -769,7 +917,6 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
     public void onStart () {
         super.onStart();
 
-
     }
     @Override
     public void onStop () {
@@ -780,6 +927,17 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+
+        //geld aktualisierung
+        final SharedPreferences google = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+        String type = "convert";
+        String dat = "request";
+        String gid = google.getString("id", "0");
+        bgworkerdias bgworker1 =new bgworkerdias(context);
+        bgworker1.execute(type, gid,"" , "convert");
+
+        bgworkerdias2 lol = new bgworkerdias2(context);
+        lol.execute(dat, gid, "diacollect");
     }
 
     @Override
@@ -1001,7 +1159,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             if(doafter =="convert") {
-
+                //Random rand = null;
 
                 if (connectcode >= 0) {
 
@@ -1019,7 +1177,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     String Pooltext = String.valueOf((prefs2.getInt("DIAMONDS", 0)) - (int)thatmanycashoutinfloat);
                     diatext.setText(": " + Pooltext);
 
-
+                    boolean werbung =true;
 
                     //Pool aktualisieren, dias abziehen
 
@@ -1027,7 +1185,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     // cashout aktualisieren
                     float rappen = (float)(connectcode);
                     float rtrdrp = rappen/100;
-                    String rpstr = Float.toString(rtrdrp);
+                    final String rpstr = Float.toString(rtrdrp);
 
                    // Toast.makeText(BankActivity.this, rpstr, Toast.LENGTH_SHORT).show();
 
@@ -1037,59 +1195,239 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                     SharedPreferences cashouttext = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("cashout", MODE_PRIVATE));
 
                     cashoutonwait.setText( String.valueOf(cashouttext.getFloat("cashout", 0) + "$"));
+                    //todo
+                    SharedPreferences editor3 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("dollardialog", MODE_PRIVATE));
+                    boolean dollardialog = editor3.getBoolean("freshdollar", true);
+                    if (rappen>=100){
+                        if(dollardialog){
 
-                    if(mInterstitialAd.isLoaded()){
-                        mInterstitialAd.show();
+                            werbung = false;
+                            editor3.edit().putBoolean("freshdollar", false).apply();
 
-                  //      Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                    context);
 
-                        mInterstitialAd.setAdListener(new AdListener() {
+                            // set title
+                            alertDialogBuilder.setTitle(getString(R.string.congratulation));
 
-                            @Override
+                            // set dialog message
+                            alertDialogBuilder
+                                    .setMessage(getString(R.string.dollar_text_dialog))
+                                    .setCancelable(false)
+                                    .setPositiveButton(getString(R.string.teilen),new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,int id) {
+                                            final SharedPreferences google = new ObscuredSharedPreferences(context,context.getSharedPreferences("google", Context.MODE_PRIVATE));
+                                            String gid = google.getString("id", "0");
+                                            final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
 
-                            public void onAdLoaded() {
+                                            String derefeerallink ="https://play.google.com/store/apps/details?id="+ appPackageName+"&referrer="+gid;
 
-                            }
-                            @Override
-                            public void onAdFailedToLoad(int errorCode) {
+                                            Intent sendIntent = new Intent();
+                                            sendIntent.setAction(Intent.ACTION_SEND);
+                                            sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.another_dollar)+derefeerallink);
+                                            sendIntent.setType("text/plain");
+                                            startActivity(Intent.createChooser(sendIntent, ""));
+
+                                        }
+                                    })
+                                    .setNegativeButton("NO",new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            // if this button is clicked, just close
+                                            // the dialog box and do nothing
+                                            dialog.cancel();
+                                        }
+                                    });
+
+                            // create alert dialog
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+
+                            // show it
+                            alertDialog.show();
+
+
+
+
+                        }
+
+                    }
+                    if (rappen<100){
+                        editor3.edit().putBoolean("freshdollar", true).apply();
+
+                    }
+
+                    SharedPreferences editor4 = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("dollardialog", MODE_PRIVATE));
+                    boolean cdialog = editor3.getBoolean("fresh50c", true);
+                    if (rappen>=10){
+                        if(cdialog){
+
+                            werbung = false;
+
+                            editor4.edit().putBoolean("fresh50c", false).apply();
+
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                    context);
+
+                            // set title
+                            alertDialogBuilder.setTitle(getString(R.string.congratulation));
+
+                            // set dialog message
+                            alertDialogBuilder
+                                    .setMessage(getString(R.string.yu_get_richer))
+                                    .setCancelable(false)
+                                    .setPositiveButton(getString(R.string.teilen),new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,int id) {
+                                            final SharedPreferences google = new ObscuredSharedPreferences(context,context.getSharedPreferences("google", Context.MODE_PRIVATE));
+                                            String gid = google.getString("id", "0");
+                                            final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+
+                                            String derefeerallink ="https://play.google.com/store/apps/details?id="+ appPackageName+"&referrer="+gid;
+
+                                            Intent sendIntent = new Intent();
+                                            sendIntent.setAction(Intent.ACTION_SEND);
+                                            sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.de50c_text)+derefeerallink);
+                                            sendIntent.setType("text/plain");
+                                            startActivity(Intent.createChooser(sendIntent, ""));
+
+                                        }
+                                    })
+                                    .setNegativeButton("NO",new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            // if this button is clicked, just close
+                                            // the dialog box and do nothing
+                                            dialog.cancel();
+                                        }
+                                    });
+
+                            // create alert dialog
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+
+                            // show it
+                            alertDialog.show();
+
+
+
+
+                        }
+
+                    }
+                    if (rappen<10){
+                        editor4.edit().putBoolean("fresh50c", true).apply();
+
+                    }
+
+                    Random rand = new Random();
+
+                    int randomNum = rand.nextInt((20 - 0) + 1) + 0;
+                    if (werbung) {
+                        if (rappen > 20) {
+                            if (randomNum<10) {
+
+
+
+
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                    context);
+
+                            // set title
+                            alertDialogBuilder.setTitle(getString(R.string.congratulation));
+
+                            // set dialog message
+                            alertDialogBuilder
+                                    .setMessage(getString(R.string.yu_get_richer))
+                                    .setCancelable(false)
+                                    .setPositiveButton(getString(R.string.teilen), new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            final SharedPreferences google = new ObscuredSharedPreferences(context, context.getSharedPreferences("google", Context.MODE_PRIVATE));
+                                            String gid = google.getString("id", "0");
+                                            final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+
+                                            String derefeerallink = "https://play.google.com/store/apps/details?id=" + appPackageName + "&referrer=" + gid;
+
+                                            Intent sendIntent = new Intent();
+                                            sendIntent.setAction(Intent.ACTION_SEND);
+                                            sendIntent.putExtra(Intent.EXTRA_TEXT, ">hey!\nI just made another " +rpstr+ " $ with this game!\n get 20 free diamonds with my link: \n" + derefeerallink);
+                                            sendIntent.setType("text/plain");
+                                            startActivity(Intent.createChooser(sendIntent, ""));
+
+                                        }
+                                    })
+                                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            // if this button is clicked, just close
+                                            // the dialog box and do nothing
+                                            dialog.cancel();
+                                        }
+                                    });
+
+                            // create alert dialog
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+
+                            // show it
+                            alertDialog.show();
+
+
+                        }
+                    }
+                    final SharedPreferences google = new ObscuredSharedPreferences(BankActivity.this, BankActivity.this.getSharedPreferences("google", MODE_PRIVATE));
+                    String dat = "request";
+                    String gid = google.getString("id", "0");
+                    bgworkerdias2 lol = new bgworkerdias2(context);
+                    lol.execute(dat, gid, "diacollect");
+                    if (randomNum>=10) {
+
+
+                            if (mInterstitialAd.isLoaded()) {
+                                mInterstitialAd.show();
+                                Random rand_2 = new Random();
+
+                                int randomNum1 = rand_2.nextInt((10 - 0) + 1) + 0;
+
+                                if (randomNum1==5) {
+                                    Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+                                }
+                                mInterstitialAd.setAdListener(new AdListener() {
+
+                                    @Override
+
+                                    public void onAdLoaded() {
+
+                                    }
+
+                                    @Override
+                                    public void onAdFailedToLoad(int errorCode) {
+                                        AdRequest adRequest = new AdRequest.Builder()
+                                                //.addTestDevice("16201-16201")
+                                                .build();
+
+                                        mInterstitialAd.loadAd(adRequest);
+                                    }
+
+                                    @Override
+                                    public void onAdClosed() {
+                                        //thanks
+                                        Toast.makeText(BankActivity.this, R.string.thx, Toast.LENGTH_SHORT).show();
+                                        dialogconvertdias.dismiss();
+                                        AdRequest adRequest = new AdRequest.Builder()
+                                                //.addTestDevice("16201-16201")
+                                                .build();
+
+                                        mInterstitialAd.loadAd(adRequest);
+
+                                    }
+                                });
+
+                            } else {
+                                Toast.makeText(BankActivity.this, "error. please try again", Toast.LENGTH_SHORT).show();
                                 AdRequest adRequest = new AdRequest.Builder()
                                         //.addTestDevice("16201-16201")
                                         .build();
 
                                 mInterstitialAd.loadAd(adRequest);
+
                             }
-                            @Override
-                            public void onAdClosed() {
-                                //thanks
-                                Toast.makeText(BankActivity.this, R.string.thx, Toast.LENGTH_SHORT).show();
-                                dialogconvertdias.dismiss();
-                                AdRequest adRequest = new AdRequest.Builder()
-                                        //.addTestDevice("16201-16201")
-                                        .build();
 
-                                mInterstitialAd.loadAd(adRequest);
-                                final SharedPreferences google = new ObscuredSharedPreferences(BankActivity.this,BankActivity.this.getSharedPreferences("google", MODE_PRIVATE));
-                                String dat = "request";
-                                String gid = google.getString("id", "0");
-                                bgworkerdias2 lol = new bgworkerdias2(context);
-                                lol.execute(dat, gid, "diacollect");
-                            }
-                        });
-
+                        }
                     }
-
-                    else {
-                        Toast.makeText(BankActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
-                        AdRequest adRequest = new AdRequest.Builder()
-                                //.addTestDevice("16201-16201")
-                                .build();
-
-                        mInterstitialAd.loadAd(adRequest);
-
-                    }
-
-
-
                 }
                 if (connectcode == -1) {
                     Toast.makeText(BankActivity.this, "too much diamonds fordered", Toast.LENGTH_SHORT).show();
@@ -1118,9 +1456,13 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
                     if(mInterstitialAd.isLoaded()){
                         mInterstitialAd.show();
-                      //  Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+                        Random rand_2 = new Random();
 
+                        int randomNum1 = rand_2.nextInt((10 - 0) + 1) + 0;
 
+                        if (randomNum1==5) {
+                            Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+                        }
                         mInterstitialAd.setAdListener(new AdListener() {
 
                             @Override
@@ -1167,7 +1509,7 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
 
 
                     else {
-                        Toast.makeText(BankActivity.this, "Ad did not load. you have to be connected to the internet", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BankActivity.this, "error. please try again", Toast.LENGTH_SHORT).show();
                         AdRequest adRequest = new AdRequest.Builder()
                                 //.addTestDevice("16201-16201")
                                 .build();
@@ -1198,7 +1540,13 @@ public class BankActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 if (connectcode == 1111) {
                     //übertrag ok
-                    Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+                    Random rand_2 = new Random();
+
+                    int randomNum1 = rand_2.nextInt((10 - 0) + 1) + 0;
+
+                    if (randomNum1==5) {
+                        Toast.makeText(BankActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+                    }
                 }
                 Log.d("serverantwort ist: " ,result);
 

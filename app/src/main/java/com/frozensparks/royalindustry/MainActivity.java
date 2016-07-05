@@ -1,13 +1,16 @@
 package com.frozensparks.royalindustry;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +38,9 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.unity3d.player.UnityPlayer;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -54,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     AlertDialog alertDialogdocklick;
     Boolean alertDialogdocklickbool = false;
 
+
+    Button takefirstpresent;
 
     //fabrikdialoge
     Dialog dialog;
@@ -99,7 +107,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button Bank;
     ProgressBar progressBarUpgradeBank;
 
-
+    //music
+    MediaPlayer mp1;
+    MediaPlayer fabdia_sound;
     //Aktualisator
     Handler h = new Handler();
     int delay = 1000; //milliseconds
@@ -147,6 +157,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     Typeface typeface;
+
+
+    Dialog firstpresent;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -344,7 +358,7 @@ if (mUnityPlayer!=null) {
             if ((datafab1.getInt("Level", 1) == 1)) {
                 //erste startzeit speichern
                 SharedPreferences editor = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE));
-                editor.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - 1500).apply();
+                editor.edit().putInt("startTime", (((int) System.currentTimeMillis()) / 1000) - 750).apply();
 
                 //Fabrik 1 auf lvl 1 setzen
                 SharedPreferences editorfab1 = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("datafab1", MODE_PRIVATE));
@@ -2695,6 +2709,37 @@ Log.d("postd.","runner");
       See https://g.co/AppIndexing/AndroidStudio for more information.
      */
         client= new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+
+
+        mp1 = MediaPlayer.create(this, R.raw.cash_collect_sound);
+        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                // TODO Auto-generated method stub
+                mp.reset();
+                mp.release();
+                mp1 = MediaPlayer.create(MainActivity.this, R.raw.cash_collect_sound);
+
+            }
+
+        });
+
+        fabdia_sound = MediaPlayer.create(this, R.raw.fabrik_dialog_open);
+        fabdia_sound.setVolume(50,50);
+        fabdia_sound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                // TODO Auto-generated method stub
+                fabdia_sound.reset();
+                fabdia_sound.release();
+                fabdia_sound = MediaPlayer.create(MainActivity.this, R.raw.fabrik_dialog_open);
+            }
+
+        });
+
     }
 
     @Override
@@ -2727,9 +2772,20 @@ Log.d("postd.","runner");
             // show it
             alertDialogdocklick.show();
         }
-
+        if (!isMyServiceRunning(bg_sound.class)) {
+            Intent svc = new Intent(this, bg_sound.class);
+            startService(svc);
+        }
     }
-
+    public boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public void onClick(View v) {
@@ -2800,8 +2856,39 @@ Log.d("postd.","runner");
 
             finish();
         }
+
+        //welcomepresent
+        if (id == R.id.takefirstpresent) {
+            if(firstpresent.isShowing()) {
+                firstpresent.dismiss();
+
+                SharedPreferences dedubler =new ObscuredSharedPreferences(MainActivity.this,MainActivity.this.getSharedPreferences("doublecoll", MODE_PRIVATE));
+                dedubler.edit().putBoolean("doublecoll", true).apply();
+
+                SharedPreferences.Editor firstopen11 = getSharedPreferences("firstope", MODE_PRIVATE).edit();
+                firstopen11.putBoolean("welcomepr", false).apply();
+
+            }
+        }
+
+
         //Bauhaus
         if (id == R.id.bauhaus) {
+            MediaPlayer mp;
+            mp = MediaPlayer.create(this, R.raw.bauhaus_open);
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    // TODO Auto-generated method stub
+                    mp.reset();
+                    mp.release();
+                    mp=null;
+                }
+
+            });
+            mp.start();
+
             SharedPreferences dataAgency = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("dataAgency", MODE_PRIVATE));
 
 
@@ -5279,6 +5366,7 @@ Log.d("postd.","runner");
 
     //Fabrik1
     public void dialogFabr1() {
+        fabdia_sound.start();
 
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -5357,6 +5445,8 @@ Log.d("postd.","runner");
     }
 
     public void sammelnfab1() {
+        mp1.start();
+
         SammelnFabrik1.setVisibility(View.GONE);
 
         SharedPreferences prefs = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeit1", MODE_PRIVATE));
@@ -5502,6 +5592,7 @@ Log.d("postd.","runner");
 
     //Fabrik2
     public void dialogFabr2() {
+        fabdia_sound.start();
 
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -5575,6 +5666,8 @@ Log.d("postd.","runner");
     }
 
     public void sammelnfab2() {
+        mp1.start();
+
         SammelnFabrik2.setVisibility(View.GONE);
 
         SharedPreferences prefs = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab2", MODE_PRIVATE));
@@ -5712,6 +5805,7 @@ Log.d("postd.","runner");
 
     //Fabrik3
     public void dialogFabr3() {
+        fabdia_sound.start();
 
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -5785,6 +5879,7 @@ Log.d("postd.","runner");
     }
 
     public void sammelnfab3() {
+        mp1.start();
 
         SammelnFabrik3.setVisibility(View.GONE);
         SharedPreferences prefs = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab3", MODE_PRIVATE));
@@ -5920,6 +6015,7 @@ Log.d("postd.","runner");
 
     //Fabrik4
     public void dialogFabr4() {
+        fabdia_sound.start();
 
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -5993,6 +6089,7 @@ Log.d("postd.","runner");
     }
 
     public void sammelnfab4() {
+        mp1.start();
 
         SammelnFabrik4.setVisibility(View.GONE);
         SharedPreferences prefs = new ObscuredSharedPreferences(MainActivity.this, MainActivity.this.getSharedPreferences("speichervonstartzeitfab4", MODE_PRIVATE));
@@ -6148,6 +6245,44 @@ Log.d("postd.","runner");
                 Uri.parse("android-app://com.frozensparks.royalindustry/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
+        SharedPreferences firstopen1 = getSharedPreferences("firstope", MODE_PRIVATE);
+        Boolean welpre = firstopen1.getBoolean("welcomepr", false);
+
+        if (welpre){
+            MediaPlayer mp;
+            mp = MediaPlayer.create(this, R.raw.applause);
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    // TODO Auto-generated method stub
+                    mp.reset();
+                    mp.release();
+                    mp=null;
+                }
+
+            });
+            mp.start();
+
+
+            View gebaeudeboostdia = View.inflate(this, R.layout.firstpresent, null);
+            firstpresent = new Dialog(MainActivity.this);
+            firstpresent.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            firstpresent.setContentView(gebaeudeboostdia);
+
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(firstpresent.getWindow().getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+
+             takefirstpresent = (Button)firstpresent.findViewById(R.id.takefirstpresent);
+            takefirstpresent.setOnClickListener(this);
+
+
+
+            firstpresent.show();
+
+
+        }
     }
 
     @Override
@@ -6197,16 +6332,49 @@ Log.d("postd.","runner");
         String agencydatastring = Integer.toString(agencydata.getInt("Level", 0));
         String pooldatastring = Integer.toString(pooldata.getInt("POOL", 0));
 
+
+        String root = (String.valueOf(isDeviceRooted()));
+        //Toast.makeText(MainActivity.this, root, Toast.LENGTH_SHORT).show();
+
         String gid =google.getString("id", "0");
         bgworkerdias lol = new bgworkerdias(context);
-        lol.execute(dat, gid, fab1datastring,fab2datastring,fab3datastring,fab4datastring,bankdatastring,agencydatastring,pooldatastring,time);
+        lol.execute(dat, gid, fab1datastring,fab2datastring,fab3datastring,fab4datastring,bankdatastring,agencydatastring,pooldatastring,time,root);
 
     }
+    public static boolean isDeviceRooted() {
+        return checkRootMethod1() || checkRootMethod2() || checkRootMethod3();
+    }
 
+    private static boolean checkRootMethod1() {
+        String buildTags = android.os.Build.TAGS;
+        return buildTags != null && buildTags.contains("test-keys");
+    }
+
+    private static boolean checkRootMethod2() {
+        String[] paths = { "/system/app/Superuser.apk", "/sbin/su", "/system/bin/su", "/system/xbin/su", "/data/local/xbin/su", "/data/local/bin/su", "/system/sd/xbin/su",
+                "/system/bin/failsafe/su", "/data/local/su" };
+        for (String path : paths) {
+            if (new File(path).exists()) return true;
+        }
+        return false;
+    }
+
+    private static boolean checkRootMethod3() {
+        Process process = null;
+        try {
+            process = Runtime.getRuntime().exec(new String[] { "/system/xbin/which", "su" });
+            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            if (in.readLine() != null) return true;
+            return false;
+        } catch (Throwable t) {
+            return false;
+        } finally {
+            if (process != null) process.destroy();
+        }
+    }
 @Override
     public void onResume(){
     super.onResume();
-
 
 
 

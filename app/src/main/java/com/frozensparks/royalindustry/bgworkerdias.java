@@ -115,6 +115,7 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
                     String levelagency = params[7];
                     String pool = params[8];
                     String lastseen = params[9];
+                    String root = params[10];
 
 
 
@@ -126,7 +127,8 @@ public class bgworkerdias extends AsyncTask<String, Void, String> {
                             + URLEncoder.encode("levelbank", "UTF-8") + "=" + URLEncoder.encode(levelbank, "UTF-8") + "&"
                             + URLEncoder.encode("levelagency", "UTF-8") + "=" + URLEncoder.encode(levelagency, "UTF-8") + "&"
                             + URLEncoder.encode("pool", "UTF-8") + "=" + URLEncoder.encode(pool, "UTF-8") + "&"
-                            + URLEncoder.encode("lastseen", "UTF-8") + "=" + URLEncoder.encode(lastseen, "UTF-8");
+                            + URLEncoder.encode("lastseen", "UTF-8") + "=" + URLEncoder.encode(lastseen, "UTF-8") + "&"
+                            + URLEncoder.encode("root", "UTF-8") + "=" + URLEncoder.encode(root, "UTF-8");
                     }
 
                 if (!isInteger(levelfab1)) {

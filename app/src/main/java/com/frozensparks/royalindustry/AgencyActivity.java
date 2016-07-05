@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class AgencyActivity extends AppCompatActivity implements View.OnClickListener {
@@ -217,6 +219,20 @@ private Tracker mTracker;
 
         }, 1);
 
+        MediaPlayer mp;
+        mp = MediaPlayer.create(this, R.raw.agency_open_sound);
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                // TODO Auto-generated method stub
+                mp.reset();
+                mp.release();
+                mp=null;
+            }
+
+        });
+        mp.start();
 
     }
 
@@ -319,7 +335,7 @@ private Tracker mTracker;
 
             if(ad) {
                 SharedPreferences deziit1 = new ObscuredSharedPreferences(AgencyActivity.this,AgencyActivity.this.getSharedPreferences("blockzeit", MODE_PRIVATE));
-                deziit1.edit().putBoolean("ad", false);
+                deziit1.edit().putBoolean("ad", false).apply();
 
 
 
@@ -358,7 +374,13 @@ private Tracker mTracker;
                             @Override
 
                             public void onAdLoaded() {
+                                Random rand_2 = new Random();
 
+                                int randomNum1 = rand_2.nextInt((10 - 0) + 1) + 0;
+
+                                if (randomNum1==5) {
+                                    Toast.makeText(AgencyActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+                                }
                             }
 
                             @Override
@@ -583,7 +605,7 @@ private Tracker mTracker;
 
             if(ad) {
                 SharedPreferences deziit1 =new ObscuredSharedPreferences(AgencyActivity.this,AgencyActivity.this.getSharedPreferences("blockzeit", MODE_PRIVATE));
-                deziit1.edit().putBoolean("ad", false);
+                deziit1.edit().putBoolean("ad", false).apply();
 
 
                 //werbung starten
@@ -597,8 +619,15 @@ private Tracker mTracker;
                         @Override
 
                         public void onAdLoaded() {
+                            Random rand_2 = new Random();
 
+                            int randomNum1 = rand_2.nextInt((10 - 0) + 1) + 0;
+
+                            if (randomNum1==5) {
+                                Toast.makeText(AgencyActivity.this, R.string.click_on_ad, Toast.LENGTH_LONG).show();
+                            }
                         }
+
 
                         @Override
                         public void onAdFailedToLoad(int errorCode) {
@@ -786,6 +815,21 @@ private Tracker mTracker;
         }
 
         if (id == R.id.closeAgency) {
+            MediaPlayer mp;
+            mp = MediaPlayer.create(this, R.raw.agency_close_sound);
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    // TODO Auto-generated method stub
+                    mp.reset();
+                    mp.release();
+                    mp=null;
+                }
+
+            });
+            mp.start();
+
             Intent start = new Intent(AgencyActivity.this, MainActivity.class);
             AgencyActivity.this.startActivity(start);
             finish();

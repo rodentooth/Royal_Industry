@@ -178,6 +178,16 @@
                 android:layout_toRightOf="@+id/cashoutonwait"
                 android:layout_marginLeft="10dp" />
 
+            <Button
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:id="@+id/freediasbank"
+                android:layout_marginTop="23dp"
+                android:background="@drawable/twendias"
+                android:layout_below="@+id/imageView16"
+                android:layout_alignLeft="@+id/cashout"
+                android:layout_alignStart="@+id/cashout" />
+
         </RelativeLayout>
 
 
